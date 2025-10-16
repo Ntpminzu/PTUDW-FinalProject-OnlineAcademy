@@ -1,0 +1,13 @@
+<div class="card">
+  <div class="card-header">Chi tiết sản phẩm</div>
+  <div class="card-body">
+    <img src="/static/imgs/sp/{{product.proid}}/main.jpg" alt="{{product.proname}}">
+    <h4 class="card-title">{{product.proname}}</h4>
+    <h5 class="card-text text-danger">Giá: {{format_number product.price}}</h5>
+    <p class="card-text">Số lượng: {{product.quantity}}</p>
+    <p class="card-text">
+      {{{product.fulldes}}}
+    </p>
+  </div>
+  <div class="card-footer text-muted">Footer</div>
+</div>

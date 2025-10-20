@@ -35,8 +35,14 @@ body {
   color: #AAAAAA;
   overflow: hidden;
   animation: fadeIn 0.8s ease-in-out;
+
+  /* ✅ điều chỉnh độ rộng hiển thị */
+  width: 80%;
+  max-width: 1600px;
+  min-width: 900px;
 }
 
+/* ==================== CARD CONTENT ==================== */
 .card-header {
   background: linear-gradient(90deg, #1A472A, #2A623D);
   font-family: 'Rubik Mono One', sans-serif;
@@ -120,6 +126,7 @@ body {
   border-bottom: 1px solid #2A623D;
   padding: 12px;
   text-align: left;
+  color: #FFF35B;
 }
 
 .table th {
@@ -225,25 +232,37 @@ a:hover {
 }
 
 /* ==================== RESPONSIVE ==================== */
+@media (max-width: 992px) {
+  .card {
+    width: 90%;
+    min-width: auto;
+  }
+}
+
 @media (max-width: 768px) {
   body {
     padding-top: 60px;
   }
+
   .card {
     width: 95%;
   }
+
   .card-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
     font-size: 1rem;
   }
+
   .table th, .table td {
     font-size: 0.85rem;
   }
+
   .form-control {
     font-size: 0.95rem;
   }
+
   .btn {
     font-size: 0.9rem;
     padding: 8px 10px;

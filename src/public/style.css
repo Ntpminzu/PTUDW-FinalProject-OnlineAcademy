@@ -243,6 +243,59 @@ swiper-slide {
     width: 100%;
   }
 }
+/* ========================= search ========================= */
+/* Tổng thể form */
+form.d-flex {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Ô input */
+form.d-flex .form-control {
+  background-color: #1b1e36;         
+  color: #ffeb3b;                 
+  border: 1px solid #ffeb3b;       
+  border-radius: 10px;
+  padding: 8px 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  width: 300px;
+}
+
+form.d-flex .form-control::placeholder {
+  color: #b3b3b3;
+}
+
+/* Khi người dùng focus vào ô input */
+form.d-flex .form-control:focus {
+  outline: none;
+  border-color: #ffd700;
+  box-shadow: 0 0 10px #ffd700;
+  background-color: #232548;
+}
+
+/* Nút Search */
+form.d-flex .btn {
+  color: #0b0d25;
+  background-color: #ffeb3b;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 8px 16px;
+}
+
+form.d-flex .btn:hover {
+  background-color: #fff35b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 255, 100, 0.6);
+}
+
+form.d-flex .btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
 
 
 /* ========================= SCROLL SECTIONS ========================= */
@@ -378,3 +431,195 @@ form.d-flex .btn:active {
   transform: translateY(1px);
   box-shadow: none;
 }
+/* ============================= */
+/* 🌟 Hiệu ứng phép thuật cho nút Sign In / Sign Up */
+/* ============================= */
+
+.magic-btn {
+  position: relative;
+  display: inline-block;
+  padding: 10px 24px;
+  margin: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(45deg, #5a00ff, #9f00ff);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(159, 0, 255, 0.4);
+  transition: transform 0.2s ease-in-out;
+}
+
+.magic-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 20px rgba(159, 0, 255, 0.8);
+}
+
+/* ✨ ánh sáng lấp lánh chạy qua nút */
+.magic-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+}
+
+.magic-btn:hover::before {
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -75%;
+  }
+  100% {
+    left: 125%;
+  }
+}
+/* ========================= AUTH BUTTONS ========================= */
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: 20px;
+}
+
+.navbar form.d-flex {
+  flex-shrink: 0;
+}
+
+form.d-flex .form-control {
+  width: 220px;
+}
+/* ========================= AUTH FORM (SIGN IN / SIGN UP) ========================= */
+.auth-container {
+  background: linear-gradient(145deg, #1A472A, #000000);
+  border: 2px solid #5D5D5D;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(42, 98, 61, 0.8);
+  width: 380px;
+  padding: 40px 35px;
+  margin: 100px auto;
+  text-align: center;
+  animation: fadeInUp 0.8s ease;
+}
+
+.auth-container h2 {
+  font-family: 'Rubik Mono One', sans-serif;
+  color: #C0C0C0;
+  text-transform: uppercase;
+  margin-bottom: 25px;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px #2A623D;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-form label {
+  text-align: left;
+  font-weight: bold;
+  color: #AAAAAA;
+  font-size: 0.95rem;
+}
+
+.auth-form input {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #5D5D5D;
+  background-color: #000;
+  color: #AAAAAA;
+  transition: all 0.3s ease;
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: #84a330;
+  box-shadow: 0 0 10px #2A623D;
+}
+
+/* Nút đăng nhập/đăng ký */
+.auth-btn {
+  background: linear-gradient(90deg, #2A623D, #1A472A);
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px 0;
+  border-radius: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 12px rgba(42, 98, 61, 0.6);
+}
+
+.auth-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(132, 163, 48, 0.9);
+  background: linear-gradient(90deg, #84a330, #2A623D);
+}
+
+/* Liên kết nhỏ bên dưới form (đăng ký / quên mật khẩu) */
+.auth-link {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #AAAAAA;
+  transition: color 0.3s;
+}
+
+.auth-link a {
+  color: #84a330;
+  text-decoration: none;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
+  color: #C0C0C0;
+}
+
+/* Animation mượt */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ========================= AUTH FOOTER ========================= */
+.auth-footer {
+  margin-top: 20px;
+  font-size: 0.95rem;
+  color: #C0C0C0; /* Màu sáng hơn để dễ đọc */
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 6px rgba(132, 163, 48, 0.6);
+}
+
+.auth-footer a {
+  color: #84a330; /* xanh sáng nổi bật */
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.auth-footer a:hover {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(132, 163, 48, 0.8);
+}
+  

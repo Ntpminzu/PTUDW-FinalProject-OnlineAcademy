@@ -11,6 +11,9 @@ const port = 3000;
 
 app.engine('hbs', engine({
     extname: '.hbs', 
+      helpers: {
+    section: hbs_sections(),
+  },
 }));
 app.set('view engine', 'hbs'); 
 app.set('views', './src/views');

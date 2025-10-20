@@ -1,0 +1,108 @@
+/* ==================== COURSE DETAIL PAGE ==================== */
+.course-detail-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: calc(100vh - 100px);
+  background-color: #001403;
+  padding: 40px 0;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.course-detail-card {
+  width: 80%;
+  max-width: 900px;
+  background: linear-gradient(145deg, #0b2615, #000000);
+  border: 2px solid #2A623D;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(42, 98, 61, 0.6);
+  color: #DDD;
+  overflow: hidden;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+/* ==================== HEADER ==================== */
+.course-detail-card .card-header {
+  background: linear-gradient(90deg, #1A472A, #2A623D);
+  font-family: 'Rubik Mono One', sans-serif;
+  color: #FFF35B;
+  font-size: 1.3rem;
+  padding: 18px 25px;
+  border-bottom: 2px solid #2A623D;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.course-detail-card .card-header i {
+  font-size: 1.4rem;
+  color: #FFF35B;
+}
+
+/* ==================== BODY ==================== */
+.course-detail-card .card-body {
+  padding: 35px;
+}
+
+.course-detail-card .card-title {
+  font-family: 'Rubik Mono One', sans-serif;
+  color: #FFF35B;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.course-detail-card .card-text {
+  color: #FFFFFF;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+/* ==================== BUTTON ==================== */
+.course-detail-card .btn-primary {
+  background-color: #2A623D;
+  border: 1px solid #1A472A;
+  color: #000;
+  font-family: 'Rubik Mono One', sans-serif;
+  letter-spacing: 0.5px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.course-detail-card .btn-primary:hover {
+  background-color: #FFF35B;
+  color: #000;
+  box-shadow: 0 0 20px rgba(255, 243, 91, 0.8);
+  transform: translateY(-2px);
+}
+
+/* ==================== FOOTER ==================== */
+.course-detail-card .card-footer {
+  background-color: #000;
+  color: #AAA;
+  text-align: center;
+  padding: 12px;
+  font-size: 0.9rem;
+  border-top: 1px solid #2A623D;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .course-detail-card {
+    width: 95%;
+  }
+
+  .course-detail-card .card-body {
+    padding: 25px 20px;
+  }
+
+  .course-detail-card .card-title {
+    font-size: 1.1rem;
+  }
+
+  .course-detail-card .card-text {
+    font-size: 0.95rem;
+  }
+}

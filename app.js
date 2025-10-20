@@ -20,10 +20,14 @@ app.set('views', './src/views');
 
 app.use(express.static('src/public'));
 
-app.use('/', courseRouter);
+app.use('/course', courseRouter);
 app.use('/account', accountRouter);
 app.use('/category', categoryRouter);
 
+app.get('/', (req, res) => {
+  res.redirect('/course');
+});
+
 app.listen(port, function () {
-    console.log(`Server is running on port ${port}`);
+    console.log(` Server is running at http://localhost:${port}`);
 });

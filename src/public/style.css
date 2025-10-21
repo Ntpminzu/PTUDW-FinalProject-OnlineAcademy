@@ -1,6 +1,9 @@
 /* ========================= RESET ========================= */
 @import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Quintessential&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Changa:wght@300;400;500;600;700&display=swap');
 * {
   box-sizing: border-box;
   margin: 0;
@@ -34,7 +37,7 @@ body {
   
 }
 
-/* ========================= CAROUSEL ========================= */
+/* ========================= CAROUSEL 4 COURSE ========================= */
 .carousel-section {
   margin-top: 60px;
   margin-bottom: 80px;
@@ -55,7 +58,7 @@ body {
   letter-spacing: 2px;
 }
 
-/* ========================= SWIPER ========================= */
+/*  SWIPER  */
 swiper-container.mySwiper {
   width: 420px;
   height: 600px;
@@ -75,7 +78,7 @@ swiper-slide {
   overflow: visible !important; /* Giữ overflow visible để hiệu ứng scale không bị cắt */
   background: transparent; /* ✅ Loại bỏ nền đen mặc định (nếu có) */
 }
-/* ========================= FLIP CAROUSEL CARD ========================= */
+/* FLIP CAROUSEL CARD  */
 .carousel-card,
 .card-inner,
 .card-front,
@@ -114,7 +117,7 @@ swiper-slide {
   transform: rotateY(180deg);
 }
 
-/* ====== Hai mặt ====== */
+/*  Hai mặt  */
 .card-front,
 .card-back {
   position: absolute;
@@ -133,7 +136,7 @@ swiper-slide {
   
 }
 
-/* ====== Mặt trước ====== */
+/* Mặt trước */
 .card-front {
   background: linear-gradient(145deg, #2A623D, #000000);
   color: #AAAAAA;
@@ -141,7 +144,8 @@ swiper-slide {
 }
 
 .card-front h3 {
-  font-family: 'Rubik Mono One', sans-serif;
+  font-family: 'Rye', cursive;
+  text-transform: uppercase;
   color: #AAAAAA;
   margin-top: 10px;
   margin-bottom: 5px;
@@ -153,7 +157,7 @@ swiper-slide {
   color: #AAAAAA;
 }
 
-/* ====== Mặt sau ====== */
+/*  Mặt sau  */
 .card-back {
   background: linear-gradient(145deg, #1A472A, #000000);
   color: #AAAAAA;
@@ -162,7 +166,8 @@ swiper-slide {
 }
 
 .card-back h3 {
-  font-family: 'Rubik Mono One', sans-serif;
+  font-family: 'Rye', cursive;
+  text-transform: uppercase;
   color: #2A623D;
   margin-bottom: 10px;
   text-shadow: 0 0 6px rgba(42, 98, 61, 0.8);
@@ -174,13 +179,13 @@ swiper-slide {
   font-size: 0.9rem;
 }
 
-/* ====== Ảnh giảng viên ====== */
+/*  Ảnh giảng viên  */
 .teacher-frame {
   width: 100%;
   height: 80%;
   border-radius: 12px;
   overflow: hidden;
-  border: 10px solid #4C3D19;
+  border: 10px solid #5D5D5D;
   margin-bottom: 15px;
 }
 
@@ -208,10 +213,10 @@ swiper-slide {
 }
 
 .logo {
-  font-family: 'Rubik Mono One', sans-serif;
-  font-size: 1.3rem;
+  font-family: 'Bungee', sans-serif;
+  font-size: 1.4rem;
   font-weight: bold;
-  color: #1A472A;
+  color: #2CFF05;
   letter-spacing: 1px;
 }
 
@@ -367,7 +372,8 @@ form.d-flex .btn:active {
   justify-content: center; /* canh ngang */
 }
 .field-card p {
-  font-family: 'Rubik Mono One', sans-serif;
+  font-family: 'Rye', cursive;
+  text-transform: uppercase;
    text-align: center; /* 🪄 Canh giữa ngang */
   color: #000000;
   margin-bottom: 5px;

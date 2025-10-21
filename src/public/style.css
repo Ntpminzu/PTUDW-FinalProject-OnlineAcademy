@@ -30,12 +30,42 @@ body {
   overflow: hidden;
 }
 
-.banner img {
+/* Khung chứa các ảnh */
+.banner-carousel {
+  display: flex;
+  width: 300%; /* nếu có 3 ảnh */
+  height: 100%;
+  transition: transform 0.8s ease-in-out;
+}
+
+.banner-carousel img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  
 }
+
+/* Nút điều hướng */
+.banner-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  border: none;    
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.3s;
+  width: 36px;          
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.banner-btn.prev { left: 20px; }
+.banner-btn.next { right: 20px; }
+
 
 /* ========================= CAROUSEL 4 COURSE ========================= */
 .carousel-section {

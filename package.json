@@ -19,12 +19,14 @@
   },
   "homepage": "https://github.com/Ntpminzu/PTUDW-FinalProject-OnlineAcademy#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "express": "^5.1.0",
     "express-handlebars": "^8.0.3",
     "express-handlebars-sections": "^1.0.1",
     "express-session": "^1.18.2",
     "knex": "^3.1.0",
+    "nodemailer": "^7.0.9",
     "pg": "^8.16.3"
   }
 }

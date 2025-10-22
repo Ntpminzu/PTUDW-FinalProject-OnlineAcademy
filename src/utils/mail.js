@@ -1,22 +1,30 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
+
+const resend = new Resend('re_your_api_key_here');//nào chạy Project nhớ quăng API Key vào
 
 export async function sendOTP(to, otp) {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'daiduong2929@gmail.com', 
-      pass: 'jrfvtpxrvkjbeumx'        
-    }
-  });
+  try {
+    console.log('🔹 Sending OTP to:', to);
 
-  const mailOptions = {
-    from: 'daiduong2929@gmail.com',   
-    to,
-    subject: 'Online Academy - Your OTP Code',
-    text: `Your OTP code is: ${otp}\nThis code expires in 5 minutes.`
-  };
+    await resend.emails.send({
+      from: 'Online Academy <no-reply@resend.dev>',
+      to,
+      subject: 'Online Academy - Mã OTP của bạn',
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+          <h2>🔐 Mã OTP của bạn</h2>
+          <p>Xin chào,</p>
+          <p>Mã OTP của bạn là:</p>
+          <h1 style="color:#007bff;">${otp}</h1>
+          <p>Mã này có hiệu lực trong <b>5 phút</b>.</p>
+          <hr />
+          <p style="font-size: 0.9em;">Online Academy Support Team</p>
+        </div>
+      `
+    });
 
-  console.log('🔹 Sending OTP to:', to);
-  await transporter.sendMail(mailOptions);
-  console.log('✅ OTP email sent successfully!');
+    console.log('✅ OTP email sent successfully!');
+  } catch (error) {
+    console.error('❌ Lỗi gửi mail:', error);
+  }
 }

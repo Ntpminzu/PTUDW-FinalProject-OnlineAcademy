@@ -13,6 +13,14 @@ router.get('/profile', (req, res) => {
   res.render('account/profile');
 });
 
+router.get('/wishlist', (req, res) => {
+  res.render('account/wishlist');
+});
+
+router.get('/history', (req, res) => {
+  res.render('account/history');
+});
+
 router.get('/change-password', (req, res) => {
   res.render('account/change-password');
 });

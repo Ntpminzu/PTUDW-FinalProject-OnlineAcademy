@@ -320,6 +320,7 @@ form.d-flex .btn:active {
    overflow-y: hidden; 
   gap: 15px;
   padding: 0 20px;
+  
 }
 
 /* Scrollbar */
@@ -354,6 +355,7 @@ form.d-flex .btn:active {
 .course-card {
   display: flex;
   align-items: center;   /* canh dọc */
+  text-decoration: none;
 
 }
 .course-card p {

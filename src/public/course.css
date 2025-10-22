@@ -17,7 +17,7 @@
   border: 2px solid #2A623D;
   border-radius: 20px;
   box-shadow: 0 0 30px rgba(42, 98, 61, 0.6);
-  color: #DDD;
+  color: black;
   overflow: hidden;
   animation: fadeIn 0.8s ease-in-out;
 }
@@ -104,5 +104,149 @@
 
   .course-detail-card .card-text {
     font-size: 0.95rem;
+  }
+}
+
+
+/* Main Course Detail Page */
+.course-detail-page {
+  padding: 20px;
+}
+
+.course-detail-card {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.card-body .course-image {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: cover;
+}
+
+.card-body .course-info {
+  flex-grow: 1;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  padding: 8px 12px;
+}
+
+.btn-primary.btn-sm {
+  padding: 6px 10px;
+}
+
+.btn-primary i {
+  margin-right: 5px;
+}
+
+/* Footer */
+.card-footer {
+  background-color: #f8f9fa;
+  font-size: 0.875rem;
+  padding: 10px;
+  color: #6c757d;
+}
+
+/* Comment Section */
+.comments-section {
+  margin-top: 30px;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.comments-section h5 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.comment {
+  border-bottom: 1px solid black;
+}
+
+.comment:last-child {
+  border-bottom: none;
+}
+
+.rating {
+  font-size: 1.25rem;
+  color: #ffcc00;
+}
+
+.rating i {
+  margin-right: 3px;
+  cursor: pointer;
+}
+
+.comment-content {
+  font-size: 1rem;
+  color: #555;
+}
+
+.comment-form {
+  margin-top: 30px;
+}
+
+.comment-form h6 {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.comment-form .form-label {
+  font-size: 1rem;
+}
+
+.comment-form .form-control {
+  font-size: 1rem;
+  padding: 10px;
+}
+
+.comment-form button {
+  padding: 6px 12px;
+  font-size: 1rem;
+}
+
+/* Rating Interaction */
+.rating i.selected {
+  color: #ffcc00;
+}
+
+.rating i:hover {
+  color: #ffc107;
+}
+
+@media (max-width: 768px) {
+  .card-body {
+    flex-direction: column;
+  }
+
+  .course-info {
+    text-align: center;
+  }
+
+  .course-image {
+    margin-bottom: 20px;
   }
 }

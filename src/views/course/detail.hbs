@@ -1,24 +1,103 @@
 {{#section "styles" append=true}}
 <link rel="stylesheet" href="/course.css">
 {{/section}}
+<div class="course-detail-page container">
+  <!-- Course Detail Card -->
 
-<div class="course-detail-page">
   <div class="card course-detail-card">
     <h5 class="card-header">
       <i class="bi bi-book-half"></i> Course Details
     </h5>
 
-    <div class="card-body">
-      <h5 class="card-title">Course Title: Example Course</h5>
-      <p class="card-text">Description: This is an example course description.</p>
-      <p class="card-text">Professor: John Doe</p>
-      <p class="card-text">Duration: 10 weeks</p>
-      <a href="/course/enroll" class="btn btn-primary">
-        <i class="bi bi-journal-plus"></i> Enroll Now
-      </a>
+    <div class="card-body d-flex flex-column flex-md-row">
+      <!-- Image Section (Left) -->
+      <div class="course-image mb-3 mb-md-0">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoKO7Q9jf-uJ7c3vEY3UaNA-v5SPJWo41fIA&s"
+          alt="Course Image" class="img-fluid rounded">
+      </div>
+
+      <!-- Course Info (Right) -->
+      <div class="course-info ms-md-4">
+        <h5 class="card-title">Course Title: Example Course</h5>
+        <p class="card-text">Description: This is an example course description.</p>
+        <p class="card-text">Professor: John Doe</p>
+        <p class="card-text">Duration: 10 weeks</p>
+        <div class="row">
+          <a href="/course/enroll" class="btn btn-primary btn-sm" style="width: 150px; margin-right: 10px;">
+            <i class="bi bi-journal-plus"></i> Enroll Now
+          </a>
+          <a href="/account/wishlist" class="btn btn-primary btn-sm" style="width: 150px;">
+            <i class="bi bi-heart"></i> Wishlist
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- Comments Section -->
+
+    <div class="comments-section mt-4">
+      <h5>Reviews and Comments</h5>
+
+      <!-- Fixed Comments -->
+      <div class="comment mb-3 p-3 border rounded">
+        <div class="rating mb-2">
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-half"></i>
+          <i class="bi bi-star"></i>
+        </div>
+        <p class="comment-content">"This course was amazing! Learned so much and the professor was great!"</p>
+      </div>
+
+      <div class="comment mb-3 p-3 border rounded">
+        <div class="rating mb-2">
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+        </div>
+        <p class="comment-content">"Highly recommended. The content is rich and very informative."</p>
+      </div>
+
+      <div class="comment mb-3 p-3 border rounded">
+        <div class="rating mb-2">
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-half"></i>
+          <i class="bi bi-star"></i>
+          <i class="bi bi-star"></i>
+        </div>
+        <p class="comment-content">"Great course but could be improved in some areas. The duration was a bit long for
+          me."
+        </p>
+      </div>
+
+      <!-- Comment Form -->
+      <div class="comment-form mt-4">
+        <h6>Leave a Review</h6>
+        <form>
+          <div class="mb-3">
+            <label for="userRating" class="form-label">Rating</label>
+            <div id="userRating" class="rating">
+              <i class="bi bi-star" data-index="1"></i>
+              <i class="bi bi-star" data-index="2"></i>
+              <i class="bi bi-star" data-index="3"></i>
+              <i class="bi bi-star" data-index="4"></i>
+              <i class="bi bi-star" data-index="5"></i>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="commentContent" class="form-label">Comment</label>
+            <textarea class="form-control" id="commentContent" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-sm">
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
 
-    <div class="card-footer text-muted text-center">
-      Hogwarts Academy © 2025
-    </div>
   </div>
+
+</div>

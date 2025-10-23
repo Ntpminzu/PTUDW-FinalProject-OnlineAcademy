@@ -21,6 +21,7 @@ body {
   grid-template-columns: 1fr;
   justify-items: center;
 }
+
 /* ========================= NAVBAR ========================= */
 .navbar {
   width: 100%;
@@ -109,8 +110,8 @@ body {
 }
 
 .dropdown-menu a:hover {
-  background: #2A623D;
-  color: #fff;
+  background: #06FF00;
+  color: #000000;
 }
 
 /* ======= SUB-DROPDOWN (CẤP 2) ======= */
@@ -136,8 +137,8 @@ body {
 }
 
 .sub-menu a:hover {
-  background: #3b7d4a;
-  color: #fff;
+ background: #06FF00;
+  color: #000000;
 }
 /* ========================= SEARCH FORM ========================= */
 form.d-flex {
@@ -150,7 +151,7 @@ form.d-flex {
 form.d-flex .form-control {
   background-color: #000;
   color: #fff;
-  border: 1px solid #ffeb3b;
+  border: 1px solid #06ff00;
   border-radius: 10px;
   padding: 8px 14px;
   width: 350px;
@@ -159,24 +160,50 @@ form.d-flex .form-control {
 
 form.d-flex .form-control:focus {
   outline: none;
-  border-color: #ffd700;
-  box-shadow: 0 0 10px #ffd700;
+  border-color: #00ff88;
+  box-shadow: 0 0 10px #00ff88;
 }
 
+/* ==== Nút Search với hiệu ứng neon xanh ==== */
 form.d-flex .btn {
-  color: #000;
-  background-color: #1A472A;
-  border: none;
-  border-radius: 10px;
+  position: relative;
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 1rem;
   font-weight: 600;
-  padding: 8px 16px;
-  transition: all 0.3s ease;
+  color: #000; /* chữ đen */
+  background: linear-gradient(45deg, #32CD32, #39FF14); /* neon green gradient */
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(0, 255, 128, 0.6);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 form.d-flex .btn:hover {
-  background-color: #fff35b;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(42, 98, 61, 0.7);
+  transform: scale(1.08);
+  box-shadow: 0 0 25px rgba(0, 255, 128, 0.9);
+}
+
+form.d-flex .btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+}
+
+form.d-flex .btn:hover::before {
+  animation: shimmer 1.2s infinite;
 }
 
 /* ========================= MAGIC BUTTONS ========================= */
@@ -192,8 +219,8 @@ form.d-flex .btn:hover {
   padding: 8px 20px;
   font-size: 1rem;
   font-weight: 600;
-  color: #fff;
-  background: linear-gradient(45deg, #5a00ff, #9f00ff);
+  color: #000000;
+background: linear-gradient(45deg, #32CD32, #39FF14);
   border: none;
   border-radius: 50px;
   cursor: pointer;
@@ -204,7 +231,7 @@ form.d-flex .btn:hover {
 
 .magic-btn:hover {
   transform: scale(1.08);
-  box-shadow: 0 0 20px rgba(159, 0, 255, 0.8);
+  box-shadow: 0 0 20px rgba(9, 255, 0, 0.8);
 }
 
 .magic-btn::before {
@@ -309,6 +336,53 @@ form.d-flex .btn:hover {
   align-items: center;
   justify-content: center;
   min-height: 80vh;
+
+  position: relative;
+  z-index: 1;
+
+  width: 100vw;              /* phủ toàn bộ chiều ngang */
+  max-width: 100vw;          /* không giới hạn theo container */
+  overflow: visible;         /* giữ hover card */
+  left: 0;                   /* ✅ căn lại về gốc trái */
+  right: 0;
+  margin-left: 0;            /* ✅ không cần bù trừ */
+  margin-right: 0;
+}
+
+/* ========================= HÌNH NỀN RẮN ========================= */
+.snake-bg {
+  position: absolute;
+  top: -50px; /* mở rộng hình ra ngoài một chút để che viền trên */
+  left: 0;
+  width: 100%;
+  height: calc(100% + 100px); /* tăng chiều cao để có vùng hòa mượt */
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.snake-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.2;
+  filter: blur(1px) brightness(0.8);
+}
+/* ✅ Làm mờ nhẹ cạnh trên và dưới để hòa với nền #001403 */
+.snake-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    #001403 0%,          /* Hòa vào nền trên cùng */
+    rgba(0, 20, 3, 0.7) 10%, /* Mờ dần */
+    transparent 25%,     /* Vùng giữa rõ ảnh */
+    transparent 75%,     
+    rgba(0, 20, 3, 0.7) 95%, /* Mờ dần xuống dưới */
+    #001403 100%         /* Hòa mượt vào nền dưới */
+  );
+  z-index: 1;
+  pointer-events: none;
 }
 
 .carousel-section h2 {
@@ -349,11 +423,15 @@ swiper-slide {
   cursor: pointer;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   border-radius: 12px;
+
 }
 
 .carousel-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 20px 40px rgba(42, 98, 61, 0.7);
+  box-shadow: 
+    0 0 25px rgba(55, 255, 20, 0.59),
+    0 0 50px rgba(55, 255, 20, 0.408),
+    0 0 80px rgba(55, 255, 20, 0.248);
 }
 
 /* Cấu trúc xoay */
@@ -376,7 +454,7 @@ swiper-slide {
   width: 100%;
   height: 100%;
   border-radius: 12px;
-  border: 4px solid #3b5f3b;
+  border: 4px solid #5D5D5D;
   padding: 20px;
   backface-visibility: hidden;
   overflow: hidden;
@@ -416,7 +494,7 @@ swiper-slide {
 
 .card-front h3 {
   font-family: 'Rye', cursive;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   text-transform: uppercase;
   color: #E8E8E8;
   margin-top: 8px;
@@ -426,14 +504,14 @@ swiper-slide {
 .card-front p.field {
   font-family: 'Quintessential', cursive;
   color: #a8ff60;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   margin-bottom: 5px;
 }
 
 .card-front p.instructor {
   font-family: 'Quintessential', cursive;
   color: #CCCCCC;
-  font-size: 0.85rem;
+  font-size: 1rem;
 }
 
 /* ========================= BACK SIDE ========================= */
@@ -454,7 +532,7 @@ swiper-slide {
 .card-back h3 {
   font-family: 'Rye', cursive;
   text-transform: uppercase;
-  color: #9fffa8;
+  color: #2CFF05;
   margin-bottom: 10px;
   text-shadow: 0 0 6px rgba(159, 255, 168, 0.8);
    margin-bottom: 10px;
@@ -463,7 +541,7 @@ swiper-slide {
 .card-back p {
   font-family: 'Quintessential', cursive;
   color: #dddddd;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   margin-bottom: 8px;
 }
 
@@ -475,7 +553,7 @@ swiper-slide {
 }
 .card-back .rating span {
   color: #ccc;
-  font-size: 0.85rem;
+  font-size: 1rem;
   margin-left: 4px;
 }
 
@@ -535,8 +613,9 @@ swiper-slide {
 /* ========================= COURSE CARD ========================= */
 .course-card {
   flex: 0 0 250px;
-  background: #ffffff;
-  border-radius: 10px;
+  background: linear-gradient(145deg,		#06ff00,	#000000);
+  border: 6px solid #000600 ;
+  border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -564,10 +643,12 @@ swiper-slide {
 }
 
 .course-info h3 {
-  font-size: 1rem;
+  font-family: 'Rye', cursive;
+  text-transform: uppercase;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #1c1d1f;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   line-height: 1.3;
   min-height: 42px; /* giữ chiều cao đều nhau */
 }
@@ -575,7 +656,7 @@ swiper-slide {
 /* Lĩnh vực / Category */
 .course-info p.category {
   font-size: 0.8rem;
-  color: #9a6b00;
+  color: #002a00;
   font-weight: 600;
   margin-bottom: 5px;
 }
@@ -583,7 +664,7 @@ swiper-slide {
 /* Giảng viên */
 .course-info p.instructor {
   font-size: 0.85rem;
-  color: #6a6a6a;
+  color: #89F336;
   margin-bottom: 8px;
 }
 
@@ -602,7 +683,7 @@ swiper-slide {
 
 .course-rating span {
   font-size: 0.85rem;
-  color: #444;
+  color: #f4c150;
 }
 
 /* ========================= GIÁ ========================= */
@@ -615,12 +696,12 @@ swiper-slide {
 .course-price .current {
   font-size: 1rem;
   font-weight: bold;
-  color: #1c1d1f;
+  color: #FFD700;
 }
 
 .course-price .old {
   font-size: 0.9rem;
-  color: #888;
+  color:   #1c1d1f;
   text-decoration: line-through;
 }
 
@@ -646,12 +727,12 @@ swiper-slide {
 
 /* ========================= FIELD CARD ========================= */
 .field-card {
-  flex: 0 0 220px; /* mỗi thẻ chiếm 220px chiều ngang */
-  background: #2A623D;
+  flex: 0 0 220px;
+  background: linear-gradient(180deg, #32803e, #00610e, #002e07);
   border-radius: 10px;
   color: #ffffff;
   padding: 25px 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -659,20 +740,26 @@ swiper-slide {
   text-align: center;
   font-family: 'Rye', cursive;
   text-transform: uppercase;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.4s ease;
 }
 
+/* 💚 Khi hover: thẻ pop-up + phát sáng neon */
 .field-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+  transform: translateY(-8px) scale(1.08);
+  box-shadow: 
+    0 0 20px rgba(57, 255, 20, 0.8),
+    0 0 40px rgba(57, 255, 20, 0.6),
+    0 0 60px rgba(57, 255, 20, 0.4);
 }
 
+/* ========================= FIELD TEXT ========================= */
 .field-card p {
-  color: #fff;
+  color: #caffb3;
   margin: 0;
   font-size: 0.95rem;
   letter-spacing: 0.5px;
   line-height: 1.3;
+  text-shadow: 0 0 4px rgba(57, 255, 20, 0.7);
 }
 
 /* ========================= RESPONSIVE ========================= */

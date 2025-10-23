@@ -8,33 +8,60 @@
   <!-- Swiper -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   {{{_sections.styles}}}
 </head>
 
 <body>
   <!-- 🌟 NAVBAR -->
   <nav class="navbar">
-    <div class="logo">Hogwarts Academy</div>
-    <ul class="nav-links">
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Courses</a></li>
-      <li><a href="#">Professors</a></li>
-      <li><a href="#">Library</a></li>
-      <li><a href="#">Contact</a></li>
+  <div class="logo">Hogwarts Academy</div>
+
+ <ul class="nav-links">
+  <li><a href="#">Home</a></li>
+  <li class="dropdown">
+    <a href="#">Courses ▾</a>
+    <ul class="dropdown-menu">
+      <li class="sub-dropdown">
+        <a href="#">Defense</a>
+        <ul class="sub-menu">
+          <li><a href="#">Magical Cyber Defense</a></li>
+          <li><a href="#">Dark Arts Protection</a></li>
+          <li><a href="#">Battle Charms</a></li>
+        </ul>
+      </li>
+      <li class="sub-dropdown">
+        <a href="#">Potions</a>
+        <ul class="sub-menu">
+          <li><a href="#">Ultimate Potions</a></li>
+          <li><a href="#">Alchemy Basics</a></li>
+          <li><a href="#">Mystic Elixirs</a></li>
+        </ul>
+      </li>
+      <li class="sub-dropdown">
+        <a href="#">Magical Creatures</a>
+        <ul class="sub-menu">
+          <li><a href="#">Dragon Training</a></li>
+          <li><a href="#">Unicorn Care</a></li>
+          <li><a href="#">Phoenix Handling</a></li>
+        </ul>
+      </li>
     </ul>
+  </li>
+</ul>
 
-    <div class="navbar-right">
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn" type="submit">Search</button>
-      </form>
+  <form class="d-flex" role="search">
+    <input class="form-control" type="search" placeholder="Search courses..." aria-label="Search">
+    <button class="btn magic-btn" type="submit">
+    Search
+  </button>
+  </form>
 
-      <div class="auth-buttons">
-        <a href="/account/signin" class="magic-btn">Sign In</a>
-        {{!-- <a href="/account/signup" class="magic-btn">Sign Up</a> --}}
-      </div>
-    </div>
-  </nav>
+  <div class="auth-buttons">
+    <button class="magic-btn">Sign In</button>
+    
+  </div>
+</nav>
 
   {{{body}}}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

@@ -1,4 +1,7 @@
 import express from 'express';
+import knex from 'knex';
+import categoryModel from '../model/category.model.js';
+
 
 const router = express.Router();
 

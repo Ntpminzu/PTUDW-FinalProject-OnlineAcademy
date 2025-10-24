@@ -1,0 +1,35 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/bycat.css">
+{{/section}}
+
+<div class="category-page">
+  <h2 class="category-title">Courses in {{category.CatName}}</h2>
+  <div class="category-section">
+    <div class="course-list">
+      {{#each courses}}
+      <div class="course-card">
+      <img src="https://picsum.photos/300/200?random=12" alt="Dragon Language">
+      <div class="course-info">
+        <h3>{{CourseName}}</h3>
+        <p class="instructor">{{InstructorName}}</p>
+        <div class="course-rating">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+          <i class="far fa-star"></i>
+          <span>{{Rating}}</span>
+          <div class="reviews">{{Total_Review}}</div>
+        </div>
+        <div class="course-price">
+          <span class="current">{{CurrentPrice}}</span>
+          <span class="old">{{OriginalPrice}}</span>
+        </div>
+      </div>
+    </div>
+      {{/each}}
+
+      {{#unless courses.length}}
+      <p>No courses found in this category.</p>
+      {{/unless}}
+    </div>
+  </div>
+</div>

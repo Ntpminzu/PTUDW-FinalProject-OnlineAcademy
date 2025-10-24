@@ -22,30 +22,16 @@
   <li class="dropdown">
     <a href="#">Courses ▾</a>
     <ul class="dropdown-menu">
+      {{#each global_categories}}
       <li class="sub-dropdown">
-        <a href="#">Defense</a>
+        <a href="/course/bycat?id={{CatID}}">{{CatName}}</a> 
         <ul class="sub-menu">
-          <li><a href="#">Magical Cyber Defense</a></li>
-          <li><a href="#">Dark Arts Protection</a></li>
-          <li><a href="#">Battle Charms</a></li>
+          {{#each courses}}
+          <li><a href="#">{{CourseName}}</a></li>
+          {{/each}}
         </ul>
       </li>
-      <li class="sub-dropdown">
-        <a href="#">Potions</a>
-        <ul class="sub-menu">
-          <li><a href="#">Ultimate Potions</a></li>
-          <li><a href="#">Alchemy Basics</a></li>
-          <li><a href="#">Mystic Elixirs</a></li>
-        </ul>
-      </li>
-      <li class="sub-dropdown">
-        <a href="#">Magical Creatures</a>
-        <ul class="sub-menu">
-          <li><a href="#">Dragon Training</a></li>
-          <li><a href="#">Unicorn Care</a></li>
-          <li><a href="#">Phoenix Handling</a></li>
-        </ul>
-      </li>
+     {{/each}}
     </ul>
   </li>
 </ul>
@@ -58,8 +44,7 @@
   </form>
 
   <div class="auth-buttons">
-    <button class="magic-btn">Sign In</button>
-    
+    <a href="account/signin"> <button class="magic-btn">Sign In</button></a>
   </div>
 </nav>
 

@@ -11,6 +11,9 @@ import courseModel from './src/model/course.model.js';
 const app = express();
 const port = 3000;
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.engine('hbs', engine({
     defaultLayout: 'main',
     extname: '.hbs', 

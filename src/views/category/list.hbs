@@ -17,19 +17,23 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">CATEGORY</th>
+            <th scope="col">DESCRIPTION</th>
             <th scope="col" class="text-end">ACTION</th>
           </tr>
         </thead>
         <tbody>
+          {{#each category}}
           <tr>
-            <th scope="row">#</th>
-            <td>Example</td>
+            <th scope="row">{{CatID}}</th>
+            <td>{{CatName}}</td>
+            <td>{{CatDes}}</td>
             <td class="text-end">
-              <a class="btn btn-sm btn-outline-primary" href="edit" role="button">
+              <a class="btn btn-sm btn-outline-primary" href="edit?id={{CatID}}" role="button">
                 <i class="bi bi-pencil-square"></i>
               </a>
             </td>
           </tr>
+          {{/each}}
         </tbody>
       </table>
     </div>

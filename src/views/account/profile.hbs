@@ -1,7 +1,7 @@
 {{#section "styles" append=true}}
 <link rel="stylesheet" href="/profile.css">
 {{/section}}
-<form action="" method="post">
+<form id="profileForm" action="/account/profile" method="post">
   <div class="profile-card">
     <div class="profile-header">
       <img src="https://i.pinimg.com/564x/50/70/50/5070504c4e21e947a94e1b37cf8d6de1.jpg" alt="Avatar" class="avatar">
@@ -16,15 +16,15 @@
       <form id="profileForm">
         <div class="field">
           <label>Họ và tên:</label>
-          <input type="text" id="name" value="Harry Potter" disabled>
+          <input type="text" id="name" value="{{user.Fullname}}" disabled>
         </div>
         <div class="field">
           <label>Email:</label>
-          <input type="email" id="email" value="harry.potter@hogwarts.edu" disabled>
+          <input type="email" id="email" value="{{user.Email}}" disabled>
         </div>
         <div class="field">
           <label>Permission :</label>
-          <input type="text" id="address" value="permissiom" disabled>
+          <input type="text" id="address" value="{{user.Permission}}" disabled>
         </div>
         <div id="saveCancelBtns" class="save-btns" style="display:none;">
           <button type="button" class="btn success" id="saveBtn">💾 Lưu</button>

@@ -178,176 +178,26 @@
 <div class="section">
   <h2>Top 10 Most Viewed Courses</h2>
   <div class="course-list">
-
+    {{#each topCourses}}
     <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=11" alt="Magical Cyber Defense">
+      <img src="{{this.ImageUrl}}" alt="{{this.CourseName}}">
       <div class="course-info">
-        <p class="category">Defense Against the Dark Arts</p>
-        <h3>Magical Cyber Defense</h3>
-        <p class="instructor">Prof. Kingsley Shacklebolt</p>
+        <p class="category">{{this.CatName}}</p>
+        <h3>{{this.CourseName}}</h3>
+        <p class="instructor">{{this.InstructorName}}</p>
         <div class="course-rating">
           <i class="fas fa-star"></i><i class="fas fa-star"></i>
           <i class="fas fa-star"></i><i class="fas fa-star"></i>
           <i class="far fa-star"></i>
-          <span>4.2 (1,250)</span>
+          <span>{{this.Rating}} ⭐ ({{this.Total_Review}})</span>
         </div>
         <div class="course-price">
-          <span class="current">$16.99</span>
-          <span class="old">$39.99</span>
+          <span class="current">${{this.CurrentPrice}}</span>
+          <span class="old">${{this.OriginalPrice}}</span>
         </div>
       </div>
     </div>
-
-    <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=12" alt="Dragon Language">
-      <div class="course-info">
-        <p class="category">Creatures & Languages</p>
-        <h3>Dragon Language</h3>
-        <p class="instructor">Prof. Charlie Weasley</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-          <i class="far fa-star"></i>
-          <span>4.4 (890)</span>
-        </div>
-        <div class="course-price">
-          <span class="current">$18.99</span>
-          <span class="old">$49.99</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=13" alt="Ancient Sorcery">
-      <div class="course-info">
-        <p class="category">Ancient Magic</p>
-        <h3>Ancient Sorcery</h3>
-        <p class="instructor">Prof. Bathilda Bagshot</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="far fa-star"></i>
-          <i class="far fa-star"></i>
-          <span>3.7 (760)</span>
-        </div>
-        <div class="course-price">
-          <span class="current">$11.99</span>
-          <span class="old">$29.99</span>
-        </div>
-      </div>
-    </div>
-<div class="course-card">
-      <img src="https://picsum.photos/300/200?random=11" alt="Magical Cyber Defense">
-      <div class="course-info">
-        <p class="category">Defense Against the Dark Arts</p>
-        <h3>Magical Cyber Defense</h3>
-        <p class="instructor">Prof. Kingsley Shacklebolt</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="far fa-star"></i>
-          <span>4.2 (1,250)</span>
-        </div>
-        <div class="course-price">
-          <span class="current">$16.99</span>
-          <span class="old">$39.99</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=12" alt="Dragon Language">
-      <div class="course-info">
-        <p class="category">Creatures & Languages</p>
-        <h3>Dragon Language</h3>
-        <p class="instructor">Prof. Charlie Weasley</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-          <i class="far fa-star"></i>
-          <span>4.4 (890)</span>
-        </div>
-        <div class="course-price">
-          <span class="current">$18.99</span>
-          <span class="old">$49.99</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=13" alt="Ancient Sorcery">
-      <div class="course-info">
-        <p class="category">Ancient Magic</p>
-        <h3>Ancient Sorcery</h3>
-        <p class="instructor">Prof. Bathilda Bagshot</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="far fa-star"></i>
-          <i class="far fa-star"></i>
-          <span>3.7 (760)</span>
-        </div>
-        <div class="course-price">
-          <span class="current">$11.99</span>
-          <span class="old">$29.99</span>
-        </div>
-      </div>
-    </div>
-    <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=11" alt="Magical Cyber Defense">
-      <div class="course-info">
-        <p class="category">Defense Against the Dark Arts</p>
-        <h3>Magical Cyber Defense</h3>
-        <p class="instructor">Prof. Kingsley Shacklebolt</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="far fa-star"></i>
-          <span>4.2 (1,250)</span>
-        </div>
-        <div class="course-price">
-          <span class="current">$16.99</span>
-          <span class="old">$39.99</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=12" alt="Dragon Language">
-      <div class="course-info">
-        <p class="category">Creatures & Languages</p>
-        <h3>Dragon Language</h3>
-        <p class="instructor">Prof. Charlie Weasley</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-          <i class="far fa-star"></i>
-          <span>4.4 (890)</span>
-        </div>
-        <div class="course-price">
-          <span class="current">$18.99</span>
-          <span class="old">$49.99</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=13" alt="Ancient Sorcery">
-      <div class="course-info">
-        <p class="category">Ancient Magic</p>
-        <h3>Ancient Sorcery</h3>
-        <p class="instructor">Prof. Bathilda Bagshot</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="far fa-star"></i>
-          <i class="far fa-star"></i>
-          <span>3.7 (760)</span>
-        </div>
-        <div class="course-price">
-          <span class="current">$11.99</span>
-          <span class="old">$29.99</span>
-        </div>
-      </div>
-    </div>
-
+    {{/each}}
   </div>
 </div>
 

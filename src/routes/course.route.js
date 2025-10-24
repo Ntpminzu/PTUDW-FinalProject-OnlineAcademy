@@ -6,7 +6,9 @@ import categoryModel from '../model/category.model.js';
 const router = express.Router();
 
 router.get('/',async function (req, res) {
+    const topCourses = await courseModel.findTop10CoursesViews();
     res.render('course/home',{
+        topCourses,
     });
 });
 

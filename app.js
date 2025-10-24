@@ -42,7 +42,7 @@ app.use('/account', accountRouter);
 app.use('/category', categoryRouter);
 
 app.get('/', (req, res) => {
-  res.render('course/home');
+  res.redirect('course');
 });
 
 app.listen(port, function () {

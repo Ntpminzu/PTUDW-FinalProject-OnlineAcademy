@@ -1,7 +1,7 @@
 {{#section "styles" append=true}}
 <link rel="stylesheet" href="/profile.css">
 {{/section}}
-
+<form action="" method="post">
   <div class="profile-card">
     <div class="profile-header">
       <img src="https://i.pinimg.com/564x/50/70/50/5070504c4e21e947a94e1b37cf8d6de1.jpg" alt="Avatar" class="avatar">
@@ -23,16 +23,8 @@
           <input type="email" id="email" value="harry.potter@hogwarts.edu" disabled>
         </div>
         <div class="field">
-          <label>Số điện thoại:</label>
-          <input type="text" id="phone" value="0123 456 789" disabled>
-        </div>
-        <div class="field">
-          <label>Địa chỉ:</label>
-          <input type="text" id="address" value="Gryffindor Tower, Hogwarts" disabled>
-        </div>
-        <div class="field">
-          <label>Ngày sinh:</label>
-          <input type="date" id="dob" value="2000-07-31" disabled>
+          <label>Permission :</label>
+          <input type="text" id="address" value="permissiom" disabled>
         </div>
         <div id="saveCancelBtns" class="save-btns" style="display:none;">
           <button type="button" class="btn success" id="saveBtn">💾 Lưu</button>
@@ -40,37 +32,7 @@
         </div>
       </form>
     </div>
-
-    <hr>
-
-    <div class="courses-section">
-      <h2>📚 Các khóa học đang tham gia</h2>
-      <div id="enrolledCourses" class="courses">
-        <div class="course-card">
-          <p>Defense Against the Dark Arts</p>
-          <button class="btn danger" onclick="removeCourse(this)">Xóa</button>
-        </div>
-        <div class="course-card">
-          <p>Ancient Sorcery</p>
-          <button class="btn danger" onclick="removeCourse(this)">Xóa</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="courses-section">
-      <h2>⭐ Khóa học yêu thích</h2>
-      <div id="favoriteCourses" class="courses">
-        <div class="course-card">
-          <p>Dragon Language</p>
-          <button class="btn danger" onclick="removeCourse(this)">Xóa</button>
-        </div>
-        <div class="course-card">
-          <p>Magical Cyber Defense</p>
-          <button class="btn danger" onclick="removeCourse(this)">Xóa</button>
-        </div>
-      </div>
-    </div>
-  </div>
+</form>
 
   <script>
     const editBtn = document.getElementById("editInfoBtn");

@@ -9,10 +9,12 @@ import categoryModel from './src/model/category.model.js';
 import courseModel from './src/model/course.model.js';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.set('trust proxy', 1) // trust first proxy
+
 
 app.engine('hbs', engine({
     defaultLayout: 'main',
@@ -26,6 +28,13 @@ app.set('views', './src/views');
 
 app.use(express.static('src/public'));
 
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'mySecretKey',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
 app.use(async (req, res, next) => {
   try {
     const categories = await categoryModel.findAll();
@@ -38,6 +47,18 @@ app.use(async (req, res, next) => {
     console.error('Lỗi khi load categories:', err);
     next(err);
   }
+});
+
+app.use(async function (req, res, next) {
+  if (req.session.isAuthenticated) {
+    res.locals.isAuthenticated = true;
+    res.locals.authUser = req.session.authUser;
+  } else {
+    res.locals.isAuthenticated = false;
+    res.locals.authUser = null;
+  }
+
+  next();
 });
 
 app.use('/course', courseRouter);

@@ -27,4 +27,8 @@ router.get('/bycat', async function (req, res) {
     });
 });
 
+router.get('/enroll', function (req, res) {
+    res.render('course/enroll');
+});
+
 export default router;

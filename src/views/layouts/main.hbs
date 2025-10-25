@@ -18,7 +18,7 @@
   <div class="logo">Hogwarts Academy</div>
 
  <ul class="nav-links">
-  <li><a href="#">Home</a></li>
+  <li><a href="/course">Home</a></li>
   <li class="dropdown">
     <a href="#">Courses ▾</a>
     <ul class="dropdown-menu">
@@ -42,10 +42,37 @@
     Search
   </button>
   </form>
-
-  <div class="auth-buttons">
-    <a href="account/signin"> <button class="magic-btn">Sign In</button></a>
-  </div>
+    {{#if isAuthenticated}}
+      <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Welcome, <b>{{authUser.UserName}}</b>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="/account/profile">
+                  <i class="bi bi-person-circle"></i>
+                  Profile
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li>
+                <a class="dropdown-item"
+                href="javascript:document.querySelector('#frmSignout').submit();">
+                  <i class="bi bi-box-arrow-right"></i>
+                  Sign Out
+                </a>
+              </li>
+            </ul>
+            
+          </li>
+          <form id="frmSignout" action="/account/signout" method="post"></form>
+    {{else}}
+      <div class="auth-buttons">
+        <a href="/account/signin"> <button class="magic-btn">Sign In</button></a>
+      </div>
+    {{/if}}
 </nav>
 
   {{{body}}}

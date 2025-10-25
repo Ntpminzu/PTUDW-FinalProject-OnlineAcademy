@@ -32,4 +32,71 @@ export default{
     )
     .limit(10);
   },
+  
+  // Top 4 xem nhiều trong tuần
+  findTop4WeekViews() {
+    return db('courses')
+      .join('users', 'courses.InstructorID', '=', 'users.UserID')
+      .join('categories', 'courses.CatID', '=', 'categories.CatID')
+      .select(
+        'courses.*',
+        'users.Fullname as InstructorName',
+        'categories.CatName as CategoryName'
+      )
+      .orderBy('WeekView', 'desc')
+      .limit(4);
+  },
+
+  // Top 10 xem nhiều trong tuần
+  findTop10WeekViews() {
+    return db('courses')
+      .join('users', 'courses.InstructorID', '=', 'users.UserID')
+      .join('categories', 'courses.CatID', '=', 'categories.CatID')
+      .select(
+        'courses.*',
+        'users.Fullname as InstructorName',
+        'categories.CatName as CategoryName'
+      )
+      .orderBy('WeekView', 'desc')
+      .limit(10);
+  },
+
+  // Top 10 mới nhất
+  findTop10Newest() {
+    return db('courses')
+      .join('users', 'courses.InstructorID', '=', 'users.UserID')
+      .join('categories', 'courses.CatID', '=', 'categories.CatID')
+      .select(
+        'courses.*',
+        'users.Fullname as InstructorName',
+        'categories.CatName as CategoryName'
+      )
+      .orderBy('Date', 'desc')
+      .limit(10);
+  },
+  findByCategoryPaging(catId, limit, offset) {
+  return db('courses')
+    .join('users', 'courses.InstructorID', '=', 'users.UserID')
+    .join('categories', 'courses.CatID', '=', 'categories.CatID')
+    .where('courses.CatID', catId)
+    .select(
+      'courses.*',
+      'users.Fullname as InstructorName',
+      'categories.CatName as CategoryName'
+    )
+    .limit(limit)
+    .offset(offset);
+  },
+  countByCategory(catId) {
+  return db('courses')
+    .where('CatID', catId)
+    .count('* as total')
+    .first();
+  },
+  findByName(keyword) {
+  return db('courses')
+    .whereRaw('LOWER("CourseName") LIKE ?', [`%${keyword.toLowerCase()}%`])
+    .first();
+  },
+
 };

@@ -15,5 +15,10 @@ export default{
     },
     patch(id,category){
         return db('categories').where('CatID',id).update(category);
-    }
+    },
+    findByName(keyword) {
+    return db('categories')
+      .whereRaw('LOWER("CatName") LIKE ?', [`%${keyword.toLowerCase()}%`])
+      .first();
+  }
 };

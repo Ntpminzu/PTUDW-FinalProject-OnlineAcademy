@@ -42,118 +42,36 @@
   <swiper-container class="mySwiper" effect="cards" grab-cursor="true" loop="true" autoplay-delay="3000">
 
     <!-- 🪄 CARD 1 -->
+    {{#each top4Week}}
     <swiper-slide>
       <div class="carousel-card">
         <div class="card-inner">
           <!-- Mặt trước -->
           <div class="card-front">
             <div class="teacher-frame">
-              <img src="https://picsum.photos/400/300?random=1" alt="Remus Lupin">
+              <img src="{{ImageUrl}}" alt="{{CourseName}}">
             </div>
-            <h3>Advanced Defense Against the Dark Arts</h3>
-            <p class="field">Field: Defense Magic</p>
-            <p class="instructor">Prof. Remus Lupin</p>
+            <h3>{{CourseName}}</h3>
+            <p class="field">{{CategoryName}}</p>
+            <p class="instructor">{{InstructorName}}</p>
           </div>
 
           <!-- Mặt sau -->
           <div class="card-back">
             <h3>Course Details</h3>
-            <p>Master defensive spells and practical techniques against dark creatures.</p>
+            <p>{{TinyDes}}</p>
             <div class="rating">
-              ⭐ 4.8 <span>(2,340 students)</span>
+              ⭐ {{Rating}} <span>({{TotalStudent}} students)</span>
             </div>
             <div class="price">
-              <span class="current">$14.99</span>
-              <span class="old">$49.99</span>
+              <span class="current">${{CurrentPrice}}</span>
+              <span class="old">${{OriginalPrice}}</span>
             </div>
           </div>
         </div>
       </div>
     </swiper-slide>
-
-    <!-- ⚗️ CARD 2 -->
-    <swiper-slide>
-      <div class="carousel-card">
-        <div class="card-inner">
-          <div class="card-front">
-            <div class="teacher-frame">
-              <img src="https://picsum.photos/400/300?random=2" alt="Severus Snape">
-            </div>
-            <h3>Advanced Potions</h3>
-            <p class="field">Field: Alchemy & Potions</p>
-            <p class="instructor">Prof. Severus Snape</p>
-          </div>
-
-          <div class="card-back">
-            <h3>Course Details</h3>
-            <p>Brew rare potions and uncover the hidden power of magical ingredients.</p>
-            <div class="rating">
-              ⭐ 4.9 <span>(4,512 students)</span>
-            </div>
-            <div class="price">
-              <span class="current">$19.99</span>
-              <span class="old">$59.99</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </swiper-slide>
-
-    <!-- 🦉 CARD 3 -->
-    <swiper-slide>
-      <div class="carousel-card">
-        <div class="card-inner">
-          <div class="card-front">
-            <div class="teacher-frame">
-              <img src="https://picsum.photos/400/300?random=3" alt="Minerva McGonagall">
-            </div>
-            <h3>Quick Transfiguration</h3>
-            <p class="field">Field: Transformation Magic</p>
-            <p class="instructor">Prof. Minerva McGonagall</p>
-          </div>
-
-          <div class="card-back">
-            <h3>Course Details</h3>
-            <p>Transform objects and animals with advanced spell precision and theory.</p>
-            <div class="rating">
-              ⭐ 4.7 <span>(1,985 students)</span>
-            </div>
-            <div class="price">
-              <span class="current">$12.99</span>
-              <span class="old">$39.99</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </swiper-slide>
-
-    <!-- 🐉 CARD 4 -->
-    <swiper-slide>
-      <div class="carousel-card">
-        <div class="card-inner">
-          <div class="card-front">
-            <div class="teacher-frame">
-              <img src="https://picsum.photos/400/300?random=4" alt="Rubeus Hagrid">
-            </div>
-            <h3>Care of Magical Creatures</h3>
-            <p class="field">Field: Magical Biology</p>
-            <p class="instructor">Prof. Rubeus Hagrid</p>
-          </div>
-
-          <div class="card-back">
-            <h3>Course Details</h3>
-            <p>Learn to handle, feed, and care for various magical creatures safely.</p>
-            <div class="rating">
-              ⭐ 4.5 <span>(3,742 students)</span>
-            </div>
-            <div class="price">
-              <span class="current">$9.99</span>
-              <span class="old">$29.99</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </swiper-slide>
+    {{/each}}
 
   </swiper-container>
 </section>
@@ -162,16 +80,9 @@
   <div class="section">
     <h2>Most Studied Fields This Week</h2>
     <div class="field-list">
-      <div class="field-card"><p>Defense Against the Dark Arts</p></div>
-      <div class="field-card"><p>Potions</p></div>
-      <div class="field-card"><p>Transfiguration</p></div>
-      <div class="field-card"><p>Charms</p></div>
-      <div class="field-card"><p>Magical Creatures</p></div>
-      <div class="field-card"><p>Herbology</p></div>
-      <div class="field-card"><p>Dragon Language</p></div>
-      <div class="field-card"><p>History of Magic</p></div>
-      <div class="field-card"><p>Mystic Meditation</p></div>
-      <div class="field-card"><p>Wizardry Medicine</p></div>
+      {{#each top10Week}}
+      <div class="field-card"><p>{{CourseName}}</p></div>
+      {{/each}}
     </div>
   </div>
  <!-- ==== TOP 10 MOST VIEWED COURSES ==== -->
@@ -205,63 +116,26 @@
 <div class="section">
   <h2>Top 10 Newest Courses</h2>
   <div class="course-list">
-
+    {{#each top10Newest}}
     <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=11" alt="Magical Cyber Defense">
+      <img src="{{ImageUrl}}" alt="{{CourseName}}">
       <div class="course-info">
-        <p class="category">Defense Against the Dark Arts</p>
-        <h3>Magical Cyber Defense</h3>
-        <p class="instructor">Prof. Kingsley Shacklebolt</p>
+        <p class="category">{{CategoryName}}</p>
+        <h3>{{CourseName}}</h3>
+        <p class="instructor">{{InstructorName}}</p>
         <div class="course-rating">
           <i class="fas fa-star"></i><i class="fas fa-star"></i>
           <i class="fas fa-star"></i><i class="fas fa-star"></i>
           <i class="far fa-star"></i>
-          <span>4.2 (1,250)</span>
+          <span>{{Rating}} ({{TotalStudent}})</span>
         </div>
         <div class="course-price">
-          <span class="current">$16.99</span>
-          <span class="old">$39.99</span>
+          <span class="current">${{CurrentPrice}}</span>
+          <span class="old">${{OriginalPrice}}</span>
         </div>
       </div>
     </div>
-
-    <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=12" alt="Dragon Language">
-      <div class="course-info">
-        <p class="category">Creatures & Languages</p>
-        <h3>Dragon Language</h3>
-        <p class="instructor">Prof. Charlie Weasley</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-          <i class="far fa-star"></i>
-          <span>4.4 (890)</span>
-        </div>
-        <div class="course-price">
-          <span class="current">$18.99</span>
-          <span class="old">$49.99</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=13" alt="Ancient Sorcery">
-      <div class="course-info">
-        <p class="category">Ancient Magic</p>
-        <h3>Ancient Sorcery</h3>
-        <p class="instructor">Prof. Bathilda Bagshot</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="far fa-star"></i>
-          <i class="far fa-star"></i>
-          <span>3.7 (760)</span>
-        </div>
-        <div class="course-price">
-          <span class="current">$11.99</span>
-          <span class="old">$29.99</span>
-        </div>
-      </div>
-    </div>
+    {{/each}}
 
   </div>
 </div>

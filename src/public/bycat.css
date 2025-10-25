@@ -157,3 +157,24 @@ text-decoration: line-through;
     flex: 0 0 240px;
   }
 }
+
+.pagination {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 25px 0;
+}
+.pagination a {
+  padding: 6px 14px;
+  background: #333;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+.pagination a:hover,
+.pagination a.active {
+  background: #FFD700;
+  color: #000;
+  font-weight: bold;
+}

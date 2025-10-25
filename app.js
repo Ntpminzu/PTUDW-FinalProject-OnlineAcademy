@@ -21,6 +21,27 @@ app.engine('hbs', engine({
     extname: '.hbs', 
       helpers: {
     section: hbs_sections(),
+    gt: function(a, b) {
+      return a > b;
+    },
+    eq: function(a, b) {
+      return a === b;
+    },
+    lt: function(a, b) {
+      return a < b;
+    },
+    add: function(a, b) {
+      return a + b;
+    },
+    range: function(start, end) {
+      let arr = [];
+      for (let i = start; i <= end; i++) {
+        arr.push(i);
+      }
+      return arr;
+    },
+    plus: (a, b) => a + b,
+    minus: (a, b) => a - b,
   },
 }));
 app.set('view engine', 'hbs'); 

@@ -36,11 +36,17 @@
   </li>
 </ul>
 
-  <form class="d-flex" role="search">
-    <input class="form-control" type="search" placeholder="Search courses..." aria-label="Search">
+  <form class="d-flex" role="search" action="/course/search" method="get">
+    <input class="form-control" type="text" placeholder="Search courses or categories..." aria-label="Search" name="q" required>
     <button class="btn magic-btn" type="submit">
+      <i class="bi bi-search"></i>
     Search
   </button>
+  {{#if notFound}}
+    <div class="alert alert-warning text-center mt-3">
+      No courses or categories found for "{{keyword}}"
+    </div>
+  {{/if}}
   </form>
     {{#if isAuthenticated}}
       <li class="nav-item dropdown">
@@ -52,6 +58,30 @@
                 <a class="dropdown-item" href="/account/profile">
                   <i class="bi bi-person-circle"></i>
                   Profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/course/courselist">
+                  <i class="bi bi-journal-bookmark"></i>
+                  My Course list
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/account/wishlist">
+                  <i class="bi bi-journal-text"></i>
+                  wishlist
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/account/history">
+                  <i class="bi bi-collection-play"></i>
+                  History
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/account/change-password">
+                  <i class="bi bi-key"></i>
+                  Change Password
                 </a>
               </li>
               <li>

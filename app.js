@@ -5,9 +5,10 @@ import session from 'express-session';
 import  courseRouter from './src/routes/course.route.js';
 import  accountRouter from './src/routes/account.route.js';
 import  categoryRouter from './src/routes/category.route.js';
+import  managementRouter from './src/routes/management.route.js';
 
 const app = express();
-const port = 3000;
+const port = 3005;
 
 app.engine('hbs', engine({
     extname: '.hbs', 
@@ -23,6 +24,7 @@ app.use(express.static('src/public'));
 app.use('/course', courseRouter);
 app.use('/account', accountRouter);
 app.use('/category', categoryRouter);
+app.use('/management', managementRouter);
 
 app.get('/', (req, res) => {
   res.redirect('/course');

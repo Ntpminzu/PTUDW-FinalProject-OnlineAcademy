@@ -1,0 +1,379 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/course-remake.css">
+<script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+{{/section}}
+
+
+<div class="container"><!-- Course Header -->
+    <div class="course-header">
+        <div class="course-image" id="courseImage">
+            📚
+        </div>
+        <div class="course-info">
+            <h1 id="courseTitle">Khóa học phép thuật biến thân</h1>
+            <div class="course-meta">
+                <div class="meta-item"><span class="rating">⭐ 4.8</span> <span>(2,847 đánh giá)</span>
+                </div>
+                <div class="meta-item"><span class="students">👥 15,234 học viên</span>
+                </div>
+                <div class="meta-item updated"><span>🔄 Cập nhật: 15/11/2024</span>
+                </div>
+            </div>
+            <p class="course-description" id="courseDescription">Học phép từ cơ bản đến nâng cao với niệm chú, bùa chú,
+                dược phẩm. Khóa học thực hành 100% với dự án thực tế.</p>
+        </div>
+    </div><!-- Main Content -->
+    <div class="main-content">
+        <div class="left-content"><!-- Detailed Description -->
+            <div class="content-section">
+                <h2 class="section-title">📋 Mô tả chi tiết khóa học</h2>
+                <div class="detailed-description">
+                    <p>Khóa học <strong>Phép thuật biến thân</strong> được thiết kế dành cho những ai muốn trở
+                        thành bất kỳ ai, cái gì, con gì. Bạn sẽ học từ những kiến thức cơ bản nhất về
+                        các phép thuật biết thân và có thể tiếp cận đến các phép ngụy trang cao cấp.</p>
+                    <h3>🎯 Bạn sẽ học được gì:</h3>
+                    <ul>
+                        <li>Nắm vững chú ngôn, các vật phẩm ma thuật</li>
+                        <li>Điều chế được dược phẩm có khả năng biến đổi</li>
+                        <li>Phát triển thêm khả năng thích nghi với môi tường</li>
+                        <li>Phát triển phép biến thân ở cấp độ tế bào, thay đổi theo bản chất của phép</li>
+                    </ul>
+                    <h3>👨‍💻 Phương pháp học:</h3>
+                    <p>Khóa học áp dụng phương pháp <em>"Learning by Doing"</em> - học qua thực hành. Mỗi bài học
+                        đều có bài tập thực hành và dự án mini. Cuối khóa, bạn sẽ hoàn thành 3 dự án lớn để bổ sung
+                        vào portfolio.</p>
+                </div>
+            </div><!-- Curriculum -->
+            <div class="content-section">
+                <h2 class="section-title">📚 Đề cương khóa học</h2>
+                <ul class="curriculum">
+                    <li class="curriculum-item preview" onclick="previewChapter(1)">
+                        <div class="chapter-title">
+                            Chương 1: Giới thiệu về Phép
+                        </div>
+                        <div class="chapter-duration">
+                            5 bài học • 2 giờ 30 phút
+                        </div>
+                    </li>
+                    <li class="curriculum-item preview" onclick="previewChapter(2)">
+                        <div class="chapter-title">
+                            Chương 2: Chú ngôn
+                        </div>
+                        <div class="chapter-duration">
+                            8 bài học • 4 giờ 15 phút
+                        </div>
+                    </li>
+                    <li class="curriculum-item preview" onclick="previewChapter(3)">
+                        <div class="chapter-title">
+                            Chương 3: Vật phẩm ma thuật
+                        </div>
+                        <div class="chapter-duration">
+                            12 bài học • 6 giờ 45 phút
+                        </div>
+                    </li>
+                    <li class="curriculum-item">
+                        <div class="chapter-title">
+                            Chương 4: Dược phẩm biến thân
+                        </div>
+                        <div class="chapter-duration">
+                            15 bài học • 8 giờ 30 phút
+                        </div>
+                    </li>
+                    <li class="curriculum-item">
+                        <div class="chapter-title">
+                            Chương 5: Phép ngụy trang nâng cao
+                        </div>
+                        <div class="chapter-duration">
+                            10 bài học • 5 giờ 20 phút
+                        </div>
+                    </li>
+                    <li class="curriculum-item">
+                        <div class="chapter-title">
+                            Chương 6: Phép biến thân cấp độ tế bào
+                        </div>
+                        <div class="chapter-duration">
+                            18 bài học • 10 giờ 15 phút
+                        </div>
+                    </li>
+                    <li class="curriculum-item">
+                        <div class="chapter-title">
+                            Chương 7: Phát triển khả năng thích nghi
+                        </div>
+                        <div class="chapter-duration">
+                            12 bài học • 7 giờ 45 phút
+                        </div>
+                    </li>
+                    <li class="curriculum-item">
+                        <div class="chapter-title">
+                            Chương 8: Dự án thực tế
+                        </div>
+                        <div class="chapter-duration">
+                            14 bài học • 8 giờ 30 phút
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- Sidebar -->
+        <div class="sidebar"><!-- Price Card -->
+            <div class="price-card">
+                <div class="discount-badge">
+                    Giảm 33%
+                </div>
+                <div class="price-original" id="originalPrice">
+                    1,500,000 VNĐ
+                </div>
+                <div class="price-current" id="currentPrice">
+                    999,000 VNĐ
+                </div><button class="enroll-btn" onclick="enrollCourse()"> 🚀 Đăng ký ngay </button>
+            </div><!-- Course Features -->
+            <div class="course-features">
+                <h3 style="margin-top: 0; color: #2c3e50;">✨ Khóa học bao gồm:</h3>
+                <div class="feature-item"><span class="feature-icon">🎥</span> <span>60+ video bài giảng HD</span>
+                </div>
+                <div class="feature-item"><span class="feature-icon">📱</span> <span>Truy cập trên mọi thiết
+                        bị</span>
+                </div>
+                <div class="feature-item"><span class="feature-icon">📜</span> <span>Chứng chỉ hoàn thành</span>
+                </div>
+                <div class="feature-item"><span class="feature-icon">💬</span> <span>Hỗ trợ Q&amp;A 24/7</span>
+                </div>
+                <div class="feature-item"><span class="feature-icon">🔄</span> <span>Cập nhật nội dung miễn
+                        phí</span>
+                </div>
+                <div class="feature-item"><span class="feature-icon">💰</span> <span>Đảm bảo hoàn tiền 30
+                        ngày</span>
+                </div>
+            </div><!-- Instructor Card -->
+            <div class="instructor-card">
+                <div class="instructor-avatar" id="instructorAvatar">
+                    GV
+                </div>
+                <div class="instructor-name" id="instructorName">
+                    Nguyễn Anh Thy
+                </div>
+                <div class="instructor-title">
+                    Senior Tranform-magic
+                </div>
+                <p style="color: #7f8c8d; font-size: 0.9rem; margin-top: 10px;">5+ năm kinh nghiệm, đã đào tạo hơn
+                    10,000 học viên thành công</p>
+            </div>
+        </div>
+    </div>
+</div><!-- Preview Modal -->
+<div id="previewModal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+    <div
+        style="background: white; padding: 30px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 80%; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 id="previewTitle" style="margin: 0; color: #2c3e50;">Xem trước chương</h3><button
+                onclick="closePreview()"
+                style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">✕</button>
+        </div>
+        <div id="previewContent" style="color: #555; line-height: 1.6;"><!-- Preview content will be loaded here -->
+        </div>
+    </div>
+</div>
+<script>
+    // Default configuration
+    const defaultConfig = {
+        course_title: "Khóa học phép thuật biến thân",
+        course_description: "Học lập trình web từ cơ bản đến nâng cao với niệm chú, vật phẩm ma thuật, dược phẩm. Khóa học thực hành 100% với dự án thực tế.",
+        instructor_name: "Nguyễn Anh Thy",
+        course_price: "1,500,000 VNĐ",
+        discount_price: "999,000 VNĐ"
+    };
+
+    // Render function
+    async function render(config) {
+        const title = config.course_title || defaultConfig.course_title;
+        const description = config.course_description || defaultConfig.course_description;
+        const instructor = config.instructor_name || defaultConfig.instructor_name;
+        const originalPrice = config.course_price || defaultConfig.course_price;
+        const currentPrice = config.discount_price || defaultConfig.discount_price;
+
+        document.getElementById('courseTitle').textContent = title;
+        document.getElementById('courseDescription').textContent = description;
+        document.getElementById('instructorName').textContent = instructor;
+        document.getElementById('originalPrice').textContent = originalPrice;
+        document.getElementById('currentPrice').textContent = currentPrice;
+
+        // Update instructor avatar with first letters
+        const initials = instructor.split(' ').map(name => name[0]).join('').toUpperCase();
+        document.getElementById('instructorAvatar').textContent = initials;
+    }
+
+    // Capabilities mapping
+    function mapToCapabilities(config) {
+        return {
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+        };
+    }
+
+    // Edit panel values mapping
+    function mapToEditPanelValues(config) {
+        return new Map([
+            ["course_title", config.course_title || defaultConfig.course_title],
+            ["course_description", config.course_description || defaultConfig.course_description],
+            ["instructor_name", config.instructor_name || defaultConfig.instructor_name],
+            ["course_price", config.course_price || defaultConfig.course_price],
+            ["discount_price", config.discount_price || defaultConfig.discount_price]
+        ]);
+    }
+
+    // Preview functionality
+    function previewChapter(chapterNumber) {
+        const previewContent = {
+            1: {
+                title: "Chương 1: Giới thiệu về phép",
+                content: `
+                    <h4>🎯 Mục tiêu chương:</h4>
+                    <ul>
+                        <li>Hiểu tổng quan về phép biến thânt</li>
+                        <li>Phân biệt biến thân và ẩn thân</li>
+                        <li>Tìm hiểu về các cách thức biến thân</li>
+                    </ul>
+                    <h4>📝 Nội dung bài học:</h4>
+                    <p><strong>Bài 1:</strong> Phép hoạt động như thế nào?</p>
+                    <p><strong>Bài 2:</strong> Phép biến thân và ẩn thân</p>
+                    <p><strong>Bài 3:</strong> Roadmap trở thành Transform-magician</p>
+                    <p><strong>Bài 4:</strong> Tạo môi trường phát triển</p>
+                    <p><strong>Bài 5:</strong> Thành thạo phép đầu tiên</p>
+                `
+            },
+            2: {
+                title: "Chương 2: Chú ngôn",
+                content: `
+                    <h4>🎯 Mục tiêu chương:</h4>
+                    <ul>
+                        <li>Nắm vững cú pháp chú ngôn</li>
+                        <li>Sử dụng voice elements</li>
+                        <li>Tạo form và validation</li>
+                    </ul>
+                    <h4>📝 Nội dung bài học:</h4>
+                    <p><strong>Bài 1:</strong> Cấu trúc cơ bản chú ngôn</p>
+                    <p><strong>Bài 2:</strong> Các chú ngôn thông dụng</p>
+                    <p><strong>Bài 3:</strong> Voice elements </p>
+                    <p><strong>Bài 4:</strong> Forms và stress types</p>
+                    <p><strong>Bài 5:</strong> Multi-magic trong chú ngôn </p>
+                `
+            },
+            3: {
+                title: "Chương 3: Vật phẩm ma thuật",
+                content: `
+                    <h4>🎯 Mục tiêu chương:</h4>
+                    <ul>
+                        <li>Sử dụng các vật phẩm ma thuật</li>
+                        <li>Điều chế được các vật phẩm</li>
+                        <li>Tự sáng tạo vật phẩm ma thuật</li>
+                    </ul>
+                    <h4>📝 Nội dung bài học:</h4>
+                    <p><strong>Bài 1:</strong> Các loại vật phẩm ma thuật thông dụng</p>
+                    <p><strong>Bài 2:</strong> Công thức và cách chế tạo</p>
+                    <p><strong>Bài 3:</strong> Thực hành: Tạo được vật phẩm theo hướng dẫn</p>
+                    <p><strong>Bài 4:</strong> Nâng cấp vật phẩm ma thuật</p>
+                    <p><strong>Bài 5:</strong> Tự sáng tạo vật phẩm ma thuật</p>
+                `
+            }
+        };
+
+        const modal = document.getElementById('previewModal');
+        const titleElement = document.getElementById('previewTitle');
+        const contentElement = document.getElementById('previewContent');
+
+        if (previewContent[chapterNumber]) {
+            titleElement.textContent = previewContent[chapterNumber].title;
+            contentElement.innerHTML = previewContent[chapterNumber].content;
+            modal.style.display = 'flex';
+        }
+    }
+
+    function closePreview() {
+        document.getElementById('previewModal').style.display = 'none';
+    }
+
+    function enrollCourse() {
+        // Create enrollment confirmation
+        const confirmDiv = document.createElement('div');
+        confirmDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1001;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        `;
+
+        confirmDiv.innerHTML = `
+            <h3 style="color: #27ae60; margin-top: 0;">🎉 Đăng ký thành công!</h3>
+            <p style="color: #555; margin: 15px 0;">Chúc mừng bạn đã đăng ký khóa học thành công. Bạn sẽ nhận được email xác nhận trong vài phút tới.</p>
+            <button onclick="this.parentElement.remove()" style="background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                Đóng
+            </button>
+        `;
+
+        document.body.appendChild(confirmDiv);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (confirmDiv.parentElement) {
+                confirmDiv.remove();
+            }
+        }, 3000);
+    }
+
+    // Close preview when clicking outside
+    document.getElementById('previewModal').addEventListener('click', function (e) {
+        if (e.target === this) {
+            closePreview();
+        }
+    });
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+        window.elementSdk.init({
+            defaultConfig,
+            render,
+            mapToCapabilities,
+            mapToEditPanelValues
+        });
+    }
+
+    // Initial render
+    render(defaultConfig);
+</script>
+<script>
+    (function () {
+        function c() {
+            var b = a.contentDocument || a.contentWindow.document;
+            if (b) {
+                var d = b.createElement('script');
+                d.innerHTML = "window.__CF$cv$params={r:'99294381e4389d24',t:'MTc2MTEzODkyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+                b.getElementsByTagName('head')[0].appendChild(d)
+            }
+        }
+        if (document.body) {
+            var a = document.createElement('iframe');
+            a.height = 1; a.width = 1; a.style.position = 'absolute';
+            a.style.top = 0; a.style.left = 0; a.style.border = 'none';
+            a.style.visibility = 'hidden'; document.body.appendChild(a);
+            if ('loading' !== document.readyState) c();
+            else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c);
+            else {
+                var e = document.onreadystatechange || function () { };
+                document.onreadystatechange = function (b) {
+                    e(b);
+                    'loading' !== document.readyState && (document.onreadystatechange = e, c())
+                }
+            }
+        }
+    })();
+</script>

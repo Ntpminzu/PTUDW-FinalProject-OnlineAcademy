@@ -10,4 +10,8 @@ router.get('/detail', function (req, res) {
     res.render('course/detail');
 });
 
+router.get('/course-remake', function (req, res) {
+    res.render('course/course-remake');
+});
+
 export default router;

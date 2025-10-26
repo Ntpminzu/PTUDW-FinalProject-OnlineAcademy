@@ -1,5 +1,47 @@
 {{#section "styles" append=true}}
 <link rel="stylesheet" href="/Adminn.css">
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("roleDropdownBtn");
+    const menu = document.getElementById("roleDropdownMenu");
+
+    if (!btn || !menu) return;
+
+    // Bấm vào nút thì bật/tắt menu
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      menu.classList.toggle("show");
+    });
+
+    // Click ra ngoài thì đóng menu
+    document.addEventListener("click", (e) => {
+      if (!btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.remove("show");
+      }
+    });
+
+    // Khi chọn 1 mục trong dropdown
+    menu.querySelectorAll("li").forEach((item) => {
+      item.addEventListener("click", () => {
+        const selectedRole = item.textContent.trim();
+        // 🔥 Cập nhật nội dung nút
+        btn.innerHTML = `<i class="bi bi-person-badge"></i> ${selectedRole} <i class="bi bi-caret-down-fill"></i>`;
+        menu.classList.remove("show");
+
+        // (Tuỳ chọn) — lọc người dùng theo role trực tiếp
+        const role = item.dataset.role;
+        document.querySelectorAll(".user-table tbody tr").forEach((row) => {
+          const roleText = row.querySelector(".status")?.textContent.trim().toLowerCase() || "";
+          if (role === "all" || roleText.includes(selectedRole.toLowerCase())) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      });
+    });
+  });
+</script>
 {{/section}}
 
 <div class="user-container">
@@ -11,19 +53,17 @@
         <i class="bi bi-search"></i>
         <input type="text" placeholder="Search">
       </div>
-      <div class="filter">
-        <div class="dropdown">
-          <button class="btn-filter" id="roleDropdownBtn">
-            <i class="bi bi-person-badge"></i> Role
-            <i class="bi bi-caret-down-fill"></i>
-          </button>
-          <ul class="dropdown-menu" id="roleDropdownMenu">
-            <li data-role="all">All</li>
-            <li data-role="0">Admin</li>
-            <li data-role="1">Instructor</li>
-            <li data-role="2">Student</li>
-          </ul>
-        </div>
+      <div class="dropdown">
+        <button class="btn-filter" id="roleDropdownBtn">
+          <i class="bi bi-person-badge"></i> Role
+          <i class="bi bi-caret-down-fill"></i>
+        </button>
+        <ul class="dropdown-menu" id="roleDropdownMenu">
+          <li data-role="all">All</li>
+          <li data-role="0">Admin</li>
+          <li data-role="1">Instructor</li>
+          <li data-role="2">Student</li>
+        </ul>
       </div>
 
     </div>
@@ -92,32 +132,5 @@
       </tbody>
     </table>
   </div>
-
-  <nav aria-label="Page navigation" class="mt-3">
-    <ul class="pagination justify-content-center">
-      {{!-- Nút Previous --}}
-      <li class="page-item {{#if (eq currentPage 1)}}disabled{{/if}}">
-        <a class="page-link" href="?page={{subtract currentPage 1}}">Previous</a>
-      </li>
-
-      {{!-- Các trang --}}
-      {{#each pages}}
-      {{#if isCurrent}}
-      <li class="page-item active" aria-current="page">
-        <a class="page-link" href="javascript:void(0);">{{value}}</a>
-      </li>
-      {{else}}
-      <li class="page-item">
-        <a class="page-link" href="?page={{value}}">{{value}}</a>
-      </li>
-      {{/if}}
-      {{/each}}
-
-      {{!-- Nút Next --}}
-      <li class="page-item {{#if (eq currentPage totalPages)}}disabled{{/if}}">
-        <a class="page-link" href="?page={{add currentPage 1}}">Next</a>
-      </li>
-    </ul>
-  </nav>
 
 </div>

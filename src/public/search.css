@@ -1,134 +1,117 @@
-/* ===================== FONT & RESET ===================== */
-@import url('https://fonts.googleapis.com/css2?family=Rye&family=Rubik:wght@300;400;500;600;700&display=swap');
+/* =========================
+   SEARCH RESULTS PAGE - SLYTHERIN THEME
+   ========================= */
+
+/* Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=Rubik+Mono+One&family=Changa:wght@400;600;700&display=swap');
 
 body {
-  font-family: 'Rubik', sans-serif;
-  background-color: #020f03; /* Deep green-black magic tone */
-  color: #d6ffd8;
+  background: radial-gradient(ellipse at top, #001a00 0%, #000 80%);
+  font-family: 'Changa', sans-serif;
+  color: #e8ffe8;
   min-height: 100vh;
 }
 
-/* ===================== PAGE CONTAINER ===================== */
-.search-result-page {
-  max-width: 1100px;
-  margin: auto;
-  padding: 40px 20px 80px;
-  animation: fadeIn 0.6s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===================== TITLES ===================== */
-.search-result-page h3 {
-  text-align: center;
-  font-family: 'Rye', cursive;
+/* ---------- Title ---------- */
+.search-title {
+  font-family: 'Rye', cursive; /* Phông chữ ma thuật cổ điển */
   font-size: 2rem;
-  color: #14ff3d;
-  text-shadow: 0 0 12px #14ff3d;
-  margin-bottom: 40px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #00ff88;
+  letter-spacing: 1.5px;
+  margin: 2rem auto;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #00ff88;
+
+  /* Hiệu ứng ánh sáng ma thuật */
+  text-shadow:
+    0 0 8px #00ff88,
+    0 0 15px #00cc66,
+    0 0 30px #009944;
+
+  animation: glowPulse 2.5s ease-in-out infinite alternate;
 }
 
-.search-result-page h4 {
-  font-family: 'Rye', cursive;
-  color: #9cffac;
-  border-left: 5px solid #14ff3d;
-  padding-left: 10px;
-  margin: 20px 0 15px;
+/* ---------- Container ---------- */
+.search-result-page.container {
+  padding-top: 2rem;
 }
 
-/* ===================== CATEGORY LIST ===================== */
-.list-group-item {
-  background: rgba(10, 30, 10, 0.8);
-  color: #d6ffd8;
-  border: 1px solid #14ff3d33;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  transition: all 0.25s ease;
-  font-weight: 500;
-  box-shadow: 0 0 8px rgba(20, 255, 61, 0.1);
-}
-
-.list-group-item:hover {
-  background: #14ff3d;
-  color: #020f03;
-  transform: translateX(6px);
-  box-shadow: 0 0 18px #14ff3d;
-}
-
-/* ===================== COURSE CARDS ===================== */
+/* ---------- Cards ---------- */
 .card {
-  background: rgba(15, 40, 15, 0.9);
-  border: 1px solid #14ff3d22;
-  border-radius: 14px;
-  box-shadow: 0 0 8px rgba(20, 255, 61, 0.15);
-  transition: all 0.25s ease;
+  background: linear-gradient(145deg, #003300, #001a00);
+  border: 2px solid #0f3;
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 255, 128, 0.3);
+  transition: all 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 0 20px rgba(20, 255, 61, 0.4);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 0 25px rgba(0, 255, 128, 0.5);
+  border-color: #39ff14;
 }
 
+.card-img-top {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom: 1px solid rgba(0, 255, 128, 0.2);
+}
+
+/* ---------- Card Body ---------- */
 .card-body {
-  padding: 18px;
+  text-align: center;
+  padding: 1rem;
 }
 
 .card-title {
   font-family: 'Rye', cursive;
-  color: #14ff3d;
   font-size: 1.1rem;
-  text-shadow: 0 0 8px rgba(20,255,61,0.3);
+  font-weight: 700;
+  color: #00ff88;
+  text-shadow: 0 0 10px #00ff88, 0 0 25px #007744;
+  margin-bottom: 0.5rem;
 }
 
-.card .text-muted {
-  font-size: 0.85rem;
-  color: #b7ffb7 !important;
-  min-height: 45px;
+.text-muted.small {
+  color: #c2ffc2 !important;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
 }
 
-/* ===================== BUTTONS ===================== */
-.card .btn-outline-primary {
-  border: 1px solid #14ff3d;
-  color: #14ff3d;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: all 0.25s ease;
+/* ---------- Button ---------- */
+.btn-outline-success {
+  color: #00ff99;
+  border: 2px solid #00ff99;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border-radius: 25px;
+  text-transform: uppercase;
 }
 
-.card .btn-outline-primary:hover {
-  background-color: #14ff3d;
+.btn-outline-success:hover {
+  background-color: #00ff99;
   color: #000;
-  box-shadow: 0 0 14px #14ff3d;
+  box-shadow: 0 0 15px #00ff99;
 }
 
-/* ===================== ALERT ===================== */
-.alert {
-  background: #fff4d0;
-  color: #184b00;
-  border-radius: 12px;
-  border: 2px solid #14ff3d55;
-  width: fit-content;
-  margin: 50px auto;
-  padding: 20px 30px;
-  font-family: 'Rye', cursive;
-  font-size: 1.1rem;
-  box-shadow: 0 0 15px rgba(20, 255, 61, 0.2);
+/* ---------- No Results ---------- */
+.alert-warning {
+  background: rgba(0, 60, 0, 0.8);
+  color: #b2ffb2;
+  border: 2px solid #00ff88;
+  font-weight: 600;
+  text-shadow: 0 0 10px #00ff88;
 }
 
-/* ===================== RESPONSIVE ===================== */
-@media (max-width: 768px) {
-  .card-title {
-    font-size: 1rem;
-  }
-
-  .search-result-page h3 {
-    font-size: 1.5rem;
-  }
-
-  .search-result-page h4 {
-    font-size: 1.2rem;
-  }
+/* ---------- Layout Tweaks ---------- */
+.row {
+  justify-content: center;
+  row-gap: 25px;
 }

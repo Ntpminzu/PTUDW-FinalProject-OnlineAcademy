@@ -99,27 +99,27 @@ export default{
     .first();
   },
   findByKeyword(keyword) {
-  return db('courses')
-    .join('users', 'courses.InstructorID', '=', 'users.UserID')
-    .join('categories', 'courses.CatID', '=', 'categories.CatID')
-    .whereRaw(`
-      LOWER("CourseName") LIKE ? 
-      OR LOWER("TinyDes") LIKE ? 
-      OR LOWER("FullDes") LIKE ? 
-      OR LOWER("categories"."CatName") LIKE ?
-      OR LOWER("users"."Fullname") LIKE ?
-    `, [
-      `%${keyword.toLowerCase()}%`,
-      `%${keyword.toLowerCase()}%`,
-      `%${keyword.toLowerCase()}%`,
-      `%${keyword.toLowerCase()}%`,
-      `%${keyword.toLowerCase()}%`
-    ])
-    .select(
-      'courses.*',
-      'users.Fullname as InstructorName',
-      'categories.CatName as CategoryName'
-    );
+    return db('courses')
+      .join('users', 'courses.InstructorID', '=', 'users.UserID')
+      .join('categories', 'courses.CatID', '=', 'categories.CatID')
+      .whereRaw(`
+        LOWER(courses."CourseName") LIKE ? 
+        OR LOWER(courses."TinyDes") LIKE ?
+        OR LOWER(courses."FullDes") LIKE ?
+        OR LOWER(categories."CatName") LIKE ?
+        OR LOWER(users."Fullname") LIKE ?
+      `, [
+        `%${keyword}%`,
+        `%${keyword}%`,
+        `%${keyword}%`,
+        `%${keyword}%`,
+        `%${keyword}%`
+      ])
+      .select(
+        'courses.*',
+        'users.Fullname as InstructorName',
+        'categories.CatName as CategoryName'
+      );
   },
 
 

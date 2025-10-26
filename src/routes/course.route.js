@@ -59,23 +59,25 @@ router.get('/search', async (req, res) => {
 
   const results = await courseModel.findByKeyword(keyword);
 
-  if (results.length === 0) {
-    return res.render('course/home', {
-      notFound: true,
+  if (!results || results.length === 0) {
+    return res.render('course/searchResults', {
+      layout: 'main',
       keyword: req.query.q,
-      message: `Không tìm thấy khóa học hoặc danh mục nào cho "${req.query.q}"`
+      results: [],
+      notFound: true,
     });
   }
 
   res.render('course/searchResults', {
     layout: 'main',
     keyword: req.query.q,
-    results
+    results,
+    notFound: false,
   });
 });
 
-router.get('searchResults', async function (req, res) {
-    res.render('course/searchResults');
+router.get('/searchResults', (req, res) => {
+  res.render('course/searchResults');
 });
 
 export default router;

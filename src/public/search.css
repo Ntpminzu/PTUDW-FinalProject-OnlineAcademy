@@ -1,0 +1,117 @@
+/* =========================
+   SEARCH RESULTS PAGE - SLYTHERIN THEME
+   ========================= */
+
+/* Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=Rubik+Mono+One&family=Changa:wght@400;600;700&display=swap');
+
+body {
+  background: radial-gradient(ellipse at top, #001a00 0%, #000 80%);
+  font-family: 'Changa', sans-serif;
+  color: #e8ffe8;
+  min-height: 100vh;
+}
+
+/* ---------- Title ---------- */
+.search-title {
+  font-family: 'Rye', cursive; /* Phông chữ ma thuật cổ điển */
+  font-size: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  color: #00ff88;
+  letter-spacing: 1.5px;
+  margin: 2rem auto;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #00ff88;
+
+  /* Hiệu ứng ánh sáng ma thuật */
+  text-shadow:
+    0 0 8px #00ff88,
+    0 0 15px #00cc66,
+    0 0 30px #009944;
+
+  animation: glowPulse 2.5s ease-in-out infinite alternate;
+}
+
+/* ---------- Container ---------- */
+.search-result-page.container {
+  padding-top: 2rem;
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: linear-gradient(145deg, #003300, #001a00);
+  border: 2px solid #0f3;
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 255, 128, 0.3);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 0 25px rgba(0, 255, 128, 0.5);
+  border-color: #39ff14;
+}
+
+.card-img-top {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom: 1px solid rgba(0, 255, 128, 0.2);
+}
+
+/* ---------- Card Body ---------- */
+.card-body {
+  text-align: center;
+  padding: 1rem;
+}
+
+.card-title {
+  font-family: 'Rye', cursive;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #00ff88;
+  text-shadow: 0 0 10px #00ff88, 0 0 25px #007744;
+  margin-bottom: 0.5rem;
+}
+
+.text-muted.small {
+  color: #c2ffc2 !important;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* ---------- Button ---------- */
+.btn-outline-success {
+  color: #00ff99;
+  border: 2px solid #00ff99;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border-radius: 25px;
+  text-transform: uppercase;
+}
+
+.btn-outline-success:hover {
+  background-color: #00ff99;
+  color: #000;
+  box-shadow: 0 0 15px #00ff99;
+}
+
+/* ---------- No Results ---------- */
+.alert-warning {
+  background: rgba(0, 60, 0, 0.8);
+  color: #b2ffb2;
+  border: 2px solid #00ff88;
+  font-weight: 600;
+  text-shadow: 0 0 10px #00ff88;
+}
+
+/* ---------- Layout Tweaks ---------- */
+.row {
+  justify-content: center;
+  row-gap: 25px;
+}

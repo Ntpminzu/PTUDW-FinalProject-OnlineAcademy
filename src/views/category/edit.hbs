@@ -11,20 +11,29 @@
     <div class="card-body">
       <form action="/category/edit" method="POST">
         <div class="mb-3">
+          <label for="catid" class="form-label">#</label>
+          <input type="text" id="catid_display" class="form-control" value="{{category.CatID}}" disabled>
+          <input type="hidden" name="catid" value="{{category.CatID}}">
+        </div>
+      
+        <div class="mb-3">
           <label for="catName" class="form-label">Category Name</label>
-          <input type="text" id="catName" name="catName" class="form-control" value="Example" required>
+          <input type="text" id="catName" name="catName" class="form-control" value="{{category.CatName}}" autofocus>
         </div>
 
         <div class="mb-3">
           <label for="catDesc" class="form-label">Description</label>
-          <textarea id="catDesc" name="catDesc" class="form-control" rows="3">This is an example category.</textarea>
+          <input type="text" id="catDesc" name="catDesc" class="form-control" value="{{category.CatDes}}" autofocus>
         </div>
 
         <div class="d-flex justify-content-end gap-2">
           <a href="/category/list" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Cancel
           </a>
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" class="btn btn-primary" formaction="/category/delete">
+            <i class="bi bi-save"></i> Delete
+          </button>
+          <button type="submit" class="btn btn-primary" formaction="/category/patch">
             <i class="bi bi-save"></i> Save Changes
           </button>
         </div>

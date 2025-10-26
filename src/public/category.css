@@ -157,6 +157,11 @@ form {
   letter-spacing: 0.5px;
 }
 
+input:disabled {
+  color: rgb(0, 0, 0);
+  font-size: 1.5rem;
+}
+
 .form-control {
   background-color: #0b2615;
   color: #FFF;

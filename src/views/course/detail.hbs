@@ -1,25 +1,103 @@
 {{#section "styles" append=true}}
 <link rel="stylesheet" href="/course.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 {{/section}}
 
-<div class="course-detail-page">
-  <div class="card course-detail-card">
-    <h5 class="card-header">
-      <i class="bi bi-book-half"></i> Course Details
-    </h5>
+<div class="CourseDetail">
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+          alt="Course Icon" class="icon">
+        <div>
+          <p class="sidebar-title">Course</p>
+          <p class="sidebar-subtitle">Course Name</p>
+        </div>
+      </div>
 
-    <div class="card-body">
-      <h5 class="card-title">Course Title: Example Course</h5>
-      <p class="card-text">Description: This is an example course description.</p>
-      <p class="card-text">Professor: John Doe</p>
-      <p class="card-text">Duration: 10 weeks</p>
-      <a href="/course/enroll" class="btn btn-primary">
-        <i class="bi bi-journal-plus"></i> Enroll Now
-      </a>
-    </div>
+      <div class="sidebar-contents">
+        <p class="content-title">Contents</p>
+        <ul class="content-list">
+          <li>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+              alt="">
+            <span>Lesson Name 1</span>
+            <button class="edit-btn">✎</button>
+          </li>
+          <li>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+              alt="">
+            <span>Lesson Name 2</span>
+            <button class="edit-btn">✎</button>
+          </li>
+          <li>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+              alt="">
+            <span>Lesson Name 3</span>
+            <button class="edit-btn">✎</button>
+          </li>
+        </ul>
+      </div>
 
+<<<<<<< HEAD
     <div class="card-footer text-muted text-center">
       Hogwarts Academy © 2025
     </div>
+=======
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-overlay">
+          <h1 class="hero-title">Course Title</h1>
+          <p class="hero-info">Rating (total reviews)</p>
+          <div class="button-container">
+            <!-- Enroll Button -->
+            <a href="/course/enroll" class="start-btn" style="text-decoration: none;">Enroll</a>
+            <a href="/course/enroll" class="start-btn" style="text-decoration: none;">Mark as complete</a>
+            <!-- Wishlist Button with Heart Icon -->
+            <form action="/course/add-to-watchlist" method="post">
+            <a href="/account/wishlist" class="start-btn wishlist-btn" style="text-decoration: none;">
+              <i class="bi bi-heart"></i> 
+            </a>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Course Overview -->
+      <section class="overview mb-3">
+        <h2>Course Overview</h2>
+        <p>
+          Bla bla bla
+        </p>
+        <div class="comment-form">
+          <h6>Leave a Review</h6>
+          <form>
+            <div class="mb-3">
+              <label for="userRating" class="form-label">Rating</label>
+              <div id="userRating" class="rating">
+                <i class="bi bi-star" data-index="1"></i>
+                <i class="bi bi-star" data-index="2"></i>
+                <i class="bi bi-star" data-index="3"></i>
+                <i class="bi bi-star" data-index="4"></i>
+                <i class="bi bi-star" data-index="5"></i>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="commentContent" class="form-label">Comment</label>
+              <textarea class="form-control" id="commentContent" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">
+              Submit
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+>>>>>>> main
   </div>
 </div>

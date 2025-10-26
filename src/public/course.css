@@ -1,108 +1,402 @@
-/* ==================== COURSE DETAIL PAGE ==================== */
-.course-detail-page {
+/*==============================Detail Course Page Styles==============================*/
+.CourseDetail {
+  background-color: #0f0f0f;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  min-height: calc(100vh - 100px);
-  background-color: #001403;
-  padding: 40px 0;
-  animation: fadeIn 0.6s ease-in-out;
-}
-
-.course-detail-card {
-  width: 80%;
-  max-width: 900px;
-  background: linear-gradient(145deg, #0b2615, #000000);
-  border: 2px solid #2A623D;
-  border-radius: 20px;
-  box-shadow: 0 0 30px rgba(42, 98, 61, 0.6);
-  color: #DDD;
   overflow: hidden;
-  animation: fadeIn 0.8s ease-in-out;
 }
 
-/* ==================== HEADER ==================== */
-.course-detail-card .card-header {
-  background: linear-gradient(90deg, #1A472A, #2A623D);
-  font-family: 'Rubik Mono One', sans-serif;
-  color: #FFF35B;
-  font-size: 1.3rem;
-  padding: 18px 25px;
-  border-bottom: 2px solid #2A623D;
-  letter-spacing: 1px;
+.CourseDetail .layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  position: fixed; /* ✅ giữ layout cố định toàn bộ khung */
+  left: 0;
+}
+
+/* Sidebar */
+.CourseDetail .sidebar {
+  width: 300px;
+  background-color: #1c1c1c;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+  height: 100vh;
+  position: fixed; /* ✅ sidebar cố định */
+  left: 0;
+}
+
+.CourseDetail .sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.CourseDetail .sidebar-header .icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+}
+
+.CourseDetail .sidebar-title {
+  color: #bbb;
+  font-size: 15px;
+  margin: 0;
+}
+
+.CourseDetail .sidebar-subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.CourseDetail .sidebar-contents {
+  flex-grow: 1;
+}
+
+.CourseDetail .content-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #ddd;
+}
+
+.CourseDetail .content-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.CourseDetail .content-list li {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #ccc;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
 }
 
-.course-detail-card .card-header i {
-  font-size: 1.4rem;
-  color: #FFF35B;
+.CourseDetail .content-list li:hover {
+  background-color: #2a2a2a;
+  color: #fff;
 }
 
-/* ==================== BODY ==================== */
-.course-detail-card .card-body {
-  padding: 35px;
+.CourseDetail .content-list img {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
 }
 
-.course-detail-card .card-title {
-  font-family: 'Rubik Mono One', sans-serif;
-  color: #FFF35B;
-  margin-bottom: 15px;
-  font-size: 1.2rem;
+/* Main Content */
+.CourseDetail .main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #111;
+  margin-left: 300px; /* ✅ đẩy sang phải bằng độ rộng sidebar */
+  height: 100vh;
+  overflow-y: auto; /* ✅ phần này scroll riêng */
 }
 
-.course-detail-card .card-text {
-  color: #FFFFFF;
-  font-size: 1rem;
-  line-height: 1.6;
+/* Hero Section */
+.CourseDetail .hero {
+  position: relative;
+  height: 360px;
+  background: url("https://cache.desktopnexus.com/thumbseg/1734/1734211-bigthumbnail.jpg") center center / cover no-repeat;
+}
+
+.CourseDetail .hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.CourseDetail .hero-title {
+  font-size: 38px;
+  font-weight: 700;
   margin-bottom: 10px;
 }
 
-/* ==================== BUTTON ==================== */
-.course-detail-card .btn-primary {
-  background-color: #2A623D;
-  border: 1px solid #1A472A;
-  color: #000;
-  font-family: 'Rubik Mono One', sans-serif;
-  letter-spacing: 0.5px;
-  border-radius: 10px;
-  transition: all 0.3s ease;
+.CourseDetail .hero-info {
+  color: #ccc;
+  margin-bottom: 20px;
 }
 
-.course-detail-card .btn-primary:hover {
-  background-color: #FFF35B;
-  color: #000;
-  box-shadow: 0 0 20px rgba(255, 243, 91, 0.8);
-  transform: translateY(-2px);
+.CourseDetail .start-btn {
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* ==================== FOOTER ==================== */
-.course-detail-card .card-footer {
-  background-color: #000;
-  color: #AAA;
-  text-align: center;
-  padding: 12px;
-  font-size: 0.9rem;
-  border-top: 1px solid #2A623D;
+.CourseDetail .start-btn:hover {
+  background-color: #1e4ed8;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.6);
 }
 
-/* ==================== RESPONSIVE ==================== */
+/* Overview */
+.CourseDetail .overview {
+  background-color: #111;
+  padding: 50px 70px;
+  line-height: 1.8;
+}
+
+.CourseDetail .overview h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.CourseDetail .overview p {
+  color: #ccc;
+  max-width: 800px;
+}
+
+/*========================= Sidebar Lesson List Enhancement =========================*/
+.CourseDetail .content-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #ccc;
+  cursor: pointer;
+  background-color: transparent;
+  transition: background 0.3s, color 0.3s;
+}
+
+.CourseDetail .content-list li:hover {
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+.CourseDetail .content-list li span {
+  flex-grow: 1;
+}
+
+.CourseDetail .edit-btn {
+  border: none;
+  background-color: #2563eb;
+  color: #fff;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.CourseDetail .edit-btn:hover {
+  background-color: #1e4ed8;
+  transform: scale(1.05);
+}
+
+/* Add new lesson row */
+.CourseDetail .content-list .add-new {
+  background-color: #1e1e1e;
+  border: 1px dashed #444;
+  justify-content: center;
+  color: #aaa;
+  font-style: italic;
+  transition: background 0.3s, color 0.3s, border 0.3s;
+}
+
+.CourseDetail .content-list .add-new:hover {
+  background-color: #2563eb20;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.CourseDetail .add-btn {
+  background-color: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.CourseDetail .add-btn:hover {
+  background-color: #16a34a;
+  transform: rotate(90deg);
+}
+
+/*=========================Course List Page Styles=========================*/
+
+
+
+/* Main Course Detail Page */
+.course-detail-page {
+  padding: 20px;
+}
+
+.course-detail-card {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.card-body .course-image {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: cover;
+}
+
+.card-body .course-info {
+  flex-grow: 1;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  padding: 8px 12px;
+}
+
+.btn-primary.btn-sm {
+  padding: 6px 10px;
+}
+
+.btn-primary i {
+  margin-right: 5px;
+}
+
+/* Footer */
+.card-footer {
+  background-color: #f8f9fa;
+  font-size: 0.875rem;
+  padding: 10px;
+  color: #6c757d;
+}
+
+/* Comment Section */
+.comments-section {
+  margin-top: 30px;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.comments-section h5 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.comment {
+  border-bottom: 1px solid black;
+}
+
+.comment:last-child {
+  border-bottom: none;
+}
+
+.rating {
+  font-size: 1.25rem;
+  color: #ffcc00;
+}
+
+.rating i {
+  margin-right: 3px;
+  cursor: pointer;
+}
+
+.comment-content {
+  font-size: 1rem;
+  color: #555;
+}
+
+.comment-form {
+  margin-top: 30px;
+}
+
+.comment-form h6 {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.comment-form .form-label {
+  font-size: 1rem;
+}
+
+.comment-form .form-control {
+  font-size: 1rem;
+  padding: 10px;
+}
+
+.comment-form button {
+  padding: 6px 12px;
+  font-size: 1rem;
+}
+
+/* Rating Interaction */
+.rating i.selected {
+  color: #ffcc00;
+}
+
+.rating i:hover {
+  color: #ffc107;
+}
+
 @media (max-width: 768px) {
-  .course-detail-card {
-    width: 95%;
+  .card-body {
+    flex-direction: column;
   }
 
-  .course-detail-card .card-body {
-    padding: 25px 20px;
+  .course-info {
+    text-align: center;
   }
 
-  .course-detail-card .card-title {
-    font-size: 1.1rem;
-  }
-
-  .course-detail-card .card-text {
-    font-size: 0.95rem;
+  .course-image {
+    margin-bottom: 20px;
   }
 }

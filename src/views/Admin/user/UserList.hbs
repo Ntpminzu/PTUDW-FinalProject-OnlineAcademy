@@ -1,0 +1,123 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/Adminn.css">
+{{/section}}
+
+<div class="user-container">
+  <h2>User Management</h2>
+
+  <div class="toolbar">
+    <div class="filters">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Search">
+      </div>
+      <div class="filter">
+        <div class="dropdown">
+          <button class="btn-filter" id="roleDropdownBtn">
+            <i class="bi bi-person-badge"></i> Role
+            <i class="bi bi-caret-down-fill"></i>
+          </button>
+          <ul class="dropdown-menu" id="roleDropdownMenu">
+            <li data-role="all">All</li>
+            <li data-role="0">Admin</li>
+            <li data-role="1">Instructor</li>
+            <li data-role="2">Student</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <a href="/admin/user/add">
+      <button class="btn-add"><i class="bi bi-plus-circle"></i> Add User</button>
+    </a>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each users}}
+        <tr>
+          <td>
+            <div class="user-info">
+              <span>{{Fullname}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="user-info">
+              <span>{{Email}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="user-info">
+              <span>{{UserName}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="user-info">
+              {{#ifCond UserPermission "==" 0}}
+              <span class="status admin">Admin</span>
+              {{/ifCond}}
+              {{#ifCond UserPermission "==" 1}}
+              <span class="status teacher">Instructor</span>
+              {{/ifCond}}
+              {{#ifCond UserPermission "==" 2}}
+              <span class="status student">Student</span>
+              {{/ifCond}}
+            </div>
+          </td>
+          <td>
+            <a href="/admin/user/edit?id={{UserID}}" class="actions">
+              <i class="bi bi-pencil" data-tooltip="Edit & View"></i>
+            </a>
+            <form action="/admin/user/del" method="POST" style="display:inline;">
+              <input type="hidden" name="UserID" value="{{UserID}}">
+              <button type="submit" class="actions"
+                onclick="return confirm('Are you sure you want to delete this user?')">
+                <i class="bi bi-trash" data-tooltip="Delete"></i>
+              </button>
+            </form>
+
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <nav aria-label="Page navigation" class="mt-3">
+    <ul class="pagination justify-content-center">
+      {{!-- Nút Previous --}}
+      <li class="page-item {{#if (eq currentPage 1)}}disabled{{/if}}">
+        <a class="page-link" href="?page={{subtract currentPage 1}}">Previous</a>
+      </li>
+
+      {{!-- Các trang --}}
+      {{#each pages}}
+      {{#if isCurrent}}
+      <li class="page-item active" aria-current="page">
+        <a class="page-link" href="javascript:void(0);">{{value}}</a>
+      </li>
+      {{else}}
+      <li class="page-item">
+        <a class="page-link" href="?page={{value}}">{{value}}</a>
+      </li>
+      {{/if}}
+      {{/each}}
+
+      {{!-- Nút Next --}}
+      <li class="page-item {{#if (eq currentPage totalPages)}}disabled{{/if}}">
+        <a class="page-link" href="?page={{add currentPage 1}}">Next</a>
+      </li>
+    </ul>
+  </nav>
+
+</div>

@@ -7,6 +7,7 @@ import  accountRouter from './src/routes/account.route.js';
 import  categoryRouter from './src/routes/category.route.js';
 import categoryModel from './src/model/category.model.js';
 import courseModel from './src/model/course.model.js';
+import  managementRouter from './src/routes/management.route.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -85,6 +86,7 @@ app.use(async function (req, res, next) {
 app.use('/course', courseRouter);
 app.use('/account', accountRouter);
 app.use('/category', categoryRouter);
+app.use('/management', managementRouter);
 
 app.get('/', (req, res) => {
   res.redirect('course');

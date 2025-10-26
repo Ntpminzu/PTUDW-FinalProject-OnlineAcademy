@@ -80,4 +80,8 @@ router.get('/searchResults', (req, res) => {
   res.render('course/searchResults');
 });
 
+router.get('/course-remake', function (req, res) {
+    res.render('course/course-remake');
+});
+
 export default router;

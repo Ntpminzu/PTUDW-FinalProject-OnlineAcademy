@@ -167,9 +167,26 @@ router.get('/change-password', (req, res) => {
   res.render('account/change-password');
 });
 
-router.get('/wishlist', (req, res) => {
-  res.render('account/wishlist');
+router.get('/wishlist',async (req, res) => {
+  if (!req.session.isAuthenticated) return res.redirect("/account/signin");
+
+  const userId = req.session.authUser.UserID;
+  const items = await accountModel.getByUser(userId);
+
+  res.render("account/wishlist", {
+    items,
+    empty: items.length === 0
+  });
 });
+
+router.post("/wishlist/remove", async (req, res) => {
+  const userId = req.session.authUser.UserID;
+  const { courseId } = req.body;
+
+  await accountModel.remove(userId, courseId);
+  res.redirect("/account/wishlist");
+});
+
 
 router.get('/history', (req, res) => {
   res.render('account/history');

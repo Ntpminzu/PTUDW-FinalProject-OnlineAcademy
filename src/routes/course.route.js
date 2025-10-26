@@ -2,13 +2,14 @@ import express from 'express';
 import knex from 'knex';
 import courseModel from '../model/course.model.js';
 import categoryModel from '../model/category.model.js';
+import * as accountModel from '../model/account.model.js';
 
 const router = express.Router();
 
 router.get('/',async function (req, res) {
     const topCourses = await courseModel.findTop10CoursesViews();
     const top4Week = await courseModel.findTop4WeekViews();
-    const top10Week = await courseModel.findTop10WeekViews();
+    const top10Week = await categoryModel.findtopcategories();
     const top10Newest = await courseModel.findTop10Newest();
     res.render('course/home',{
         topCourses,
@@ -49,7 +50,11 @@ router.get('/enroll', function (req, res) {
 });
 
 router.get('/courselist', async function (req, res) {
+    const UserId = req.session.authUser?.UserID;
+    const courses = await courseModel.finduserenrollcourses(UserId);
     res.render('course/courselist', {
+        layout: 'main',
+        courses,
     });
 } );
 
@@ -82,6 +87,17 @@ router.get('/searchResults', (req, res) => {
 
 router.get('/course-remake', function (req, res) {
     res.render('course/course-remake');
+});
+
+router.post("/add-to-watchlist", async (req, res) => {
+  if (!req.session.isAuthenticated)
+    return res.redirect("/account/signin");
+
+  const userId = req.session.authUser.UserID;
+  const { courseId } = req.body;
+
+  await accountModel.addToWatchlist(userId, courseId);
+  res.redirect(`/course/detail?id=${courseId}`);
 });
 
 export default router;

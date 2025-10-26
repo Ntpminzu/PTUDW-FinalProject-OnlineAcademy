@@ -4,12 +4,22 @@
 
 <div class="container mt-4">
   <h2>Your Course List</h2>
-  <div class="course-card">
-      <img src="https://picsum.photos/300/200?random=11" alt="Magical Cyber Defense">
-      <div class="course-info">
-        <p class="category">Defense Against the Dark Arts</p>
-        <h3>Magical Cyber Defense</h3>
-        <p class="instructor">Prof. Kingsley Shacklebolt</p>
-        <a href="/course/enroll"><button class="btn btn-primary mt-3">Continue Learning</button></a>
+  {{#if courses.length}}
+    {{#each courses}}
+      <div class="course-card">
+        <img src="{{ImageUrl}}" alt="{{CourseName}}">
+        <div class="course-info">
+          <p class="category">{{CatName}}</p>
+          <h3>{{CourseName}}</h3>
+          <a href="/course/detail?id={{CourseID}}">
+            <button class="btn btn-primary mt-3">Continue Learning</button>
+          </a>
+        </div>
       </div>
-    </div>
+    {{/each}}
+  {{else}}
+    <p style="color: #FFD700; text-align: center; font-weight: bold; font-size: 1.1rem;">
+      You are not enrolled in any courses yet.
+    </p>
+  {{/if}}
+</div>

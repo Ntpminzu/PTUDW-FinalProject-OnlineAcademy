@@ -121,6 +121,23 @@ export default{
         'categories.CatName as CategoryName'
       );
   },
-
+  async finduserenrollcourses(UserId) {
+    return await db('enrollments')
+      .join('courses', 'enrollments.CourseID', 'courses.CourseID')
+      .join('categories', 'courses.CatID', 'categories.CatID')
+      .select(
+        'courses.CourseID',
+        'courses.CourseName',
+        'courses.ImageUrl',
+        'categories.CatName',
+        'courses.CurrentPrice',
+        'courses.OriginalPrice',
+        'courses.Rating',
+        'courses.Total_Review',
+        'courses.TotalStudent'
+      )
+      .where('enrollments.UserID', UserId)
+      .orderBy('enrollments.enrolled_at', 'desc');
+  },
 
 };

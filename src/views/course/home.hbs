@@ -81,7 +81,7 @@
     <h2>Most Studied Fields This Week</h2>
     <div class="field-list">
       {{#each top10Week}}
-      <div class="field-card"><p>{{CourseName}}</p></div>
+      <div class="field-card"><a href="/course/bycat?id={{CatID}}"><p>{{CatName}}</p></a></div>
       {{/each}}
     </div>
   </div>
@@ -91,6 +91,7 @@
   <div class="course-list">
     {{#each topCourses}}
     <div class="course-card">
+      <a href="/course/detail?id={{CourseID}}">
       <img src="{{this.ImageUrl}}" alt="{{this.CourseName}}">
       <div class="course-info">
         <p class="category">{{this.CatName}}</p>
@@ -106,8 +107,10 @@
           <span class="current">${{this.CurrentPrice}}</span>
           <span class="old">${{this.OriginalPrice}}</span>
         </div>
-      </div>
+      </div> 
+      </a>
     </div>
+   
     {{/each}}
   </div>
 </div>
@@ -118,6 +121,7 @@
   <div class="course-list">
     {{#each top10Newest}}
     <div class="course-card">
+      <a href="/course/detail?id={{CourseID}}">
       <img src="{{ImageUrl}}" alt="{{CourseName}}">
       <div class="course-info">
         <p class="category">{{CategoryName}}</p>
@@ -134,7 +138,9 @@
           <span class="old">${{OriginalPrice}}</span>
         </div>
       </div>
+      </a>
     </div>
+    
     {{/each}}
 
   </div>

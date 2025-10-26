@@ -60,7 +60,7 @@ router.post('/verify-otp', async (req, res) => {
       Password: hash,
       Fullname: pending.name,
       Email: pending.email,
-      UserPermission: 0,
+      UserPermission: 2,
     });
 
     req.session.pendingUser = null;

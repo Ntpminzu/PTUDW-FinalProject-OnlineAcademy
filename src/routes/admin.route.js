@@ -6,33 +6,11 @@ import courseModel from '../model/course.model.js';
 const router = express.Router();
 
 router.get('/user/list', async function (req, res) {
-  const limit = 10; // số user mỗi trang
-  const page = parseInt(req.query.page) || 1; // trang hiện tại
-  const offset = (page - 1) * limit;
-
-  // Lấy danh sách user theo trang
-  const list = await adminModel.findPage(offset, limit);
-
-  // Tổng số user
-  const total = await adminModel.countAll();
-  const totalPages = Math.ceil(total.amount / limit);
-
-  // Danh sách các trang
-  const pages = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pages.push({
-      value: i,
-      isCurrent: i === page
-    });
-  }
-
+  const list = await adminModel.findAll();
   res.render('Admin/user/UserList', {
-    users: list,
-    pages: pages,
-    currentPage: page
+    users: list
   });
 });
-
 
 router.get('/user/add', function (req, res) {
   res.render('Admin/user/UserAdd');
@@ -140,25 +118,5 @@ router.post('/category/patch', async function (req, res) {
   res.redirect('/admin/category/list');
 });
 
-router.get('/couse/coursebycat', async function (req, res) {
-  const catId = req.query.id;
-      if (!catId) return res.redirect('/course');
-  
-      const page = req.query.page ? parseInt(req.query.page) : 1;
-      const limit = 4;
-      const offset = (page - 1) * limit;
-      const category = await categoryModel.findByID(catId);
-      const courses = await courseModel.findByCategoryPaging(catId, limit, offset);
-      const totalRow = await courseModel.countByCategory(catId);
-      const totalPages = Math.ceil(totalRow.total / limit);
-  res.render('Admin/couse/CourseByCat',{
-    layout: 'main',
-      category,
-      courses,
-      currentPage: page,
-    totalPages,
-    categoryId: catId,
-  });
-});
 
 export default router;

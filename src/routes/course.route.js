@@ -1,5 +1,4 @@
 import express from 'express';
-import knex from 'knex';
 import courseModel from '../model/course.model.js';
 import categoryModel from '../model/category.model.js';
 import * as accountModel from '../model/account.model.js';

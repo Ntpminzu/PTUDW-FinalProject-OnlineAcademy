@@ -2,55 +2,30 @@
 {{/section}}
 
 <div class="container mt-4">
-  <h2>Your Wishlist</h2>
+  <h2 style="color: gold; text-align: center; font-weight: bold; font-size: 1.5rem; ">Your Wishlist</h2>
   <div class="row">
-    <!-- Card 1 -->
+    {{#if empty}}
+      <p class="text-muted" style="color: beige; text-align: center; font-weight: bold; font-size: 1.0rem;">Bạn chưa lưu khóa học nào 😊</p>
+    {{else}}
+      {{#each items}}
     <div class="col-md-4">
       <div class="card">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoKO7Q9jf-uJ7c3vEY3UaNA-v5SPJWo41fIA&s" class="card-img-top" alt="Course Image">
+        <img src="{{ImageUrl}}" class="card-img-top" alt="Course Image">
         <div class="card-body">
-          <h5 class="card-title">Ancient Magic</h5>
-          <p class="card-text">Professor: Albus Dumbledore</p>
-          <p class="card-text">Learn about the ancient arts of magic and spell-crafting.</p>
-          <a href="/course/detail?id=ancient-magic" class="btn btn-primary">View Details</a>
-          <button class="btn btn-danger float-end ms-2">
-            <i class="bi bi-x-circle"></i> Remove
-          </button>
+          <h5 class="card-title">{{CourseName}}</h5>
+          <p class="card-text">Professor: {{InstructorName}}</p>
+          <p class="card-text">{{TinyDes}}</p>
+          <a href="/course/detail?id={{CourseID}}" class="btn btn-primary">View Details</a>
+          <form action="/account/wishlist/remove" method="post" class="float-end ms-2">
+              <input type="hidden" name="courseId" value="{{CourseID}}">
+              <button class="btn btn-danger">
+                <i class="bi bi-x-circle"></i> Remove
+              </button>
+            </form>
         </div>
       </div>
     </div>
-
-    <!-- Card 2 -->
-    <div class="col-md-4">
-      <div class="card">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoKO7Q9jf-uJ7c3vEY3UaNA-v5SPJWo41fIA&s" class="card-img-top" alt="Course Image">
-        <div class="card-body">
-          <h5 class="card-title">Basic Charms</h5>
-          <p class="card-text">Professor: Filius Flitwick</p>
-          <p class="card-text">A beginner's guide to learning magical charms and spells.</p>
-          <a href="/course/detail?id=basic-charms" class="btn btn-primary">View Details</a>
-          <button class="btn btn-danger float-end ms-2">
-            <i class="bi bi-x-circle"></i> Remove
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="col-md-4">
-      <div class="card">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoKO7Q9jf-uJ7c3vEY3UaNA-v5SPJWo41fIA&s" class="card-img-top" alt="Course Image">
-        <div class="card-body">
-          <h5 class="card-title">Potions</h5>
-          <p class="card-text">Professor: Severus Snape</p>
-          <p class="card-text">Master the art of react-making</p>
-          <a href="/course/detail?id=potions" class="btn btn-primary">View Details</a>
-          <button class="btn btn-danger float-end ms-2">
-            <i class="bi bi-x-circle"></i> Remove
-          </button>
-        </div>
-      </div>
-    </div>
-
+      {{/each}}
+    {{/if}}
   </div>
 </div>

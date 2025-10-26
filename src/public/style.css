@@ -799,3 +799,10 @@ swiper-slide {
   box-shadow: 0 0 18px #00ff55, 0 0 25px #00ff33 inset;
   color: #000;
 }
+
+.field-card a,
+.course-card a{
+  text-decoration: none;
+  color: inherit;
+  display: block;  
+}

@@ -19,5 +19,9 @@ export default{
     findByName(keyword) {
     return db('categories')
       .whereRaw('LOWER("CatName") LIKE ?', [`%${keyword.toLowerCase()}%`])
-    }
+    },
+    findtopcategories(limit) {
+    return db('categories')
+      .limit(10);
+    },
 };

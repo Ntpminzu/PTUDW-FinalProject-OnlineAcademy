@@ -98,5 +98,29 @@ export default{
     .whereRaw('LOWER("CourseName") LIKE ?', [`%${keyword.toLowerCase()}%`])
     .first();
   },
+  findByKeyword(keyword) {
+  return db('courses')
+    .join('users', 'courses.InstructorID', '=', 'users.UserID')
+    .join('categories', 'courses.CatID', '=', 'categories.CatID')
+    .whereRaw(`
+      LOWER("CourseName") LIKE ? 
+      OR LOWER("TinyDes") LIKE ? 
+      OR LOWER("FullDes") LIKE ? 
+      OR LOWER("categories"."CatName") LIKE ?
+      OR LOWER("users"."Fullname") LIKE ?
+    `, [
+      `%${keyword.toLowerCase()}%`,
+      `%${keyword.toLowerCase()}%`,
+      `%${keyword.toLowerCase()}%`,
+      `%${keyword.toLowerCase()}%`,
+      `%${keyword.toLowerCase()}%`
+    ])
+    .select(
+      'courses.*',
+      'users.Fullname as InstructorName',
+      'categories.CatName as CategoryName'
+    );
+  },
+
 
 };

@@ -1,0 +1,134 @@
+/* ===================== FONT & RESET ===================== */
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=Rubik:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: 'Rubik', sans-serif;
+  background-color: #020f03; /* Deep green-black magic tone */
+  color: #d6ffd8;
+  min-height: 100vh;
+}
+
+/* ===================== PAGE CONTAINER ===================== */
+.search-result-page {
+  max-width: 1100px;
+  margin: auto;
+  padding: 40px 20px 80px;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===================== TITLES ===================== */
+.search-result-page h3 {
+  text-align: center;
+  font-family: 'Rye', cursive;
+  font-size: 2rem;
+  color: #14ff3d;
+  text-shadow: 0 0 12px #14ff3d;
+  margin-bottom: 40px;
+}
+
+.search-result-page h4 {
+  font-family: 'Rye', cursive;
+  color: #9cffac;
+  border-left: 5px solid #14ff3d;
+  padding-left: 10px;
+  margin: 20px 0 15px;
+}
+
+/* ===================== CATEGORY LIST ===================== */
+.list-group-item {
+  background: rgba(10, 30, 10, 0.8);
+  color: #d6ffd8;
+  border: 1px solid #14ff3d33;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: all 0.25s ease;
+  font-weight: 500;
+  box-shadow: 0 0 8px rgba(20, 255, 61, 0.1);
+}
+
+.list-group-item:hover {
+  background: #14ff3d;
+  color: #020f03;
+  transform: translateX(6px);
+  box-shadow: 0 0 18px #14ff3d;
+}
+
+/* ===================== COURSE CARDS ===================== */
+.card {
+  background: rgba(15, 40, 15, 0.9);
+  border: 1px solid #14ff3d22;
+  border-radius: 14px;
+  box-shadow: 0 0 8px rgba(20, 255, 61, 0.15);
+  transition: all 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 20px rgba(20, 255, 61, 0.4);
+}
+
+.card-body {
+  padding: 18px;
+}
+
+.card-title {
+  font-family: 'Rye', cursive;
+  color: #14ff3d;
+  font-size: 1.1rem;
+  text-shadow: 0 0 8px rgba(20,255,61,0.3);
+}
+
+.card .text-muted {
+  font-size: 0.85rem;
+  color: #b7ffb7 !important;
+  min-height: 45px;
+}
+
+/* ===================== BUTTONS ===================== */
+.card .btn-outline-primary {
+  border: 1px solid #14ff3d;
+  color: #14ff3d;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.card .btn-outline-primary:hover {
+  background-color: #14ff3d;
+  color: #000;
+  box-shadow: 0 0 14px #14ff3d;
+}
+
+/* ===================== ALERT ===================== */
+.alert {
+  background: #fff4d0;
+  color: #184b00;
+  border-radius: 12px;
+  border: 2px solid #14ff3d55;
+  width: fit-content;
+  margin: 50px auto;
+  padding: 20px 30px;
+  font-family: 'Rye', cursive;
+  font-size: 1.1rem;
+  box-shadow: 0 0 15px rgba(20, 255, 61, 0.2);
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 768px) {
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .search-result-page h3 {
+    font-size: 1.5rem;
+  }
+
+  .search-result-page h4 {
+    font-size: 1.2rem;
+  }
+}

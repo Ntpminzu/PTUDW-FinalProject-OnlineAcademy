@@ -188,9 +188,5 @@ router.post("/wishlist/remove", async (req, res) => {
 });
 
 
-router.get('/history', (req, res) => {
-  res.render('account/history');
-});
-
 export default router;
 

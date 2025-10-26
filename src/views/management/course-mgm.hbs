@@ -35,20 +35,17 @@
                     <input type="text" class="search-input" id="courseSearchInput" placeholder="🔍 Tìm kiếm khóa học..."
                         onkeyup="filterCourses()" />
                     <select class="form-select" id="categoryFilter" onchange="filterCourses()" style="width: auto">
-                        <option value="">Tất cả lĩnh vực</option>
-                        <option value="IT">Công nghệ thông tin</option>
-                        <option value="Design">Thiết kế</option>
-                        <option value="Business">Kinh doanh</option>
-                        <option value="Marketing">Marketing</option>
+                        <option value="*">All Categories</option>
+                        {{#each global_categories}}
+                        <option value="{{CatName}}">{{CatName}}</option>
+                        {{/each}}
                     </select>
                     <select class="form-select" id="statusFilter" onchange="filterCourses()" style="width: auto">
-                        <option value="">Tất cả trạng thái</option>
-                        <option value="completed">Hoàn thành</option>
-                        <option value="incomplete">Chưa hoàn thành</option>
-                        <option value="draft">Bản nháp</option>
+                        <option value="">All State</option>
+                        <option value="{{CourseStatus}}">{{CourseStatus}}</option>
                     </select>
                     <button class="btn btn-primary" onclick="showAddCourseModal()">
-                        ➕ Thêm khóa học
+                        ➕ New Course
                     </button>
                 </div>
                 <div id="coursesList">
@@ -61,60 +58,63 @@
             <!-- Add Course Tab -->
             <div id="courseAddTab" class="tab-content">
                 <div class="form-container">
-                    <h3 style="
-                color: var(--accent-gold);
-                margin-bottom: 25px;
-                text-align: center;
-            ">
-                        ➕ Thêm khóa học mới
-                    </h3>
                     <form id="quickCourseForm" onsubmit="quickAddCourse(event)">
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" for="quickTitle">Tên khóa học *</label>
-                                <input type="text" class="form-input" id="quickTitle" required />
+                                <label class="form-label" for="quickTitle">Course Name *</label>
+                                <input type="text" class="form-input" id="quickTitle" required name="courseName" />
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="quickImage">Icon khóa học</label>
-                                <input type="text" class="form-input" id="quickImage" placeholder="📚" maxlength="2" />
+                                <label class="form-label" for="quickImage">Image URL</label>
+                                <input type="text" class="form-input" id="quickImage" placeholder="📚"
+                                    name="imageURL" />
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" for="quickCategory">Lĩnh vực *</label>
-                                <select class="form-select" id="quickCategory" required
+                                <label class="form-label" for="quickCategory">Category *</label>
+                                <select class="form-select" id="quickCategory" required name="catName"
                                     onchange="updateQuickSubcategories()">
-                                    <option value="">Chọn lĩnh vực</option>
-                                    <option value="IT">Công nghệ thông tin</option>
-                                    <option value="Design">Thiết kế</option>
-                                    <option value="Business">Kinh doanh</option>
-                                    <option value="Marketing">Marketing</option>
+                                    <option value="">Choose category</option>
+                                    {{#each global_categories}}
+                                    <option value="{{CatName}}">{{CatName}}</option>
+                                    {{/each}}
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="quickSubcategory">Chuyên ngành *</label>
-                                <select class="form-select" id="quickSubcategory" required>
-                                    <option value="">Chọn chuyên ngành</option>
+                                <label class="form-label" for="quickSubcategory">Sub category *</label>
+                                <select class="form-select" id="quickSubcategory" required name="subCatName">
+                                    <option value="">Choose sub-category</option>
+                                    {{#each global_categories}}
+                                    {{#each SubCategories}}
+                                    <option value="{{this}}">{{this}}</option>
+                                    {{/each}}
+                                    {{/each}}
                                 </select>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" for="quickPrice">Giá khóa học (VNĐ) *</label>
-                                <input type="number" class="form-input" id="quickPrice" min="0" required />
+                                <label class="form-label" for="quickPrice">Original price (VNĐ) *</label>
+                                <input type="number" class="form-input" id="quickPrice" min="0" required
+                                    name="originalPrice" />
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="quickInstructor">Giảng viên *</label>
-                                <select class="form-select" id="quickInstructor" required>
-                                    <option value="">Chọn giảng viên</option>
-                                </select>
+                                <label class="form-label" for="quickPrice">Current price (VNĐ) *</label>
+                                <input type="number" class="form-input" id="quickPrice" min="0" required
+                                    name="currentPrice" />
                             </div>
                         </div>
-                        <div class="form-row full">
+                        <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" for="quickDescription">Mô tả khóa học *</label>
+                                <label class="form-label" for="quickDescription">Short description *</label>
                                 <textarea class="form-textarea" id="quickDescription" rows="4" required
-                                    placeholder="Mô tả chi tiết về khóa học..."></textarea>
+                                    placeholder="Describe short information about course..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="quickDescription">Full description *</label>
+                                <textarea class="form-textarea" id="quickDescription" rows="4" required
+                                    placeholder="Describe full information about course..."></textarea>
                             </div>
                         </div>
                         <div style="text-align: center; margin-top: 30px">
@@ -188,7 +188,12 @@
             "Web Design",
             "Motion Graphics",
         ],
-        Business: ["Quản lý dự án", "Khởi nghiệp", "Tài chính", "Nhân sự"],
+        Business: [
+            "Quản lý dự án",
+            "Khởi nghiệp",
+            "Tài chính",
+            "Nhân sự"
+        ],
         Marketing: [
             "Digital Marketing",
             "Content Marketing",

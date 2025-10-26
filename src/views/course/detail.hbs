@@ -1,97 +1,308 @@
 {{#section "styles" append=true}}
-<link rel="stylesheet" href="/course.css">
+<link rel="stylesheet" href="/detail.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 {{/section}}
 
 <div class="CourseDetail">
   <div class="layout">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
-          alt="Course Icon" class="icon">
-        <div>
-          <p class="sidebar-title">Course</p>
-          <p class="sidebar-subtitle">Course Name</p>
-        </div>
-      </div>
-
-      <div class="sidebar-contents">
-        <p class="content-title">Contents</p>
-        <ul class="content-list">
-          <li>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
-              alt="">
-            <span>Lesson Name 1</span>
-            <button class="edit-btn">✎</button>
-          </li>
-          <li>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
-              alt="">
-            <span>Lesson Name 2</span>
-            <button class="edit-btn">✎</button>
-          </li>
-          <li>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
-              alt="">
-            <span>Lesson Name 3</span>
-            <button class="edit-btn">✎</button>
-          </li>
-        </ul>
-      </div>
-
-    </aside>
-
     <!-- Main Content -->
     <main class="main-content">
       <!-- Hero -->
       <section class="hero">
         <div class="hero-overlay">
-          <h1 class="hero-title">Course Title</h1>
-          <p class="hero-info">Rating (total reviews)</p>
+          <div class="course-stats">
+            <div class="rating-info">
+              <span class="average-rating">4.5</span>
+              <div class="rating-stars">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-half"></i>
+              </div>
+              <span class="review-count">(120 reviews)</span>
+            </div>
+            <div class="enrollment-info">
+              <i class="bi bi-person-fill"></i>
+              <span>1,500 students enrolled</span>
+            </div>
+          </div>
           <div class="button-container">
-            <!-- Enroll Button -->
-            <a href="/course/enroll" class="start-btn" style="text-decoration: none;">Enroll</a>
-            <a href="/course/enroll" class="start-btn" style="text-decoration: none;">Mark as complete</a>
-            <!-- Wishlist Button with Heart Icon -->
-            <form action="/course/add-to-watchlist" method="post">
-            <a href="/account/wishlist" class="start-btn wishlist-btn" style="text-decoration: none;">
-              <i class="bi bi-heart"></i> 
+            <a href="/course/enroll" class="start-btn enroll-btn">Enroll</a>
+            <h1 class="hero-title">Course Title</h1>
+            <p class="course-price">$99.99 <span class="original-price">$149.99</span> <span class="discount-info">(33%
+                off until Nov 1, 2025)</span></p>
+            <a href="/course/enroll" class="start-btn secondary-btn">Mark as complete</a>
+            <a href="/account/wishlist" class="start-btn wishlist-btn">
+              <i class="bi bi-heart"></i>
             </a>
-            </form>
           </div>
         </div>
       </section>
 
-      <!-- Course Overview -->
+      <!-- Course Overview with Detailed Info -->
       <section class="overview mb-3">
-        <h2>Course Overview</h2>
-        <p>
-          Bla bla bla
-        </p>
-        <div class="comment-form">
-          <h6>Leave a Review</h6>
-          <form>
-            <div class="mb-3">
-              <label for="userRating" class="form-label">Rating</label>
-              <div id="userRating" class="rating">
-                <i class="bi bi-star" data-index="1"></i>
-                <i class="bi bi-star" data-index="2"></i>
-                <i class="bi bi-star" data-index="3"></i>
-                <i class="bi bi-star" data-index="4"></i>
-                <i class="bi bi-star" data-index="5"></i>
+        <div class="course-details-card">
+          <h5 class="card-header">
+            <i class="bi bi-book-half"></i> Course Details
+          </h5>
+          <div class="card-body">
+            <h5 class="card-title">Course Title: {{course.title}}</h5>
+            <p class="card-text">Description: This course provides an in-depth exploration of the subject, designed for
+              beginners to advanced learners. You'll gain practical skills through hands-on projects and real-world
+              examples.</p>
+            <p class="card-text">Instructor: Dr. Jane Doe (Expert with 10+ years experience)</p>
+            <p class="card-text">Duration: 8 weeks (20 hours total)</p>
+            <p class="card-text">Level: Intermediate</p>
+            <p class="card-text">Prerequisites: Basic knowledge of programming and mathematics</p>
+            <p class="card-text">What You'll Learn:
+            <ul>
+              <li>Fundamental concepts and advanced techniques</li>
+              <li>Practical applications in industry</li>
+              <li>Tools and software for implementation</li>
+            </ul>
+            </p>
+            <p class="card-text">Benefits: Certificate upon completion, lifetime access, community support</p>
+            <p class="card-text">Tuition Fee: $99.99 <span class="original-price">$149.99</span> <span
+                class="discount-info">(33% off until Nov 1, 2025)</span></p>
+            <p class="card-text">Last Updated: October 15, 2025</p>
+            <a href="/course/enroll" class="enroll-btn"><i class="bi bi-journal-plus"></i> Enroll Now</a>
+          </div>
+          <div class="card-footer text-muted text-center">
+            Hogwarts Academy © 2025
+          </div>
+        </div>
+        <div class="course-outline">
+          <h3>Course Outline</h3>
+          <ul class="outline-list">
+            <li>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+                alt="">
+              <span>Lesson 1: Introduction to the Topic</span>
+              <p>Overview of key concepts and foundational knowledge. Duration: 2 hours.</p>
+              <button class="preview-btn" onclick="togglePreview('lesson1')">Preview</button>
+              <div id="lesson1" class="preview-content" style="display: none; text-align: center;">
+                <h5>Lesson 1 Content:</h5>
+                <p>This is the detailed content for Lesson 1. You can add video, text, images, or any content here.</p>
+
+                <!-- Add video -->
+                <video width="600" controls style="margin: 0 auto; display: block;">
+                  <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                    type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+
+            </li>
+            <li>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+                alt="">
+              <span>Lesson 2: Advanced Techniques</span>
+              <p>Deep dive into practical methods with hands-on exercises. Duration: 3 hours.</p>
+              <button class="preview-btn" onclick="togglePreview('lesson2')">Preview</button>
+              <div id="lesson2" class="preview-content" style="display: none; text-align: center;">
+                <h5>Lesson 2 Content:</h5>
+                <p>This is the detailed content for Lesson 2. You can add video, text, images, or any content here.</p>
+
+                <video width="600" controls style="margin: 0 auto; display: block;">
+                  <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                    type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </li>
+            <li>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+                alt="">
+              <span>Lesson 3: Real-World Applications</span>
+              <p>Explore case studies and apply concepts to real-world scenarios. Duration: 4 hours.</p>
+              <button class="preview-btn" onclick="togglePreview('lesson3')">Preview</button>
+              <div id="lesson3" class="preview-content" style="display: none; text-align: center;">
+                <h5>Lesson 3 Content:</h5>
+                <p>This is the detailed content for Lesson 3. You can add video, text, images, or any content here.</p>
+
+                <video width="600" controls style="margin: 0 auto; display: block;">
+                  <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                    type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </li>
+            <li>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+                alt="">
+              <span>Lesson 4: Final Project</span>
+              <p>Build and present your own project with instructor feedback. Duration: 5 hours.</p>
+              <button class="preview-btn" onclick="togglePreview('lesson4')">Preview</button>
+              <div id="lesson4" class="preview-content" style="display: none; text-align: center;">
+                <h5>Lesson 4 Content:</h5>
+                <p>This is the detailed content for Lesson 4. You can add video, text, images, or any content here.</p>
+
+                <video width="600" controls style="margin: 0 auto; display: block;">
+                  <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                    type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </li>
+          </ul>
+
+        </div>
+      </section>
+
+      <!-- Related Courses -->
+      <section class="related-courses">
+        <h2>Related Courses in This Field</h2>
+        <div class="related-courses-list">
+          <div class="course-card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+              alt="Course Thumbnail" class="course-thumbnail">
+            <div class="course-info">
+              <h4>Advanced Programming</h4>
+              <p class="course-instructor">By Dr. John Smith</p>
+              <div class="course-stats">
+                <span class="course-rating">4.8 <i class="bi bi-star-fill"></i> (200 reviews)</span>
+                <span class="course-enrollment">2,300 students</span>
+              </div>
+              <p class="course-price">$79.99 <span class="original-price">$99.99</span></p>
+              <a href="/course/1" class="course-btn">View Course</a>
+            </div>
+          </div>
+          <div class="course-card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+              alt="Course Thumbnail" class="course-thumbnail">
+            <div class="course-info">
+              <h4>Data Science Basics</h4>
+              <p class="course-instructor">By Prof. Alice Brown</p>
+              <div class="course-stats">
+                <span class="course-rating">4.6 <i class="bi bi-star-fill"></i> (150 reviews)</span>
+                <span class="course-enrollment">1,800 students</span>
+              </div>
+              <p class="course-price">$59.99</p>
+              <a href="/course/2" class="course-btn">View Course</a>
+            </div>
+          </div>
+          <div class="course-card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+              alt="Course Thumbnail" class="course-thumbnail">
+            <div class="course-info">
+              <h4>Machine Learning Intro</h4>
+              <p class="course-instructor">By Dr. Emma Wilson</p>
+              <div class="course-stats">
+                <span class="course-rating">4.7 <i class="bi bi-star-fill"></i> (180 reviews)</span>
+                <span class="course-enrollment">2,000 students</span>
+              </div>
+              <p class="course-price">$89.99 <span class="original-price">$119.99</span></p>
+              <a href="/course/3" class="course-btn">View Course</a>
+            </div>
+          </div>
+          <div class="course-card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+              alt="Course Thumbnail" class="course-thumbnail">
+            <div class="course-info">
+              <h4>Web Development</h4>
+              <p class="course-instructor">By Prof. Michael Lee</p>
+              <div class="course-stats">
+                <span class="course-rating">4.5 <i class="bi bi-star-fill"></i> (120 reviews)</span>
+                <span class="course-enrollment">1,500 students</span>
+              </div>
+              <p class="card-text">$49.99</p>
+              <a href="/course/4" class="course-btn">View Course</a>
+            </div>
+          </div>
+          <div class="course-card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+              alt="Course Thumbnail" class="course-thumbnail">
+            <div class="course-info">
+              <h4>AI Fundamentals</h4>
+              <p class="course-instructor">By Dr. Sarah Davis</p>
+              <div class="course-stats">
+                <span class="course-rating">4.9 <i class="bi bi-star-fill"></i> (250 reviews)</span>
+                <span class="course-enrollment">3,000 students</span>
+              </div>
+              <p class="course-price">$99.99 <span class="original-price">$129.99</span></p>
+              <a href="/course/5" class="course-btn">View Course</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feedback Section -->
+      <section class="feedback-section">
+        <h2>Student Feedback</h2>
+        <div class="feedback-list">
+          <div class="feedback-item">
+            <div class="feedback-header">
+              <span class="feedback-user">John Doe</span>
+              <div class="feedback-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star"></i>
+                <span>4.0</span>
               </div>
             </div>
-            <div class="mb-3">
-              <label for="commentContent" class="form-label">Comment</label>
-              <textarea class="form-control" id="commentContent" rows="3"></textarea>
+            <p class="feedback-content">
+              This course was very informative and well-structured. I learned a lot!
+            </p>
+            <span class="feedback-date">October 20, 2025</span>
+          </div>
+          <div class="feedback-item">
+            <div class="feedback-header">
+              <span class="feedback-user">Jane Smith</span>
+              <div class="feedback-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <span>5.0</span>
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-sm">
-              Submit
-            </button>
-          </form>
+            <p class="feedback-content">
+              Amazing course! The instructor was clear and engaging.
+            </p>
+            <span class="feedback-date">October 18, 2025</span>
+          </div>
         </div>
+      </section>
+
+      <!-- Comment Form Section -->
+      <section class="comment-form-section">
+        <h6>Leave a Review</h6>
+        <form>
+          <div class="mb-3">
+            <label for="userRating" class="form-label">Rating</label>
+            <div id="userRating" class="rating">
+              <i class="bi bi-star" data-index="1"></i>
+              <i class="bi bi-star" data-index="2"></i>
+              <i class="bi bi-star" data-index="3"></i>
+              <i class="bi bi-star" data-index="4"></i>
+              <i class="bi bi-star" data-index="5"></i>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="commentContent" class="form-label">Comment</label>
+            <textarea class="form-control" id="commentContent" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-sm">
+            Submit
+          </button>
+        </form>
       </section>
     </main>
   </div>
 </div>
+<script>
+  function togglePreview(lessonId) {
+    var previewContent = document.getElementById(lessonId);
+
+    if (previewContent.style.display === "none" || previewContent.style.display === "") {
+      previewContent.style.display = "block";
+    } else {
+      previewContent.style.display = "none";
+    }
+  }
+
+</script>

@@ -15,7 +15,7 @@ body {
   background: #001403; /* xanh đậm Slytherin */
   color: #000000;
   line-height: 1.4;
-  
+
   display: grid;
   grid-template-rows: auto auto auto;
   grid-template-columns: 1fr;

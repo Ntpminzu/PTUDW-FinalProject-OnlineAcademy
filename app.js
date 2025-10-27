@@ -8,6 +8,8 @@ import  categoryRouter from './src/routes/category.route.js';
 import categoryModel from './src/model/category.model.js';
 import courseModel from './src/model/course.model.js';
 import  managementRouter from './src/routes/management.route.js';
+import userRouter from './src/routes/admin.route.js';
+import { restrict, restrictAdmin } from './src/middlewares/auth.mdw.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -43,10 +45,25 @@ app.engine('hbs', engine({
     },
     plus: (a, b) => a + b,
     minus: (a, b) => a - b,
+    ifCond: function (v1, operator, v2, options) {
+      switch (operator) {
+        case '==': return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '===': return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '!=': return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        case '<': return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=': return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>': return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=': return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        default: return options.inverse(this);
+      }
   },
+  subtract: (a, b) => a - b,
+  }
 }));
 app.set('view engine', 'hbs'); 
+app.set('view engine', 'hbs');
 app.set('views', './src/views');
+
 
 app.use(express.static('src/public'));
 
@@ -86,10 +103,19 @@ app.use(async function (req, res, next) {
 app.use('/course', courseRouter);
 app.use('/account', accountRouter);
 app.use('/category', categoryRouter);
-app.use('/management', managementRouter);
+app.use('/management', restrict, restrictAdmin, managementRouter);
+app.use('/admin', userRouter);
+
+app.get('/403', (req, res) => {
+  res.status(403).render('403');
+});
 
 app.get('/', (req, res) => {
   res.redirect('course');
+});
+
+app.use((req, res) => {
+  res.status(404).render('404');
 });
 
 app.listen(port, function () {

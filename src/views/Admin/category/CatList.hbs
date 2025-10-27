@@ -1,5 +1,27 @@
 {{#section "styles" append=true}}
 <link rel="stylesheet" href="/Adminn.css">
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.querySelector(".search-box input");
+    const rows = document.querySelectorAll(".user-table tbody tr");
+
+    if (!searchInput || !rows.length) return;
+
+    searchInput.addEventListener("input", () => {
+      const keyword = searchInput.value.trim().toLowerCase();
+
+      rows.forEach((row) => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(keyword)) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    });
+  });
+</script>
+
 {{/section}}
 
 <div class="user-container">
@@ -64,4 +86,5 @@
             </tbody>
         </table>
     </div>
+
 </div>

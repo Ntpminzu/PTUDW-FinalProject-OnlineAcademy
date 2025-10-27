@@ -56,11 +56,18 @@ app.engine('hbs', engine({
         case '>=': return (v1 >= v2) ? options.fn(this) : options.inverse(this);
         default: return options.inverse(this);
       }
-  },
-  subtract: (a, b) => a - b,
+    },
+    add: (a, b) => a + b,
+    subtract: (a, b) => a - b,
+    eq: (a, b) => a === b
   }
 }));
-app.set('view engine', 'hbs'); 
+
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+
 app.set('view engine', 'hbs');
 app.set('views', './src/views');
 

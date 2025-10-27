@@ -224,6 +224,13 @@ body {
     box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
 }
 
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+    background: rgba(200, 200, 200, 0.5);
+    cursor: not-allowed;
+}
+
 /* Button Styles */
 .btn {
     padding: 12px 24px;

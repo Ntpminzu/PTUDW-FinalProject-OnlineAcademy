@@ -81,10 +81,6 @@ router.get('/search', async (req, res) => {
   });
 });
 
-router.get('/searchResults', (req, res) => {
-  res.render('course/searchResults');
-});
-
 router.get('/course-remake', function (req, res) {
     res.render('course/course-remake');
 });

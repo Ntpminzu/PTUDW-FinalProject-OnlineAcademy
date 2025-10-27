@@ -6,7 +6,7 @@
     <div class="profile-header">
       <img src="https://i.pinimg.com/564x/50/70/50/5070504c4e21e947a94e1b37cf8d6de1.jpg" alt="Avatar" class="avatar">
       <div class="info">
-        <h1 id="userName">Harry Potter</h1>
+        <h1 id="userName">{{user.Fullname}}</h1>
       </div>
       <button id="editInfoBtn" class="btn">✏️ Sửa thông tin</button>
       <a href="/account/change-password" class="btn danger">🔒 Đổi mật khẩu</a>
@@ -23,7 +23,7 @@
           <input type="email" id="email" value="{{user.Email}}" disabled>
         </div>
         <div class="field">
-          <label>Permission :</label>
+          <label>Permission :</label> 
           <input type="text" id="address" value="{{user.Permission}}" disabled>
         </div>
         <div id="saveCancelBtns" class="save-btns" style="display:none;">

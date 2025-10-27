@@ -84,7 +84,9 @@ app.use(session({
 app.use(async (req, res, next) => {
   try {
     const categories = await categoryModel.findAll();
-   
+   for (const cat of categories) {
+            cat.courses = await courseModel.findByCategory(cat.catID);
+        }
     res.locals.global_categories = categories;
     next();
   } catch (err) {

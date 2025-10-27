@@ -67,6 +67,9 @@
               <span class="current">${{CurrentPrice}}</span>
               <span class="old">${{OriginalPrice}}</span>
             </div>
+            <div class="btn-group-access">
+              <a href="/course/detail?id={{CourseID}}" class="btn btn-primary">View Course</a>
+            </div>
           </div>
         </div>
       </div>
@@ -81,7 +84,7 @@
     <h2>Most Studied Fields This Week</h2>
     <div class="field-list">
       {{#each top10Week}}
-      <div class="field-card"><a href="/course/bycat?id={{CatID}}"><p>{{CatName}}</p></a></div>
+      <div class="field-card"><a href="/course/bycat?catid={{CatID}}&subcatid={{SubCatID}}"><p>{{SubCatName}}</p></a></div>
       {{/each}}
     </div>
   </div>

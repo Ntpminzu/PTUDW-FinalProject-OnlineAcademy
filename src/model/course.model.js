@@ -75,16 +75,24 @@ export default {
 
   // SỬA: 'courses.InstructorID' -> 'courses.UserID'
   findTop10Newest() {
-    return db('courses')
-      .join('users', 'courses.UserID', '=', 'users.UserID')
-      .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
-      .select(
-        'courses.*',
-        'users.Fullname as InstructorName',
-        'categories.CatName as CategoryName'
-      )
-      .orderBy('Date', 'desc')
-      .limit(10);
+    return db('courses as c')
+    .join('users as u', 'c.UserID', '=', 'u.UserID')
+    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+    .select(
+      'c.CourseID',
+      'c.CourseName',
+      'c.ImageUrl',
+      'c.Rating',
+      'c.Total_Review',
+      'c.CurrentPrice',
+      'c.OriginalPrice',
+      'u.Fullname as InstructorName',
+      'ca.CatName as CategoryName',
+      'c.Date'
+    )
+    .orderByRaw('"c"."Date" DESC NULLS LAST')
+    .limit(10);
   },
 
   // SỬA: 'courses.InstructorID' -> 'courses.UserID'

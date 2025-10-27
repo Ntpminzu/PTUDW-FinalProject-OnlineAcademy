@@ -88,3 +88,9 @@ export function getCompletedLessonsByUserId(userId, courseId) {
       'courses.CourseName'
     );
 }
+
+export function updatePassword(userId, hashedPassword) {
+  return db('users')
+    .where('UserID', userId)
+    .update({ Password: hashedPassword });
+}

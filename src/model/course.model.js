@@ -14,11 +14,14 @@ export default {
   findByCategory(SubCatID) {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID') 
-      .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
+      .join('sub_cat', 'courses.SubCatID', '=', 'sub_cat.SubCatID') 
+      .join('categories', 'sub_cat.CatID', '=', 'categories.CatID')
       .where('courses.SubCatID', SubCatID)
       .select(
         'courses.*',
-        'users.Fullname as InstructorName'
+        'users.Fullname as InstructorName',
+        'categories.CatName as CategoryName',
+        'sub_cat.SubCatName as SubCategoryName'
       );
   },
 
@@ -88,12 +91,14 @@ export default {
   findByCategoryPaging(SubCatID, limit, offset) {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID')
-      .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
+      .join('sub_cat', 'courses.SubCatID', '=', 'sub_cat.SubCatID')
+      .join('categories', 'sub_cat.CatID', '=', 'categories.CatID')
       .where('courses.SubCatID', SubCatID)
       .select(
         'courses.*',
         'users.Fullname as InstructorName',
-        'categories.CatName as CategoryName'
+        'categories.CatName as CategoryName',
+        'sub_cat.SubCatName as SubCategoryName'
       )
       .limit(limit)
       .offset(offset);

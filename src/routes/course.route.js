@@ -24,28 +24,45 @@ router.get('/detail', function (req, res) {
 });
 
 router.get('/bycat', async function (req, res) {
-  const subcatId = req.query.subcatid; // 👈 Lấy đúng query param
-  if (!subcatId) return res.redirect('/course');
+  try {
+    const catId = req.query.catid;
+    const subcatId = req.query.subcatid;
 
-  const page = req.query.page ? parseInt(req.query.page) : 1;
-  const limit = 4;
-  const offset = (page - 1) * limit;
+    // 🔒 Nếu không có subcatid thì quay về trang course chính
+    if (!subcatId) return res.redirect('/course');
 
-  const category = await categoryModel.findByID(req.query.catid); // lấy tên category cha
-  const sub_cat = await db('sub_cat').where('SubCatID', subcatId).first(); // lấy tên subcategory
-  const courses = await courseModel.findByCategoryPaging(subcatId, limit, offset);
-  const totalRow = await courseModel.countByCategory(subcatId);
-  const totalPages = Math.ceil(totalRow.total / limit);
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const limit = 4;
+    const offset = (page - 1) * limit;
 
-  res.render('course/bycat', {
-    layout: 'main',
-    category,
-    courses,
-    currentPage: page,
-    totalPages,
-    categoryId: subcatId,
-    sub_cat,
-  });
+    // ✅ Lấy category cha
+    const category = await categoryModel.findByID(catId);
+
+    // ✅ Lấy thông tin subcategory
+    const sub_cat = await db('sub_cat').where('SubCatID', subcatId).first();
+
+    // ✅ Lấy danh sách course thuộc subcategory
+    const courses = await courseModel.findByCategoryPaging(subcatId, limit, offset);
+
+    // ✅ Đếm tổng số course để phân trang
+    const totalRow = await courseModel.countByCategory(subcatId);
+    const totalPages = Math.ceil(totalRow.total / limit);
+
+    // ✅ Render ra view
+    res.render('course/bycat', {
+      layout: 'main',
+      category,              // Category cha
+      sub_cat,               // Subcategory con
+      courses,               // Danh sách khóa học
+      currentPage: page,
+      totalPages,
+      categoryId: catId,     // ✅ Giữ đúng: categoryId là ID cha
+      subcatId,              // ✅ Giữ đúng: subcatId để link phân trang hoạt động
+    });
+  } catch (err) {
+    console.error('Lỗi khi load trang bycat:', err);
+    res.status(500).render('500', { layout: 'main', message: 'Đã xảy ra lỗi khi tải trang.' });
+  }
 });
 
 router.get('/enroll', function (req, res) {

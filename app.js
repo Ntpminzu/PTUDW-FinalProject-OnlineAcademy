@@ -82,26 +82,32 @@ app.use(session({
   cookie: { secure: false }
 }));
 
+// ===== Caching categories để tránh pool full =====
+let cachedCategories = null;
+
+async function loadCategories() {
+  const categories = await categoryModel.findAll();
+  const subcatPromises = categories.map(cat =>
+    db('sub_cat').where('CatID', cat.CatID)
+  );
+  const subcatResults = await Promise.all(subcatPromises);
+  categories.forEach((cat, i) => {
+    cat.subcategories = subcatResults[i];
+  });
+  return categories;
+}
+
+// Middleware: chỉ load 1 lần duy nhất
 app.use(async (req, res, next) => {
   try {
-    const categories = await categoryModel.findAll();
-
-    // chạy tất cả các truy vấn song song
-    const subcatPromises = categories.map(cat =>
-      db('sub_cat').where('CatID', cat.CatID)
-    );
-
-    const subcatResults = await Promise.all(subcatPromises);
-
-    // gắn subcat tương ứng
-    categories.forEach((cat, i) => {
-      cat.subcategories = subcatResults[i];
-    });
-
-    res.locals.global_categories = categories;
+    if (!cachedCategories) {
+      cachedCategories = await loadCategories();
+      console.log('✅ Categories loaded into cache');
+    }
+    res.locals.global_categories = cachedCategories;
     next();
   } catch (err) {
-    console.error('Lỗi khi load categories:', err);
+    console.error('❌ Lỗi khi load categories:', err);
     next(err);
   }
 });

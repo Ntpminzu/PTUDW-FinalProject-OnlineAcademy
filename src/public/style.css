@@ -78,6 +78,7 @@ body {
   list-style: none;
   margin: 0;
   padding: 0;
+  color: rgb(246, 246, 246);
 }
 
 .dropdown-menu {

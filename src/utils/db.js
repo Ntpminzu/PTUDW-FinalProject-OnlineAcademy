@@ -9,7 +9,16 @@ const db = knex({
     password: '4h5_C5H7LkprX*T',
     database: 'postgres',
   },
-  pool: { min: 0, max: 200 },
+  pool: {
+    min: 2,
+    max: 10, // đừng để 200
+    idleTimeoutMillis: 30000,
+    createTimeoutMillis: 30000,
+    acquireTimeoutMillis: 30000,
+    reapIntervalMillis: 1000,
+    createRetryIntervalMillis: 100
+  },
+  debug: false
 });
 
 export default db;

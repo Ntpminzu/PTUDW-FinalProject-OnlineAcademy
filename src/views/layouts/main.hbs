@@ -8,14 +8,8 @@
   <!-- Swiper -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <link rel="stylesheet" href="/style.css">
-<<<<<<< HEAD
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   {{{_sections.styles}}}
-=======
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-  {{{_sections.styles}}}   
->>>>>>> 7695e62275d40cc03cfa9629ba4e15c28632bb38
 </head>
 
 <body>
@@ -30,10 +24,10 @@
         <ul class="dropdown-menu">
           {{#each global_categories}}
           <li class="sub-dropdown">
-            <a href="/course/bycat?id={{CatID}}">{{CatName}}</a>
+            <a>{{CatName}}</a>
             <ul class="sub-menu">
-              {{#each courses}}
-              <li><a href="#">{{CourseName}}</a></li>
+              {{#each subcategories}}
+              <li><a href="/course/bycat?catid={{CatID}}&subcatid={{SubCatID}}">{{SubCatName}}</a></li>
               {{/each}}
             </ul>
           </li>

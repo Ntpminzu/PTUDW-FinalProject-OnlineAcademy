@@ -10,6 +10,7 @@ import courseModel from './src/model/course.model.js';
 import  managementRouter from './src/routes/management.route.js';
 import userRouter from './src/routes/admin.route.js';
 import { restrict, restrictAdmin } from './src/middlewares/auth.mdw.js';
+import db from './src/utils/db.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -84,9 +85,19 @@ app.use(session({
 app.use(async (req, res, next) => {
   try {
     const categories = await categoryModel.findAll();
-    for (const cat of categories) {
-      cat.courses = await courseModel.findByCategory(cat.CatID);
-    }
+
+    // chạy tất cả các truy vấn song song
+    const subcatPromises = categories.map(cat =>
+      db('sub_cat').where('CatID', cat.CatID)
+    );
+
+    const subcatResults = await Promise.all(subcatPromises);
+
+    // gắn subcat tương ứng
+    categories.forEach((cat, i) => {
+      cat.subcategories = subcatResults[i];
+    });
+
     res.locals.global_categories = categories;
     next();
   } catch (err) {

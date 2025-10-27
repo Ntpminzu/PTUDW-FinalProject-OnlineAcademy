@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/',async function (req, res) {
     const topCourses = await courseModel.findTop10CoursesViews();
     const top4Week = await courseModel.findTop4WeekViews();
-    const top10Week = await categoryModel.findtopcategories();
+    const top10Week = await categoryModel.findTopSubCategories();
     const top10Newest = await courseModel.findTop10Newest();
     res.render('course/home',{
         topCourses,
@@ -27,6 +27,8 @@ router.get('/bycat', async function (req, res) {
   try {
     const catId = req.query.catid;
     const subcatId = req.query.subcatid;
+    console.log('catId:', catId);
+    console.log('subcatId:', subcatId);
 
     // 🔒 Nếu không có subcatid thì quay về trang course chính
     if (!subcatId) return res.redirect('/course');

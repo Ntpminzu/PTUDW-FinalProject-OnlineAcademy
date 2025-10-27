@@ -1,0 +1,30 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/search.css">
+{{/section}}
+
+<div class="search-result-page container mt-4">
+  <h3 class="search-title text-center mb-4">
+    Search results for "{{keyword}}"
+  </h3>
+
+  {{#if notFound}}
+    <div class="alert alert-warning text-center">
+      No courses or categories found for "{{keyword}}"
+    </div>
+  {{else}}
+    <div class="row">
+      {{#each results}}
+      <div class="col-md-3 mb-3">
+        <div class="card h-100 shadow-sm">
+          <img src="{{ImageUrl}}" class="card-img-top" alt="{{CourseName}}">
+          <div class="card-body">
+            <h6 class="card-title">{{CourseName}}</h6>
+            <p class="text-muted small">{{CategoryName}}</p>
+            <a href="/course/detail?id={{CourseID}}" class="btn btn-outline-success btn-sm">View Detail</a>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  {{/if}}
+</div>

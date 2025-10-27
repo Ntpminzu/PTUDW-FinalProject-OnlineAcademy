@@ -1,5 +1,7 @@
 import express from 'express';
 import * as adminModel from '../model/admin.model.js';
+import categoryModel from '../model/category.model.js';
+import courseModel from '../model/course.model.js';
 
 const router = express.Router();
 

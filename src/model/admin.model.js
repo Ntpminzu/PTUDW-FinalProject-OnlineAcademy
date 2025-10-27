@@ -35,7 +35,7 @@ export function findCategoryById(id) {
   return db('categories').where('CatID', id).first();
 }
 export function findAllCategories() {
-  return db('categories');
+  return db('categories').orderBy('CatID', 'asc');
 }
 export function addCategory(category) {
   return db('categories').insert(category);
@@ -47,4 +47,3 @@ export function patchCategory(id, category) {
   return db('categories').where('CatID', id).update(category);
 }
 /*=================courses=================*/
-

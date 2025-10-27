@@ -1,0 +1,77 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/signin,signup.css">
+{{/section}}
+
+<div class="auth-container">
+  <h2>🪄 Create Your Student Account</h2>
+
+  {{#if error}}
+  <div class="error">{{error}}</div>
+  {{/if}}
+
+  {{#if success}}
+  <div class="success">{{success}}</div>
+  {{/if}}
+
+  {{#unless showOtp}}
+  <form action="/account/signup" method="post" class="auth-form">
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" name="username" required>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" name="password" required>
+    </div>
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" name="confirm" required>
+    </div>
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" name="name" required>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" name="email" required>
+    </div>
+    <button type="submit" class="magic-btn">✨ Sign Up ✨</button>
+  </form>
+  {{/unless}}
+
+  {{#if showOtp}}
+  <form action="/account/verify-otp" method="post" class="auth-form">
+    <p>We’ve sent a 6-digit OTP to your email: <strong>{{email}}</strong></p>
+    <div class="form-group">
+      <label for="otp">Enter OTP</label>
+      <input type="text" id="otp" name="otp" maxlength="6" required>
+    </div>
+    <button type="submit" class="magic-btn">🔮 Verify OTP 🔮</button>
+  </form>
+  {{/if}}
+
+  <div class="auth-footer">
+    <p>Already have an account? <a href="/account/signin">Login here</a></p>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const messages = {
+    username: 'Vui lòng nhập tên đăng nhập!',
+    password: 'Vui lòng nhập mật khẩu!',
+    confirm: 'Vui lòng xác nhận mật khẩu!',
+    name: 'Vui lòng nhập họ tên!',
+    email: 'Vui lòng nhập email hợp lệ!',
+  };
+
+  document.querySelectorAll('input[required]').forEach(input => {
+    input.oninvalid = function() {
+      this.setCustomValidity(messages[this.name] || 'Trường này không được để trống.');
+    };
+    input.oninput = function() {
+      this.setCustomValidity('');
+    };
+  });
+});
+</script>

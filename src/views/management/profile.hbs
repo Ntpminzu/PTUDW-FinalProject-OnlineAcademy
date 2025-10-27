@@ -1,0 +1,64 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/course-form.css" />
+{{/section}}
+
+<main class="main-content">
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Instructor Profile</h1>
+            <p class="welcome-text">Change Your Profile.</p>
+        </div>
+
+        <section class="section active">
+            <h2 class="section-title">👨‍🏫 My Profile</h2>
+
+            {{#if success}}
+            <div class="alert alert-success" role="alert"
+                style="background-color: #2d7a4f; color: white; border: none; margin: 0 auto 20px auto; max-width: 800px; text-align: center; font-weight: bold;">
+                {{success}}
+            </div>
+            {{/if}}
+
+            <div class="form-container" style="max-width: 800px; margin: 0 auto;">
+                <form action="/management/profile/update" method="POST">
+
+                    {{! DDL xác nhận: UserName }}
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Username (Can not change)</label>
+                            <input type="text" class="form-input" value="{{users.UserName}}" disabled />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        {{! DDL xác nhận: Fullname }}
+                        <div class="form-group">
+                            <label class="form-label" for="Fullname">Full name</label>
+                            <input type="text" class="form-input" id="Fullname" name="fullname"
+                                value="{{users.Fullname}}" required />
+                        </div>
+                        {{! DDL xác nhận: Email }}
+                        <div class="form-group">
+                            <label class="form-label" for="Email">Email</label>
+                            <input type="email" class="form-input" id="Email" name="email" value="{{users.Email}}"
+                                required />
+                        </div>
+                    </div>
+
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Permission (Can not change)</label>
+                            <input type="text" class="form-input" value="Instructor" disabled />
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 30px">
+                        <button type="submit" class="btn btn-primary">
+                            💾 Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</main>

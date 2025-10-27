@@ -1,0 +1,275 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Quintessential&display=swap');
+
+/* ==================== GLOBAL THEME ==================== */
+body {
+  font-family: 'Quintessential', cursive;
+  background-color: #001403;
+  color: #AAAAAA;
+  min-height: 100vh;
+  margin: 0;
+  padding-top: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ==================== COMMON WRAPPER ==================== */
+.list-page,
+.add-page,
+.edit-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: calc(100vh - 100px);
+  padding: 40px 0;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+/* ==================== CARD BASE ==================== */
+.card {
+  background: linear-gradient(145deg, #0b2615, #000000);
+  border: 2px solid #2A623D;
+  border-radius: 15px;
+  box-shadow: 0 0 25px rgba(42, 98, 61, 0.6);
+  color: #AAAAAA;
+  overflow: hidden;
+  animation: fadeIn 0.8s ease-in-out;
+
+  /* ✅ điều chỉnh độ rộng hiển thị */
+  width: 80%;
+  max-width: 1600px;
+  min-width: 900px;
+}
+
+/* ==================== CARD CONTENT ==================== */
+.card-header {
+  background: linear-gradient(90deg, #1A472A, #2A623D);
+  font-family: 'Rubik Mono One', sans-serif;
+  color: #FFF35B;
+  font-size: 1.1rem;
+  padding: 15px 20px;
+  border-bottom: 2px solid #2A623D;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 1px;
+}
+
+.card-body {
+  padding: 25px 30px;
+}
+
+.card-footer {
+  background-color: #000000;
+  color: #AAAAAA;
+  text-align: center;
+  padding: 12px;
+  font-size: 0.9rem;
+  border-top: 1px solid #2A623D;
+}
+
+/* ==================== BUTTONS ==================== */
+.btn {
+  font-family: 'Rubik Mono One', sans-serif;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background-color: #2A623D;
+  border: 1px solid #1A472A;
+  color: #000000;
+}
+
+.btn-primary:hover {
+  background-color: #FFF35B;
+  color: #000000;
+  box-shadow: 0 0 15px rgba(255, 243, 91, 0.8);
+}
+
+.btn-outline-primary {
+  border: 1px solid #2A623D;
+  color: #AAAAAA;
+  background: transparent;
+}
+
+.btn-outline-primary:hover {
+  background-color: #2A623D;
+  color: #000000;
+  box-shadow: 0 0 10px rgba(42, 98, 61, 0.8);
+}
+
+.btn-outline-secondary {
+  border: 1px solid #FFF35B;
+  color: #FFF35B;
+  background: transparent;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #FFF35B;
+  color: #000000;
+}
+
+/* ==================== TABLE (LIST PAGE) ==================== */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid #2A623D;
+  padding: 12px;
+  text-align: left;
+  color: #FFF35B;
+}
+
+.table th {
+  font-family: 'Rubik Mono One', sans-serif;
+  color: #FFF35B;
+  background-color: #0b2615;
+  text-transform: uppercase;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(42, 98, 61, 0.2);
+  transition: background-color 0.2s ease;
+}
+
+.table td a.btn {
+  margin-left: 8px;
+}
+
+/* ==================== FORM STYLING (ADD & EDIT) ==================== */
+form {
+  margin-top: 10px;
+}
+
+.form-label {
+  font-family: 'Rubik Mono One', sans-serif;
+  color: #FFF35B;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input:disabled {
+  color: rgb(0, 0, 0);
+  font-size: 1.5rem;
+}
+
+.form-control {
+  background-color: #0b2615;
+  color: #FFF;
+  border: 1px solid #2A623D;
+  border-radius: 8px;
+  padding: 10px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(255, 243, 91, 0.6);
+  border-color: #FFF35B;
+}
+
+textarea.form-control {
+  resize: none;
+}
+
+/* ==================== ALERTS ==================== */
+.alert {
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 15px;
+  font-family: 'Rubik Mono One', sans-serif;
+  text-transform: uppercase;
+}
+
+.alert-success {
+  background-color: rgba(42, 98, 61, 0.3);
+  border: 1px solid #2A623D;
+  color: #FFF35B;
+}
+
+.alert-error {
+  background-color: rgba(120, 0, 0, 0.3);
+  border: 1px solid #FF4444;
+  color: #FF7777;
+}
+
+/* ==================== LINKS ==================== */
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #2A623D;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 992px) {
+  .card {
+    width: 90%;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-top: 60px;
+  }
+
+  .card {
+    width: 95%;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 1rem;
+  }
+
+  .table th, .table td {
+    font-size: 0.85rem;
+  }
+
+  .form-control {
+    font-size: 0.95rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+  }
+}

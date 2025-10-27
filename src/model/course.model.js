@@ -4,7 +4,7 @@ export default {
   findAll() {
     return db('courses');
   },
-  
+
   // THÊM: Hàm thêm khóa học mới
   add(courseEntity) {
     return db('courses').insert(courseEntity);
@@ -13,7 +13,7 @@ export default {
   // SỬA: 'courses.InstructorID' -> 'courses.UserID'
   findByCategory(SubCatID) {
     return db('courses')
-      .join('users', 'courses.UserID', '=', 'users.UserID') 
+      .join('users', 'courses.UserID', '=', 'users.UserID')
       .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
       .where('courses.SubCatID', SubCatID)
       .select(
@@ -161,5 +161,22 @@ export default {
   findByUserId(userId) {
     // Tìm các khóa học có 'UserID' (trường foreign key) khớp với 'userId' (param)
     return db('courses').where('UserID', userId);
-  }
+  },
+  findById(courseId) {
+    return db('courses')
+      .leftJoin('users', 'courses.UserID', '=', 'users.UserID')
+      .leftJoin('categories', 'courses.SubCatID', '=', 'categories.CatID')
+      .where('courses.CourseID', courseId)
+      .select(
+        'courses.*',
+        'users.Fullname as InstructorName',
+        'categories.CatName as CategoryName'
+      )
+      .first(); // Return the first (and only) result
+  },
+  checkIfInWishlist(userId, courseId) {
+    return db('watch_list')
+      .where('UserID', userId)
+      .andWhere('CourseID', courseId);
+  },
 };

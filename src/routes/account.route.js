@@ -188,5 +188,15 @@ router.post("/wishlist/remove", async (req, res) => {
 });
 
 
+router.post("/add-to-watchlist", async (req, res) => {
+  if (!req.session.isAuthenticated)
+    return res.redirect("/account/signin");
+
+  const userId = req.session.authUser.UserID;
+  const { courseId } = req.body;
+
+  await accountModel.addToWatchlist(userId, courseId);
+  res.redirect(`/account/wishlist`);
+});
 export default router;
 

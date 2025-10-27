@@ -12,6 +12,7 @@ router.get('/user/list', async function (req, res) {
   });
 });
 
+
 router.get('/user/add', function (req, res) {
   res.render('Admin/user/UserAdd');
 });
@@ -117,6 +118,5 @@ router.post('/category/patch', async function (req, res) {
   await adminModel.patchCategory(id, category);
   res.redirect('/admin/category/list');
 });
-
 
 export default router;

@@ -33,13 +33,17 @@ export default {
   },
 
   // SỬA: 'courses.InstructorID' -> 'courses.UserID'
-  findByCategory(catId) {
+  findByCategory(SubCatID) {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID') 
-      .where('courses.CatID', catId)
+      .join('sub_cat', 'courses.SubCatID', '=', 'sub_cat.SubCatID') 
+      .join('categories', 'sub_cat.CatID', '=', 'categories.CatID')
+      .where('courses.SubCatID', SubCatID)
       .select(
         'courses.*',
-        'users.Fullname as InstructorName'
+        'users.Fullname as InstructorName',
+        'categories.CatName as CategoryName',
+        'sub_cat.SubCatName as SubCategoryName'
       );
   },
 
@@ -47,7 +51,7 @@ export default {
   findTop10CoursesViews() {
     return db('courses as c')
       .leftJoin('users as u', 'c.UserID', 'u.UserID')
-      .leftJoin('categories as ca', 'c.CatID', 'ca.CatID')
+      .leftJoin('categories as ca', 'c.SubCatID', 'ca.CatID')
       .orderBy('c.Views', 'desc')
       .select(
         'c.CourseID',
@@ -67,7 +71,7 @@ export default {
   findTop4WeekViews() {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID')
-      .join('categories', 'courses.CatID', '=', 'categories.CatID')
+      .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
       .select(
         'courses.*',
         'users.Fullname as InstructorName',
@@ -81,7 +85,7 @@ export default {
   findTop10WeekViews() {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID')
-      .join('categories', 'courses.CatID', '=', 'categories.CatID')
+      .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
       .select(
         'courses.*',
         'users.Fullname as InstructorName',
@@ -93,36 +97,46 @@ export default {
 
   // SỬA: 'courses.InstructorID' -> 'courses.UserID'
   findTop10Newest() {
-    return db('courses')
-      .join('users', 'courses.UserID', '=', 'users.UserID')
-      .join('categories', 'courses.CatID', '=', 'categories.CatID')
-      .select(
-        'courses.*',
-        'users.Fullname as InstructorName',
-        'categories.CatName as CategoryName'
-      )
-      .orderBy('Date', 'desc')
-      .limit(10);
+    return db('courses as c')
+    .join('users as u', 'c.UserID', '=', 'u.UserID')
+    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+    .select(
+      'c.CourseID',
+      'c.CourseName',
+      'c.ImageUrl',
+      'c.Rating',
+      'c.Total_Review',
+      'c.CurrentPrice',
+      'c.OriginalPrice',
+      'u.Fullname as InstructorName',
+      'ca.CatName as CategoryName',
+      'c.Date'
+    )
+    .orderByRaw('"c"."Date" DESC NULLS LAST')
+    .limit(10);
   },
 
   // SỬA: 'courses.InstructorID' -> 'courses.UserID'
-  findByCategoryPaging(catId, limit, offset) {
+  findByCategoryPaging(SubCatID, limit, offset) {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID')
-      .join('categories', 'courses.CatID', '=', 'categories.CatID')
-      .where('courses.CatID', catId)
+      .join('sub_cat', 'courses.SubCatID', '=', 'sub_cat.SubCatID')
+      .join('categories', 'sub_cat.CatID', '=', 'categories.CatID')
+      .where('courses.SubCatID', SubCatID)
       .select(
         'courses.*',
         'users.Fullname as InstructorName',
-        'categories.CatName as CategoryName'
+        'categories.CatName as CategoryName',
+        'sub_cat.SubCatName as SubCategoryName'
       )
       .limit(limit)
       .offset(offset);
   },
 
-  countByCategory(catId) {
+  countByCategory(SubCatID) {
     return db('courses')
-      .where('CatID', catId)
+      .where('SubCatID', SubCatID)
       .count('* as total')
       .first();
   },
@@ -137,7 +151,7 @@ export default {
   findByKeyword(keyword) {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID')
-      .join('categories', 'courses.CatID', '=', 'categories.CatID')
+      .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
       .whereRaw(`
         LOWER(courses."CourseName") LIKE ? 
         OR LOWER(courses."TinyDes") LIKE ?
@@ -162,7 +176,7 @@ export default {
   async finduserenrollcourses(UserId) {
     return await db('enrollments')
       .join('courses', 'enrollments.CourseID', 'courses.CourseID')
-      .join('categories', 'courses.CatID', 'categories.CatID')
+      .join('categories', 'courses.SubCatID', 'categories.CatID')
       .select(
         'courses.CourseID',
         'courses.CourseName',

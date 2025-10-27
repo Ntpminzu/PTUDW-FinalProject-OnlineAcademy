@@ -8,7 +8,7 @@ export function restrict(req, res, next) {
 }
 
 export function restrictAdmin(req, res, next) {
-  if (req.session.authUser && req.session.authUser.permission === '0') {
+  if (req.session.authUser && req.session.authUser.permission === "0") {
     next();
   } else {
     res.status(403).render('403'); 
@@ -16,7 +16,7 @@ export function restrictAdmin(req, res, next) {
 }
 
 export function restrictInstructor(req, res, next) {
-    if (!req.session.isAuthenticated || req.session.authUser.UserPermission !== '1') {
+    if (!req.session.isAuthenticated || req.session.authUser.UserPermission !== "1") {
       res.status(403).render('403');
     } else {
     next(); 
@@ -24,7 +24,7 @@ export function restrictInstructor(req, res, next) {
 }
 
 export function restrictStudent(req, res, next) {
-  if (req.session.authUser && req.session.authUser.permission === '2') {
+  if (req.session.authUser && req.session.authUser.permission === "2") {
     next();
   } else {
     res.status(403).render('403'); 

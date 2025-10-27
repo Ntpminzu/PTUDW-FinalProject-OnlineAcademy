@@ -1,7 +1,7 @@
 import db from '../utils/db.js';
 
 export function findAll() {
-  return db('users');
+  return db('users').orderBy('UserPermission', 'asc');
 }
 
 export function findById(id) {

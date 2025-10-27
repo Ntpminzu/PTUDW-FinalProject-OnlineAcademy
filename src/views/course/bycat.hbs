@@ -3,13 +3,14 @@
 {{/section}}
 
 <div class="category-page">
-  <h2 class="category-title">Courses in {{category.CatName}}</h2>
+  <h2 class="category-title">{{sub_cat.SubCatName}} in {{category.CatName}}</h2>
+
   <div class="category-section">
     <div class="course-list">
       {{#each courses}}
       <div class="course-card">
         <a href="/course/detail?id={{CourseID}}">
-          <img src="https://picsum.photos/300/200?random=12" alt="Dragon Language">
+          <img src="https://picsum.photos/300/200?random={{CourseID}}" alt="{{CourseName}}">
           <div class="course-info">
             <h3>{{CourseName}}</h3>
             <p class="instructor">{{InstructorName}}</p>
@@ -30,22 +31,28 @@
       {{/each}}
 
       {{#unless courses.length}}
-      <p>No courses found in this category.</p>
+      <p>No courses found in this subcategory.</p>
       {{/unless}}
     </div>
+
     <div class="pagination">
       {{#if (gt currentPage 1)}}
-      <a href="/course/bycat?id={{categoryId}}&page={{subtract currentPage 1}}">Previous</a>
+      <a href="/course/bycat?catid={{category.CatID}}&subcatid={{subcatId}}&page={{minus currentPage 1}}">
+        Previous
+      </a>
       {{/if}}
 
       {{#each (range 1 totalPages)}}
-      <a href="/course/bycat?id={{../categoryId}}&page={{this}}" class="{{#if (eq this ../currentPage)}}active{{/if}}">
+      <a href="/course/bycat?catid={{../category.CatID}}&subcatid={{../subcatId}}&page={{this}}"
+        class="{{#if (eq this ../currentPage)}}active{{/if}}">
         {{this}}
       </a>
       {{/each}}
 
       {{#if (lt currentPage totalPages)}}
-      <a href="/course/bycat?id={{categoryId}}&page={{plus currentPage 1}}">Next</a>
+      <a href="/course/bycat?catid={{category.CatID}}&subcatid={{subcatId}}&page={{plus currentPage 1}}">
+        Next
+      </a>
       {{/if}}
     </div>
   </div>

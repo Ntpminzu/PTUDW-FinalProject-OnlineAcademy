@@ -6,30 +6,9 @@ import courseModel from '../model/course.model.js';
 const router = express.Router();
 
 router.get('/user/list', async function (req, res) {
-  const limit = 10; // số user mỗi trang
-  const page = parseInt(req.query.page) || 1; // trang hiện tại
-  const offset = (page - 1) * limit;
-
-  // Lấy danh sách user theo trang
-  const list = await adminModel.findPage(offset, limit);
-
-  // Tổng số user
-  const total = await adminModel.countAll();
-  const totalPages = Math.ceil(total.amount / limit);
-
-  // Danh sách các trang
-  const pages = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pages.push({
-      value: i,
-      isCurrent: i === page
-    });
-  }
-
+  const list = await adminModel.findAll();
   res.render('Admin/user/UserList', {
-    users: list,
-    pages: pages,
-    currentPage: page
+    users: list
   });
 });
 

@@ -5,9 +5,10 @@
   <h2 style="color: gold; text-align: center; font-weight: bold; font-size: 1.5rem; ">Your Wishlist</h2>
   <div class="row">
     {{#if empty}}
-      <p class="text-muted" style="color: beige; text-align: center; font-weight: bold; font-size: 1.0rem;">Bạn chưa lưu khóa học nào 😊</p>
+    <p class="text-muted" style="color: beige; text-align: center; font-weight: bold; font-size: 1.0rem;">Bạn chưa lưu
+      khóa học nào 😊</p>
     {{else}}
-      {{#each items}}
+    {{#each items}}
     <div class="col-md-4">
       <div class="card">
         <img src="{{ImageUrl}}" class="card-img-top" alt="Course Image">
@@ -17,15 +18,15 @@
           <p class="card-text">{{TinyDes}}</p>
           <a href="/course/detail?id={{CourseID}}" class="btn btn-primary">View Details</a>
           <form action="/account/wishlist/remove" method="post" class="float-end ms-2">
-              <input type="hidden" name="courseId" value="{{CourseID}}">
-              <button class="btn btn-danger">
-                <i class="bi bi-x-circle"></i> Remove
-              </button>
-            </form>
+            <input type="hidden" name="courseId" value="{{CourseID}}">
+            <button class="btn btn-danger">
+              <i class="bi bi-x-circle"></i> Remove
+            </button>
+          </form>
         </div>
       </div>
     </div>
-      {{/each}}
+    {{/each}}
     {{/if}}
   </div>
 </div>

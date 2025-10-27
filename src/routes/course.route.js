@@ -19,9 +19,31 @@ router.get('/',async function (req, res) {
     });
 });
 
-router.get('/detail', function (req, res) {
-    res.render('course/detail');
+
+router.get('/detail', async function (req, res) {
+  const courseId = req.query.id;
+  const userId = req.session.authUser?.UserID;
+
+  try {
+    const course = await courseModel.findById(courseId);
+
+    let isInWishlist = false;
+    if (userId) {
+      const wishlist = await courseModel.checkIfInWishlist(userId, courseId);
+      isInWishlist = wishlist.length > 0;
+    }
+
+    if (course) {
+      res.render('course/detail', { course, isInWishlist });
+    } else {
+      res.status(404).send('Course not found');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
 });
+
 
 router.get('/bycat', async function (req, res) {
   try {
@@ -105,15 +127,5 @@ router.get('/course-remake', function (req, res) {
     res.render('course/course-remake');
 });
 
-router.post("/add-to-watchlist", async (req, res) => {
-  if (!req.session.isAuthenticated)
-    return res.redirect("/account/signin");
-
-  const userId = req.session.authUser.UserID;
-  const { courseId } = req.body;
-
-  await accountModel.addToWatchlist(userId, courseId);
-  res.redirect(`/course/detail?id=${courseId}`);
-});
 
 export default router;

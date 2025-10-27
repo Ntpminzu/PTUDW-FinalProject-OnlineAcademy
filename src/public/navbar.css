@@ -1,0 +1,277 @@
+/* ========================= RESET ========================= */
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Quintessential&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Changa:wght@300;400;500;600;700&display=swap');
+* {
+  box-sizing: border-box;
+  margin: 0 ;
+  padding: 0 ;
+}
+/* ========================= NAVBAR ========================= */
+.navbar {
+  width: 100%;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 40px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  flex-wrap: nowrap; /* tránh xuống dòng */
+  gap: 20px;
+}
+
+.logo {
+  font-family: 'Bungee', sans-serif;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #2CFF05;
+  white-space: nowrap;
+}
+
+/* Links */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #AAAAAA;
+  font-weight: 500;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.nav-links a:hover {
+  color: #2A623D;
+  transform: scale(1.1);
+}
+/* ======= DROPDOWN (CẤP 1) ======= */
+.nav-links li {
+  position: relative;
+}
+/* Bỏ dấu chấm và khoảng cách mặc định trong các menu */
+.nav-links ul,
+.dropdown-menu,
+.sub-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: cornsilk;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #111;
+  padding: 10px 0;
+  border-radius: 8px;
+  min-width: 200px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  z-index: 200;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu li {
+  position: relative;
+}
+
+.dropdown-menu a {
+  display: block;
+  color: #ddd;
+  padding: 10px 20px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.dropdown-menu a:hover {
+  background: #06FF00;
+  color: #000000;
+}
+
+/* ======= SUB-DROPDOWN (CẤP 2) ======= */
+.sub-menu {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background: #222;
+  min-width: 200px;
+  border-radius: 8px;
+  padding: 10px 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.sub-dropdown:hover .sub-menu {
+  display: block;
+}
+
+.sub-menu a {
+  color: #ccc;
+  padding: 10px 20px;
+}
+
+.sub-menu a:hover {
+ background: #06FF00;
+  color: #000000;
+}
+/* ========================= SEARCH FORM ========================= */
+form.d-flex {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+form.d-flex .form-control {
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #06ff00;
+  border-radius: 10px;
+  padding: 8px 14px;
+  width: 350px;
+  transition: all 0.3s ease;
+}
+
+form.d-flex .form-control:focus {
+  outline: none;
+  border-color: #00ff88;
+  box-shadow: 0 0 10px #00ff88;
+}
+
+/* ==== Nút Search với hiệu ứng neon xanh ==== */
+form.d-flex .btn {
+  position: relative;
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000; /* chữ đen */
+  background: linear-gradient(45deg, #32CD32, #39FF14); /* neon green gradient */
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(0, 255, 128, 0.6);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+form.d-flex .btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 25px rgba(0, 255, 128, 0.9);
+}
+
+form.d-flex .btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+}
+
+form.d-flex .btn:hover::before {
+  animation: shimmer 1.2s infinite;
+}
+
+/* ========================= MAGIC BUTTONS ========================= */
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.magic-btn {
+  position: relative;
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000000;
+background: linear-gradient(45deg, #32CD32, #39FF14);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(159, 0, 255, 0.4);
+  transition: transform 0.2s ease-in-out;
+}
+
+.magic-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 20px rgba(9, 255, 0, 0.8);
+}
+
+.magic-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+}
+
+.magic-btn:hover::before {
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -75%; }
+  100% { left: 125%; }
+}
+
+/* ========================= RESPONSIVE ========================= */
+@media (max-width: 992px) {
+  .navbar {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  form.d-flex .form-control {
+    width: 180px;
+  }
+
+  .auth-buttons {
+    justify-content: center;
+  }
+}
+.field-card a,
+.course-card a{
+  text-decoration: none;
+  color: inherit;
+  display: block;  
+}

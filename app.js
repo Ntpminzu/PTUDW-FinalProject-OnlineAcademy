@@ -11,9 +11,13 @@ import  managementRouter from './src/routes/management.route.js';
 import userRouter from './src/routes/admin.route.js';
 import { restrict, restrictAdmin } from './src/middlewares/auth.mdw.js';
 import db from './src/utils/db.js';
+import path from 'path';
+import { fileURLToPath } from "url";
 
 const app = express();
 const port = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -23,6 +27,9 @@ app.set('trust proxy', 1) // trust first proxy
 app.engine('hbs', engine({
     defaultLayout: 'main',
     extname: '.hbs', 
+    layoutsDir: path.join(__dirname, "src/views/layouts"),
+    partialsDir: path.join(__dirname, "src/views/partials"),
+    defaultLayout: "main",
       helpers: {
     section: hbs_sections(),
     gt: function(a, b) {

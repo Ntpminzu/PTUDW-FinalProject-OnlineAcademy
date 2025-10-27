@@ -4,44 +4,57 @@
   document.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById("roleDropdownBtn");
     const menu = document.getElementById("roleDropdownMenu");
+    const searchInput = document.querySelector(".search-box input");
+    const rows = document.querySelectorAll(".user-table tbody tr");
 
-    if (!btn || !menu) return;
+    let currentRole = "all";
 
-    // Bấm vào nút thì bật/tắt menu
+    if (!btn || !menu || !searchInput) return;
+
+    // Dropdown toggle
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
       menu.classList.toggle("show");
     });
 
-    // Click ra ngoài thì đóng menu
+    // Close dropdown when clicking outside
     document.addEventListener("click", (e) => {
       if (!btn.contains(e.target) && !menu.contains(e.target)) {
         menu.classList.remove("show");
       }
     });
 
-    // Khi chọn 1 mục trong dropdown
+    // Role filter
     menu.querySelectorAll("li").forEach((item) => {
       item.addEventListener("click", () => {
         const selectedRole = item.textContent.trim();
-        // 🔥 Cập nhật nội dung nút
+        currentRole = item.dataset.role;
         btn.innerHTML = `<i class="bi bi-person-badge"></i> ${selectedRole} <i class="bi bi-caret-down-fill"></i>`;
         menu.classList.remove("show");
-
-        // (Tuỳ chọn) — lọc người dùng theo role trực tiếp
-        const role = item.dataset.role;
-        document.querySelectorAll(".user-table tbody tr").forEach((row) => {
-          const roleText = row.querySelector(".status")?.textContent.trim().toLowerCase() || "";
-          if (role === "all" || roleText.includes(selectedRole.toLowerCase())) {
-            row.style.display = "";
-          } else {
-            row.style.display = "none";
-          }
-        });
+        applyFilters();
       });
     });
+
+    // Search filter
+    searchInput.addEventListener("input", () => {
+      applyFilters();
+    });
+
+    // 🔥 Kết hợp lọc role + tìm kiếm
+    function applyFilters() {
+      const keyword = searchInput.value.trim().toLowerCase();
+
+      rows.forEach((row) => {
+        const text = row.textContent.toLowerCase();
+        const roleText = row.querySelector(".status")?.textContent.trim().toLowerCase() || "";
+        const matchKeyword = text.includes(keyword);
+        const matchRole = currentRole === "all" || roleText.includes(currentRole === "0" ? "admin" : currentRole === "1" ? "instructor" : "student");
+        row.style.display = matchKeyword && matchRole ? "" : "none";
+      });
+    }
   });
 </script>
+
 {{/section}}
 
 <div class="user-container">

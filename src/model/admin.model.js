@@ -1,7 +1,7 @@
 import db from '../utils/db.js';
 
 export function findAll() {
-  return db('users');
+  return db('users').orderBy('UserPermission', 'asc');
 }
 
 export function findById(id) {
@@ -35,7 +35,7 @@ export function findCategoryById(id) {
   return db('categories').where('CatID', id).first();
 }
 export function findAllCategories() {
-  return db('categories');
+  return db('categories').orderBy('CatID', 'asc');
 }
 export function addCategory(category) {
   return db('categories').insert(category);

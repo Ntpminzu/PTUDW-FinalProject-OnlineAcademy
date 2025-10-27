@@ -2,17 +2,22 @@ import express from 'express';
 import { engine } from 'express-handlebars';
 import hbs_sections from 'express-handlebars-sections';
 import session from 'express-session';
-import courseRouter from './src/routes/course.route.js';
-import accountRouter from './src/routes/account.route.js';
-import categoryRouter from './src/routes/category.route.js';
+import  courseRouter from './src/routes/course.route.js';
+import  accountRouter from './src/routes/account.route.js';
+import  categoryRouter from './src/routes/category.route.js';
 import categoryModel from './src/model/category.model.js';
 import courseModel from './src/model/course.model.js';
-import managementRouter from './src/routes/management.route.js';
+import  managementRouter from './src/routes/management.route.js';
 import userRouter from './src/routes/admin.route.js';
 import { restrict, restrictAdmin } from './src/middlewares/auth.mdw.js';
+import db from './src/utils/db.js';
+import path from 'path';
+import { fileURLToPath } from "url";
 
 const app = express();
 const port = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -20,9 +25,12 @@ app.set('trust proxy', 1) // trust first proxy
 
 
 app.engine('hbs', engine({
-  extname: '.hbs',
-  defaultLayout: 'main',
-  helpers: {
+    defaultLayout: 'main',
+    extname: '.hbs', 
+    layoutsDir: path.join(__dirname, "src/views/layouts"),
+    partialsDir: path.join(__dirname, "src/views/partials"),
+    defaultLayout: "main",
+      helpers: {
     section: hbs_sections(),
     gt: function (a, b) {
       return a > b;
@@ -66,7 +74,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.set('view engine', 'hbs');
-app.set('view engine', 'hbs');
 app.set('views', './src/views');
 
 
@@ -79,13 +86,32 @@ app.use(session({
   cookie: { secure: false }
 }));
 
+// ===== Caching categories để tránh pool full =====
+let cachedCategories = null;
+
+async function loadCategories() {
+  const categories = await categoryModel.findAll();
+  const subcatPromises = categories.map(cat =>
+    db('sub_cat').where('CatID', cat.CatID)
+  );
+  const subcatResults = await Promise.all(subcatPromises);
+  categories.forEach((cat, i) => {
+    cat.subcategories = subcatResults[i];
+  });
+  return categories;
+}
+
+// Middleware: chỉ load 1 lần duy nhất
 app.use(async (req, res, next) => {
   try {
-    const categories = await categoryModel.findAll();
-    res.locals.global_categories = categories;
+    if (!cachedCategories) {
+      cachedCategories = await loadCategories();
+      console.log('✅ Categories loaded into cache');
+    }
+    res.locals.global_categories = cachedCategories;
     next();
   } catch (err) {
-    console.error('Lỗi khi load categories:', err);
+    console.error('❌ Lỗi khi load categories:', err);
     next(err);
   }
 });

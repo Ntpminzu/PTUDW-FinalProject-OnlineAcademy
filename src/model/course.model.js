@@ -1,20 +1,42 @@
 import db from "../utils/db.js";
 
-export default{
-     findAll() {
+export default {
+  findAll() {
     return db('courses');
   },
 
-  findByCategory(catId) {
+  // THÊM: Hàm thêm khóa học mới
+  add(courseEntity) {
+    return db('courses').insert(courseEntity);
+  },
+
+  // SỬA: 'courses.InstructorID' -> 'courses.UserID'
+  findByCategory(SubCatID) {
     return db('courses')
+<<<<<<< HEAD
     .join('users', 'courses.UserID', '=', 'users.UserID')
     .where('courses.CatID', catId)
     .select(
       'courses.*',
       'users.Fullname as InstructorName'
     );
+=======
+      .join('users', 'courses.UserID', '=', 'users.UserID')
+      .join('sub_cat', 'courses.SubCatID', '=', 'sub_cat.SubCatID')
+      .join('categories', 'sub_cat.CatID', '=', 'categories.CatID')
+      .where('courses.SubCatID', SubCatID)
+      .select(
+        'courses.*',
+        'users.Fullname as InstructorName',
+        'categories.CatName as CategoryName',
+        'sub_cat.SubCatName as SubCategoryName'
+      );
+>>>>>>> 959b19ee1589c233d8be9e51dbe1a0c329bff192
   },
+
+  // SỬA: 'c.InstructorID' -> 'c.UserID'
   findTop10CoursesViews() {
+<<<<<<< HEAD
   return db('courses as c')
     .leftJoin('users as u', 'c.UserID', 'u.UserID')
     .leftJoin('categories as ca', 'c.CatID', 'ca.CatID')
@@ -31,13 +53,35 @@ export default{
       'ca.CatName'
     )
     .limit(10);
+=======
+    return db('courses as c')
+      .leftJoin('users as u', 'c.UserID', 'u.UserID')
+      .leftJoin('categories as ca', 'c.SubCatID', 'ca.CatID')
+      .orderBy('c.Views', 'desc')
+      .select(
+        'c.CourseID',
+        'c.CourseName',
+        'c.ImageUrl',
+        'c.Rating',
+        'c.Total_Review',
+        'c.CurrentPrice',
+        'c.OriginalPrice',
+        'u.Fullname as InstructorName',
+        'ca.CatName'
+      )
+      .limit(10);
+>>>>>>> 959b19ee1589c233d8be9e51dbe1a0c329bff192
   },
-  
-  // Top 4 xem nhiều trong tuần
+
+  // SỬA: 'courses.InstructorID' -> 'courses.UserID'
   findTop4WeekViews() {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID')
+<<<<<<< HEAD
       .join('categories', 'courses.CatID', '=', 'categories.CatID')
+=======
+      .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
+>>>>>>> 959b19ee1589c233d8be9e51dbe1a0c329bff192
       .select(
         'courses.*',
         'users.Fullname as InstructorName',
@@ -47,11 +91,15 @@ export default{
       .limit(4);
   },
 
-  // Top 10 xem nhiều trong tuần
+  // SỬA: 'courses.InstructorID' -> 'courses.UserID'
   findTop10WeekViews() {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID')
+<<<<<<< HEAD
       .join('categories', 'courses.CatID', '=', 'categories.CatID')
+=======
+      .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
+>>>>>>> 959b19ee1589c233d8be9e51dbe1a0c329bff192
       .select(
         'courses.*',
         'users.Fullname as InstructorName',
@@ -61,19 +109,49 @@ export default{
       .limit(10);
   },
 
-  // Top 10 mới nhất
+  // SỬA: 'courses.InstructorID' -> 'courses.UserID'
   findTop10Newest() {
+    return db('courses as c')
+    .join('users as u', 'c.UserID', '=', 'u.UserID')
+    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+    .select(
+      'c.CourseID',
+      'c.CourseName',
+      'c.ImageUrl',
+      'c.Rating',
+      'c.Total_Review',
+      'c.CurrentPrice',
+      'c.OriginalPrice',
+      'u.Fullname as InstructorName',
+      'ca.CatName as CategoryName',
+      'c.Date'
+    )
+    .orderByRaw('"c"."Date" DESC NULLS LAST')
+    .limit(10);
+  },
+
+  // SỬA: 'courses.InstructorID' -> 'courses.UserID'
+  findByCategoryPaging(SubCatID, limit, offset) {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID')
+<<<<<<< HEAD
       .join('categories', 'courses.CatID', '=', 'categories.CatID')
+=======
+      .join('sub_cat', 'courses.SubCatID', '=', 'sub_cat.SubCatID')
+      .join('categories', 'sub_cat.CatID', '=', 'categories.CatID')
+      .where('courses.SubCatID', SubCatID)
+>>>>>>> 959b19ee1589c233d8be9e51dbe1a0c329bff192
       .select(
         'courses.*',
         'users.Fullname as InstructorName',
-        'categories.CatName as CategoryName'
+        'categories.CatName as CategoryName',
+        'sub_cat.SubCatName as SubCategoryName'
       )
-      .orderBy('Date', 'desc')
-      .limit(10);
+      .limit(limit)
+      .offset(offset);
   },
+<<<<<<< HEAD
   findByCategoryPaging(catId, limit, offset) {
   return db('courses')
     .join('users', 'courses.UserID', '=', 'users.UserID')
@@ -92,16 +170,31 @@ export default{
     .where('CatID', catId)
     .count('* as total')
     .first();
+=======
+
+  countByCategory(SubCatID) {
+    return db('courses')
+      .where('SubCatID', SubCatID)
+      .count('* as total')
+      .first();
+>>>>>>> 959b19ee1589c233d8be9e51dbe1a0c329bff192
   },
+
   findByName(keyword) {
-  return db('courses')
-    .whereRaw('LOWER("CourseName") LIKE ?', [`%${keyword.toLowerCase()}%`])
-    .first();
+    return db('courses')
+      .whereRaw('LOWER("CourseName") LIKE ?', [`%${keyword.toLowerCase()}%`])
+      .first();
   },
+
+  // SỬA: 'courses.InstructorID' -> 'courses.UserID'
   findByKeyword(keyword) {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID')
+<<<<<<< HEAD
       .join('categories', 'courses.CatID', '=', 'categories.CatID')
+=======
+      .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
+>>>>>>> 959b19ee1589c233d8be9e51dbe1a0c329bff192
       .whereRaw(`
         LOWER(courses."CourseName") LIKE ? 
         OR LOWER(courses."TinyDes") LIKE ?
@@ -121,23 +214,72 @@ export default{
         'categories.CatName as CategoryName'
       );
   },
+
+  // finduserenrollcourses (Hàm này không join với bảng users nên không cần sửa)
   async finduserenrollcourses(UserId) {
-    return await db('enrollments')
-      .join('courses', 'enrollments.CourseID', 'courses.CourseID')
-      .join('categories', 'courses.CatID', 'categories.CatID')
+    return await db('enrollments as e')
+      .join('courses as c', 'e.CourseID', 'c.CourseID')
+      .join('sub_cat as s', 'c.SubCatID', 's.SubCatID')
+      .join('categories as ca', 's.CatID', 'ca.CatID')
       .select(
-        'courses.CourseID',
-        'courses.CourseName',
-        'courses.ImageUrl',
-        'categories.CatName',
-        'courses.CurrentPrice',
-        'courses.OriginalPrice',
-        'courses.Rating',
-        'courses.Total_Review',
-        'courses.TotalStudent'
+        'c.CourseID',
+        'c.CourseName',
+        'c.ImageUrl',
+        'ca.CatName',
+        'c.CurrentPrice',
+        'c.OriginalPrice',
+        'c.Rating',
+        'c.Total_Review',
+        'c.TotalStudent',
+        'e.enrolled_at'
       )
-      .where('enrollments.UserID', UserId)
-      .orderBy('enrollments.enrolled_at', 'desc');
+      .where('e.UserID', UserId)
+      .orderBy('e.enrolled_at', 'desc');
   },
+
+  // THÊM HÀM MỚI (đã sửa): Dùng 'UserID'
+  findByUserId(userId) {
+    // Tìm các khóa học có 'UserID' (trường foreign key) khớp với 'userId' (param)
+    return db('courses').where('UserID', userId);
+  },
+  findById(courseId) {
+    return db('courses')
+      .leftJoin('users', 'courses.UserID', '=', 'users.UserID')
+      .leftJoin('categories', 'courses.SubCatID', '=', 'categories.CatID')
+      .where('courses.CourseID', courseId)
+      .select(
+        'courses.*',
+        'users.Fullname as InstructorName',
+        'categories.CatName as CategoryName'
+      )
+      .first();
+  },
+  checkIfInWishlist(userId, courseId) {
+    return db('watch_list')
+      .where('UserID', userId)
+      .andWhere('CourseID', courseId);
+  },
+  checkIfInEnrollments(userId, courseId) {
+    return db('enrollments')
+      .where('UserID', userId)
+      .andWhere('CourseID', courseId);
+  },
+  findLessonsByCourseId(courseId) {
+    return db('lessons')
+      .where('CourseID', courseId)
+      .select(
+        'LessonID',
+        'LessonName',
+        'TinyDes',
+        'FullDes',
+        'VideoUrl',
+        'LessonStatus',
+        'LessonPermission',
+        'LastUpdate',
+        'CourseID',
+        'UserID'
+      )
+      .orderBy('LastUpdate', 'asc');
+  }
 
 };

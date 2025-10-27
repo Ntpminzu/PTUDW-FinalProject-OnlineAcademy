@@ -1,7 +1,6 @@
 import express from 'express';
 import * as adminModel from '../model/admin.model.js';
 
-
 const router = express.Router();
 
 router.get('/user/list', async function (req, res) {

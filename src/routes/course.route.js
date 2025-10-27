@@ -1,15 +1,15 @@
 import express from 'express';
-import knex from 'knex';
 import courseModel from '../model/course.model.js';
 import categoryModel from '../model/category.model.js';
 import * as accountModel from '../model/account.model.js';
+import db from '../utils/db.js';
 
 const router = express.Router();
 
 router.get('/',async function (req, res) {
     const topCourses = await courseModel.findTop10CoursesViews();
     const top4Week = await courseModel.findTop4WeekViews();
-    const top10Week = await categoryModel.findtopcategories();
+    const top10Week = await categoryModel.findTopSubCategories();
     const top10Newest = await courseModel.findTop10Newest();
     res.render('course/home',{
         topCourses,
@@ -19,44 +19,118 @@ router.get('/',async function (req, res) {
     });
 });
 
-router.get('/detail', function (req, res) {
-    res.render('course/detail');
+
+router.get('/detail', async function (req, res) {
+  const courseId = req.query.id;
+  const userId = req.session.authUser?.UserID;
+
+  try {
+    const course = await courseModel.findById(courseId);
+
+    let isInWishlist = false;
+    let isBought = false;
+    if (userId) {
+      const wishlist = await courseModel.checkIfInWishlist(userId, courseId);
+      isInWishlist = wishlist.length > 0;
+
+      const enrollments = await courseModel.checkIfInEnrollments(userId, courseId);
+      isBought = enrollments.length > 0;
+    }
+
+    if (course) {
+      res.render('course/detail', { course, isInWishlist, isBought });
+    } else {
+      res.status(404).send('Course not found');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
 });
 
+
 router.get('/bycat', async function (req, res) {
-    const catId = req.query.id;
-    if (!catId) return res.redirect('/course');
+  try {
+    const catId = req.query.catid;
+    const subcatId = req.query.subcatid;
+    console.log('catId:', catId);
+    console.log('subcatId:', subcatId);
+
+    // 🔒 Nếu không có subcatid thì quay về trang course chính
+    if (!subcatId) return res.redirect('/course');
 
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const limit = 4;
     const offset = (page - 1) * limit;
+
+    // ✅ Lấy category cha
     const category = await categoryModel.findByID(catId);
-    const courses = await courseModel.findByCategoryPaging(catId, limit, offset);
-    const totalRow = await courseModel.countByCategory(catId);
+
+    // ✅ Lấy thông tin subcategory
+    const sub_cat = await db('sub_cat').where('SubCatID', subcatId).first();
+
+    // ✅ Lấy danh sách course thuộc subcategory
+    const courses = await courseModel.findByCategoryPaging(subcatId, limit, offset);
+
+    // ✅ Đếm tổng số course để phân trang
+    const totalRow = await courseModel.countByCategory(subcatId);
     const totalPages = Math.ceil(totalRow.total / limit);
 
+    // ✅ Render ra view
     res.render('course/bycat', {
-        layout: 'main',
-      category,
-      courses,
+      layout: 'main',
+      category,              // Category cha
+      sub_cat,               // Subcategory con
+      courses,               // Danh sách khóa học
       currentPage: page,
-    totalPages,
-    categoryId: catId,
+      totalPages,
+      categoryId: catId,     // ✅ Giữ đúng: categoryId là ID cha
+      subcatId,              // ✅ Giữ đúng: subcatId để link phân trang hoạt động
     });
+  } catch (err) {
+    console.error('Lỗi khi load trang bycat:', err);
+    res.status(500).render('500', { layout: 'main', message: 'Đã xảy ra lỗi khi tải trang.' });
+  }
 });
 
-router.get('/enroll', function (req, res) {
-    res.render('course/enroll');
+router.get('/enroll', async function (req, res) {
+  const courseId = req.query.id;
+  const userId = req.session.authUser?.UserID;
+
+  try {
+    const course = await courseModel.findById(courseId);
+    const lessons = await courseModel.findLessonsByCourseId(courseId);
+
+    let completedLessons = [];
+    if (userId) {
+      completedLessons = await accountModel.getCompletedLessonsByUserId(userId, courseId);
+    }
+
+    const updatedLessons = lessons.map(lesson => {
+      const isCompleted = completedLessons.some(completed => completed.LessonID === lesson.LessonID);
+      return {
+        ...lesson,
+        isCompleted
+      };
+    });
+
+    res.render('course/enroll', { course, lessons: updatedLessons });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
 });
+
 
 router.get('/courselist', async function (req, res) {
-    const UserId = req.session.authUser?.UserID;
-    const courses = await courseModel.finduserenrollcourses(UserId);
-    res.render('course/courselist', {
-        layout: 'main',
-        courses,
-    });
-} );
+  const UserId = req.session.authUser?.UserID;
+  const courses = await courseModel.finduserenrollcourses(UserId);
+  res.render('course/courselist', {
+    layout: 'main',
+    courses,
+  });
+});
 
 router.get('/search', async (req, res) => {
   const keyword = req.query.q?.trim().toLowerCase();
@@ -81,23 +155,9 @@ router.get('/search', async (req, res) => {
   });
 });
 
-router.get('/searchResults', (req, res) => {
-  res.render('course/searchResults');
-});
-
 router.get('/course-remake', function (req, res) {
-    res.render('course/course-remake');
+  res.render('course/course-remake');
 });
 
-router.post("/add-to-watchlist", async (req, res) => {
-  if (!req.session.isAuthenticated)
-    return res.redirect("/account/signin");
-
-  const userId = req.session.authUser.UserID;
-  const { courseId } = req.body;
-
-  await accountModel.addToWatchlist(userId, courseId);
-  res.redirect(`/course/detail?id=${courseId}`);
-});
 
 export default router;

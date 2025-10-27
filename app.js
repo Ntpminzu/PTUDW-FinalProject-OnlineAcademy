@@ -9,7 +9,7 @@ import categoryModel from './src/model/category.model.js';
 import courseModel from './src/model/course.model.js';
 import  managementRouter from './src/routes/management.route.js';
 import userRouter from './src/routes/admin.route.js';
-import { restrict, restrictAdmin } from './src/middlewares/auth.mdw.js';
+import { restrict, restrictAdmin, restrictInstructor, restrictStudent } from './src/middlewares/auth.mdw.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,45 +20,44 @@ app.set('trust proxy', 1) // trust first proxy
 
 
 app.engine('hbs', engine({
-    defaultLayout: 'main',
-    extname: '.hbs', 
-      helpers: {
-    section: hbs_sections(),
-    gt: function(a, b) {
-      return a > b;
-    },
-    eq: function(a, b) {
-      return a === b;
-    },
-    lt: function(a, b) {
-      return a < b;
-    },
-    add: function(a, b) {
-      return a + b;
-    },
-    range: function(start, end) {
-      let arr = [];
-      for (let i = start; i <= end; i++) {
-        arr.push(i);
-      }
-      return arr;
-    },
-    plus: (a, b) => a + b,
-    minus: (a, b) => a - b,
-    ifCond: function (v1, operator, v2, options) {
-      switch (operator) {
-        case '==': return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===': return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '!=': return (v1 != v2) ? options.fn(this) : options.inverse(this);
-        case '<': return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=': return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>': return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=': return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        default: return options.inverse(this);
-      }
-  },
-  subtract: (a, b) => a - b,
-  }
+  defaultLayout: 'main',
+  extname: '.hbs', 
+    helpers: {
+      section: hbs_sections(),
+      gt: function(a, b) {
+        return a > b;
+      },
+      eq: function(a, b) {
+        return a === b;
+      },
+      lt: function(a, b) {
+        return a < b;
+      },
+      add: function(a, b) {
+        return a + b;
+      },
+      range: function(start, end) {
+        let arr = [];
+        for (let i = start; i <= end; i++) {
+          arr.push(i);
+        }
+        return arr;
+      },
+      plus: (a, b) => a + b,
+      subtract: (a, b) => a - b,
+      ifCond: function (v1, operator, v2, options) {
+        switch (operator) {
+          case '==': return (v1 == v2) ? options.fn(this) : options.inverse(this);
+          case '===': return (v1 === v2) ? options.fn(this) : options.inverse(this);
+          case '!=': return (v1 != v2) ? options.fn(this) : options.inverse(this);
+          case '<': return (v1 < v2) ? options.fn(this) : options.inverse(this);
+          case '<=': return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+          case '>': return (v1 > v2) ? options.fn(this) : options.inverse(this);
+          case '>=': return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+          default: return options.inverse(this);
+        }
+      },
+    }
 }));
 app.set('view engine', 'hbs'); 
 app.set('view engine', 'hbs');
@@ -77,9 +76,7 @@ app.use(session({
 app.use(async (req, res, next) => {
   try {
     const categories = await categoryModel.findAll();
-    for (const cat of categories) {
-      cat.courses = await courseModel.findByCategory(cat.CatID);
-    }
+
     res.locals.global_categories = categories;
     next();
   } catch (err) {
@@ -103,15 +100,15 @@ app.use(async function (req, res, next) {
 app.use('/course', courseRouter);
 app.use('/account', accountRouter);
 app.use('/category', categoryRouter);
-app.use('/management', restrict, restrictAdmin, managementRouter);
-app.use('/admin', userRouter);
-
-app.get('/403', (req, res) => {
-  res.status(403).render('403');
-});
+app.use('/management', restrict, restrictInstructor, managementRouter);
+app.use('/admin', restrict, userRouter);
 
 app.get('/', (req, res) => {
   res.redirect('course');
+});
+
+app.get('/403', (req, res) => {
+  res.status(403).render('403');
 });
 
 app.use((req, res) => {

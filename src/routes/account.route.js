@@ -128,7 +128,9 @@ router.post('/verify-signin-otp', async (req, res) => {
     req.session.signinOtp = null;
     req.session.signinOtpAt = null;
 
-    res.redirect('/');
+    const retUrl = req.session.retUrl || '/';
+    delete req.session.retUrl;
+    res.redirect(retUrl);
   } catch (error) {
     console.error(error);
     res.render('account/signin', { error: 'Lỗi khi xác minh OTP.', showOtp: true });

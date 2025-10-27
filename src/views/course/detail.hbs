@@ -1,5 +1,9 @@
 {{#section "styles" append=true}}
+<<<<<<< HEAD
 <link rel="stylesheet" href="/course.css">
+=======
+<link rel="stylesheet" href="/detail.css">
+>>>>>>> 8b7b32ddbd0f3efbc739c0d00adf480bd68cd827
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 {{/section}}
 
@@ -8,11 +12,19 @@
     <!-- Main Content -->
     <main class="main-content">
       <!-- Hero -->
+<<<<<<< HEAD
       <section class="hero">
         <div class="hero-overlay">
           <div class="course-stats">
             <div class="rating-info">
               <span class="average-rating">4.5</span>
+=======
+      <section class="hero" style="background: url('{{course.ImageUrl}}') center center / cover no-repeat;">
+        <div class="hero-overlay">
+          <div class="course-stats">
+            <div class="rating-info">
+              <span class="average-rating">{{course.Rating}}</span>
+>>>>>>> 8b7b32ddbd0f3efbc739c0d00adf480bd68cd827
               <div class="rating-stars">
                 <i class="bi bi-star-fill"></i>
                 <i class="bi bi-star-fill"></i>
@@ -20,6 +32,7 @@
                 <i class="bi bi-star-fill"></i>
                 <i class="bi bi-star-half"></i>
               </div>
+<<<<<<< HEAD
               <span class="review-count">(120 reviews)</span>
             </div>
             <div class="enrollment-info">
@@ -93,6 +106,148 @@
         </div>
       </section>
 
+=======
+              <span class="review-count">({{course.Total_Review}} reviews)</span>
+            </div>
+            <div class="enrollment-info">
+              <i class="bi bi-person-fill"></i>
+              <span>{{course.TotalStudent}} students enrolled</span>
+            </div>
+          </div>
+          <div class="button-container">
+            {{#if isInWishlist}}
+            <form action="/account/wishlist/remove" method="post">
+              <input type="hidden" name="courseId" value="{{course.CourseID}}">
+              <button type="submit" class="start-btn wishlist-btn" style="text-decoration: none;">
+                <i class="bi bi-heart-fill"></i> Remove from Wishlist
+              </button>
+            </form>
+            {{else}}
+            <form action="/account/add-to-watchlist" method="post">
+              <input type="hidden" name="courseId" value="{{course.CourseID}}">
+              <button type="submit" class="start-btn wishlist-btn" style="text-decoration: none;">
+                <i class="bi bi-heart"></i> Add to Wishlist
+              </button>
+            </form>
+            {{/if}}
+
+
+            <form action="/account/add-to-cart" method="post">
+              <button type="submit" class="start-btn cart-btn" style="text-decoration: none;">
+                <i class="bi bi-cart"></i> Buy Course
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Course Overview with Detailed Info -->
+      <section class="overview mb-3">
+        <div class="course-details-card">
+          <h5 class="card-header">
+            <i class="bi bi-book-half"></i> Course Details
+          </h5>
+          <div class="card-body">
+            <h5 class="card-title">{{course.CourseName}}</h5>
+            <p class="card-text">Description: {{course.TinyDes}}</p>
+            <p class="card-text">Instructor: {{course.InstructorName}}</p>
+            <p class="card-text">Duration: {{course.TinyDes}}</p>
+            <p class="card-text">Level: {{course.Level}}</p>
+            <p class="card-text">Prerequisites: Basic knowledge of programming and mathematics</p>
+            <p class="card-text">What You'll Learn:
+            <ul>
+              <li>{{course.FullDes}}</li>
+            </ul>
+            </p>
+            <p class="card-text">Benefits: Certificate upon completion, lifetime access, community support</p>
+            <p class="card-text">Tuition Fee: ${{course.CurrentPrice}}</p>
+            <p class="card-text">Last Updated: {{course.Date}}</p>
+            <a href="/course/enroll" class="enroll-btn"><i class="bi bi-journal-plus"></i> Enroll Now</a>
+          </div>
+          <div class="card-footer text-muted text-center">
+            Hogwarts Academy © 2025
+          </div>
+        </div>
+        <div class="course-outline">
+          <h3>Course Outline</h3>
+          <ul class="outline-list">
+            <li>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+                alt="">
+              <span>Lesson 1: Introduction to the Topic</span>
+              <p>Overview of key concepts and foundational knowledge. Duration: 2 hours.</p>
+              <button class="preview-btn" onclick="togglePreview('lesson1')">Preview</button>
+              <div id="lesson1" class="preview-content" style="display: none; text-align: center;">
+                <h5>Lesson 1 Content:</h5>
+                <p>This is the detailed content for Lesson 1. You can add video, text, images, or any content here.</p>
+
+                <!-- Add video -->
+                <video width="600" controls style="margin: 0 auto; display: block;">
+                  <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                    type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+
+            </li>
+            <li>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+                alt="">
+              <span>Lesson 2: Advanced Techniques</span>
+              <p>Deep dive into practical methods with hands-on exercises. Duration: 3 hours.</p>
+              <button class="preview-btn" onclick="togglePreview('lesson2')">Preview</button>
+              <div id="lesson2" class="preview-content" style="display: none; text-align: center;">
+                <h5>Lesson 2 Content:</h5>
+                <p>This is the detailed content for Lesson 2. You can add video, text, images, or any content here.</p>
+
+                <video width="600" controls style="margin: 0 auto; display: block;">
+                  <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                    type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </li>
+            <li>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+                alt="">
+              <span>Lesson 3: Real-World Applications</span>
+              <p>Explore case studies and apply concepts to real-world scenarios. Duration: 4 hours.</p>
+              <button class="preview-btn" onclick="togglePreview('lesson3')">Preview</button>
+              <div id="lesson3" class="preview-content" style="display: none; text-align: center;">
+                <h5>Lesson 3 Content:</h5>
+                <p>This is the detailed content for Lesson 3. You can add video, text, images, or any content here.</p>
+
+                <video width="600" controls style="margin: 0 auto; display: block;">
+                  <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                    type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </li>
+            <li>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+                alt="">
+              <span>Lesson 4: Final Project</span>
+              <p>Build and present your own project with instructor feedback. Duration: 5 hours.</p>
+              <button class="preview-btn" onclick="togglePreview('lesson4')">Preview</button>
+              <div id="lesson4" class="preview-content" style="display: none; text-align: center;">
+                <h5>Lesson 4 Content:</h5>
+                <p>This is the detailed content for Lesson 4. You can add video, text, images, or any content here.</p>
+
+                <video width="600" controls style="margin: 0 auto; display: block;">
+                  <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                    type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </li>
+          </ul>
+
+        </div>
+      </section>
+
+>>>>>>> 8b7b32ddbd0f3efbc739c0d00adf480bd68cd827
       <!-- Related Courses -->
       <section class="related-courses">
         <h2>Related Courses in This Field</h2>
@@ -149,7 +304,11 @@
                 <span class="course-rating">4.5 <i class="bi bi-star-fill"></i> (120 reviews)</span>
                 <span class="course-enrollment">1,500 students</span>
               </div>
+<<<<<<< HEAD
               <p class="course-price">$49.99</p>
+=======
+              <p class="card-text">$49.99</p>
+>>>>>>> 8b7b32ddbd0f3efbc739c0d00adf480bd68cd827
               <a href="/course/4" class="course-btn">View Course</a>
             </div>
           </div>
@@ -236,4 +395,20 @@
       </section>
     </main>
   </div>
+<<<<<<< HEAD
 </div>
+=======
+</div>
+<script>
+  function togglePreview(lessonId) {
+    var previewContent = document.getElementById(lessonId);
+
+    if (previewContent.style.display === "none" || previewContent.style.display === "") {
+      previewContent.style.display = "block";
+    } else {
+      previewContent.style.display = "none";
+    }
+  }
+
+</script>
+>>>>>>> 8b7b32ddbd0f3efbc739c0d00adf480bd68cd827

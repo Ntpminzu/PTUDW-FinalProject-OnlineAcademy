@@ -1,0 +1,40 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/search.css">
+{{/section}}
+
+<div class="search-result-page container mt-4">
+  <h3 class="search-title text-center mb-4" style="text-align: center;">
+    Search results for "{{keyword}}"
+  </h3>
+
+  {{#if notFound}}
+    <div class="alert alert-warning text-center">
+      No courses or categories found for "{{keyword}}"
+    </div>
+  {{else}}
+    <div class="row">
+      {{#each results}}
+      <div class="course-card">
+      <a href="/course/detail?id={{CourseID}}">
+      <img src="{{ImageUrl}}" alt="{{CourseName}}">
+      <div class="course-info">
+        <p class="category">{{CategoryName}}</p>
+        <h3>{{CourseName}}</h3>
+        <p class="instructor">{{InstructorName}}</p>
+        <div class="course-rating">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="far fa-star"></i>
+          <span>{{Rating}} ({{TotalStudent}})</span>
+        </div>
+        <div class="course-price">
+          <span class="current">${{CurrentPrice}}</span>
+          <span class="old">${{OriginalPrice}}</span>
+        </div>
+      </div>
+      </a>
+    </div>
+      {{/each}}
+    </div>
+  {{/if}}
+</div>

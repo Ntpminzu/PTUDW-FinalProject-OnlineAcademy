@@ -2,6 +2,7 @@
 {{/section}}
 
 <div class="container mt-4">
+<<<<<<< HEAD
   <h2>Your Wishlist</h2>
   <div class="row">
     <!-- Card 1 -->
@@ -52,5 +53,32 @@
       </div>
     </div>
 
+=======
+  <h2 style="color: gold; text-align: center; font-weight: bold; font-size: 1.5rem; ">Your Wishlist</h2>
+  <div class="row">
+    {{#if empty}}
+      <p class="text-muted" style="color: beige; text-align: center; font-weight: bold; font-size: 1.0rem;">Bạn chưa lưu khóa học nào 😊</p>
+    {{else}}
+      {{#each items}}
+    <div class="col-md-4">
+      <div class="card">
+        <img src="{{ImageUrl}}" class="card-img-top" alt="Course Image">
+        <div class="card-body">
+          <h5 class="card-title">{{CourseName}}</h5>
+          <p class="card-text">Professor: {{InstructorName}}</p>
+          <p class="card-text">{{TinyDes}}</p>
+          <a href="/course/detail?id={{CourseID}}" class="btn btn-primary">View Details</a>
+          <form action="/account/wishlist/remove" method="post" class="float-end ms-2">
+              <input type="hidden" name="courseId" value="{{CourseID}}">
+              <button class="btn btn-danger">
+                <i class="bi bi-x-circle"></i> Remove
+              </button>
+            </form>
+        </div>
+      </div>
+    </div>
+      {{/each}}
+    {{/if}}
+>>>>>>> 8b7b32ddbd0f3efbc739c0d00adf480bd68cd827
   </div>
 </div>

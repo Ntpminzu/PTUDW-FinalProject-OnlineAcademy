@@ -1,6 +1,9 @@
 /* ========================= RESET ========================= */
 @import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Quintessential&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Changa:wght@300;400;500;600;700&display=swap');
 * {
   box-sizing: border-box;
   margin: 0;
@@ -12,213 +15,45 @@ body {
   background: #001403; /* xanh đậm Slytherin */
   color: #000000;
   line-height: 1.4;
-  padding-top: 60px;
+  
   display: grid;
   grid-template-rows: auto auto auto;
   grid-template-columns: 1fr;
   justify-items: center;
 }
 
-/* ========================= BANNER ========================= */
-.banner {
-  position: relative;
-  width: 100%;
-  height: 500px;
-  overflow: hidden;
-}
-
-.banner img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  
-}
-
-/* ========================= CAROUSEL ========================= */
-.carousel-section {
-  margin-top: 60px;
-  margin-bottom: 80px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 80vh;
-}
-
-.carousel-section h2 {
-  font-family: 'Rubik Mono One', sans-serif;
-  color: #AAAAAA;
-  font-size: 1.8rem;
-  margin-bottom: 30px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-/* ========================= SWIPER ========================= */
-swiper-container.mySwiper {
-  width: 420px;
-  height: 600px;
-  margin: 0 auto;
-  overflow: visible !important; /* Cho phép hiển thị phần tràn */
-}
-
-.swiper-wrapper {
-  overflow: visible !important; /* ✅ Cần dòng này để không cắt phần scale */
-}
-
-swiper-slide {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
-  overflow: visible !important; /* Giữ overflow visible để hiệu ứng scale không bị cắt */
-  background: transparent; /* ✅ Loại bỏ nền đen mặc định (nếu có) */
-}
-/* ========================= FLIP CAROUSEL CARD ========================= */
-.carousel-card,
-.card-inner,
-.card-front,
-.card-back {
-  box-sizing: border-box;
-  
-  
-}
-
-.carousel-card {
-  width: 100%;
-  height: 100%;
-  perspective: 1000px;
-  cursor: pointer;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-/* Hover effect – áp dụng toàn card */
-.carousel-card:hover {
-  transform: scale(1.10);
-    box-shadow: 0 30px 50px rgba(42, 98, 61, 0.781);
-  border-radius: 12px;
-}
-
-/* Cấu trúc xoay */
-.card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  transition: transform 0.8s;
-  transform-style: preserve-3d;
-}
-
-.carousel-card.flipped .card-inner {
-  transform: rotateY(180deg);
-}
-
-/* ====== Hai mặt ====== */
-.card-front,
-.card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  border: 6px solid #5D5D5D;
-  padding: 20px; 
-  backface-visibility: hidden;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  
-}
-
-/* ====== Mặt trước ====== */
-.card-front {
-  background: linear-gradient(145deg, #2A623D, #000000);
-  color: #AAAAAA;
-  text-align: center;
-}
-
-.card-front h3 {
-  font-family: 'Rubik Mono One', sans-serif;
-  color: #AAAAAA;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  text-shadow: 0 0 8px rgba(42, 98, 61, 0.8);
-}
-
-.card-front p {
-  font-family: 'Quintessential', cursive;
-  color: #AAAAAA;
-}
-
-/* ====== Mặt sau ====== */
-.card-back {
-  background: linear-gradient(145deg, #1A472A, #000000);
-  color: #AAAAAA;
-  transform: rotateY(180deg);
-  text-align: center;
-}
-
-.card-back h3 {
-  font-family: 'Rubik Mono One', sans-serif;
-  color: #2A623D;
-  margin-bottom: 10px;
-  text-shadow: 0 0 6px rgba(42, 98, 61, 0.8);
-}
-
-.card-back p {
-  font-family: 'Quintessential', cursive;
-  color: #AAAAAA;
-  font-size: 0.9rem;
-}
-
-/* ====== Ảnh giảng viên ====== */
-.teacher-frame {
-  width: 100%;
-  height: 80%;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 10px solid #4C3D19;
-  margin-bottom: 15px;
-}
-
-.teacher-frame img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-
-  transition: transform 0.4s ease;
-}
-
 /* ========================= NAVBAR ========================= */
 .navbar {
   width: 100%;
-  background-color: #000000;
+  background-color: #000;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 15px 40px;
-  position: fixed;
+  justify-content: space-between;
+  padding: 12px 40px;
+  position: static;
   top: 0;
   left: 0;
   z-index: 100;
   box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  flex-wrap: nowrap; /* tránh xuống dòng */
+  gap: 20px;
 }
 
 .logo {
-  font-family: 'Rubik Mono One', sans-serif;
-  font-size: 1.3rem;
+  font-family: 'Bungee', sans-serif;
+  font-size: 1.4rem;
   font-weight: bold;
-  color: #1A472A;
-  letter-spacing: 1px;
+  color: #2CFF05;
+  white-space: nowrap;
 }
 
+/* Links */
 .nav-links {
   list-style: none;
   display: flex;
   gap: 25px;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links a {
@@ -232,77 +67,144 @@ swiper-slide {
   color: #2A623D;
   transform: scale(1.1);
 }
-
-/* Responsive mobile navbar */
-@media (max-width: 768px) {
-  .nav-links {
-    display: none;
-  }
-  .logo {
-    text-align: center;
-    width: 100%;
-  }
+/* ======= DROPDOWN (CẤP 1) ======= */
+.nav-links li {
+  position: relative;
 }
-/* ========================= search ========================= */
-/* Tổng thể form */
+/* Bỏ dấu chấm và khoảng cách mặc định trong các menu */
+.nav-links ul,
+.dropdown-menu,
+.sub-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: rgb(246, 246, 246);
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #111;
+  padding: 10px 0;
+  border-radius: 8px;
+  min-width: 200px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  z-index: 200;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu li {
+  position: relative;
+}
+
+.dropdown-menu a {
+  display: block;
+  color: #ddd;
+  padding: 10px 20px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.dropdown-menu a:hover {
+  background: #06FF00;
+  color: #000000;
+}
+
+/* ======= SUB-DROPDOWN (CẤP 2) ======= */
+.sub-menu {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background: #222;
+  min-width: 200px;
+  border-radius: 8px;
+  padding: 10px 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.sub-dropdown:hover .sub-menu {
+  display: block;
+}
+
+.sub-menu a {
+  color: #ccc;
+  padding: 10px 20px;
+}
+
+.sub-menu a:hover {
+ background: #06FF00;
+  color: #000000;
+}
+/* ========================= SEARCH FORM ========================= */
 form.d-flex {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
-/* Ô input */
 form.d-flex .form-control {
-  background-color: #1b1e36;         
-  color: #ffeb3b;                 
-  border: 1px solid #ffeb3b;       
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #06ff00;
   border-radius: 10px;
   padding: 8px 14px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  width: 350px;
   transition: all 0.3s ease;
-  width: 300px;
 }
 
-form.d-flex .form-control::placeholder {
-  color: #b3b3b3;
-}
-
-/* Khi người dùng focus vào ô input */
 form.d-flex .form-control:focus {
   outline: none;
-  border-color: #ffd700;
-  box-shadow: 0 0 10px #ffd700;
-  background-color: #232548;
+  border-color: #00ff88;
+  box-shadow: 0 0 10px #00ff88;
 }
 
-/* Nút Search */
+/* ==== Nút Search với hiệu ứng neon xanh ==== */
 form.d-flex .btn {
-  color: #0b0d25;
-  background-color: #ffeb3b;
-  border: none;
-  border-radius: 10px;
+  position: relative;
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 1rem;
   font-weight: 600;
-  transition: all 0.3s ease;
-  padding: 8px 16px;
+  color: #000; /* chữ đen */
+  background: linear-gradient(45deg, #32CD32, #39FF14); /* neon green gradient */
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(0, 255, 128, 0.6);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 form.d-flex .btn:hover {
-  background-color: #fff35b;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(255, 255, 100, 0.6);
+  transform: scale(1.08);
+  box-shadow: 0 0 25px rgba(0, 255, 128, 0.9);
 }
 
-form.d-flex .btn:active {
-  transform: translateY(1px);
-  box-shadow: none;
+form.d-flex .btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
 }
 
-
-/* ========================= SCROLL SECTIONS ========================= */
-.section {
-  width: 100%;
-  max-width: 1200px;
-  margin-bottom: 50px;
+form.d-flex .btn:hover::before {
+  animation: shimmer 1.2s infinite;
 }
 
 .section h2 {
@@ -383,69 +285,21 @@ form.d-flex .btn:active {
 /* ========================= search ========================= */
 /* Tổng thể form */
 form.d-flex {
+/* ========================= MAGIC BUTTONS ========================= */
+.auth-buttons {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Ô input */
-form.d-flex .form-control {
-  background-color: #000000;         
-  color: #000000;                 
-  border: 1px solid #ffeb3b;       
-  border-radius: 10px;
-  padding: 8px 14px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-  transition: all 0.3s ease;
-  width: 300px;
-}
-
-form.d-flex .form-control::placeholder {
-  color: #b3b3b3;
-}
-
-/* Khi người dùng focus vào ô input */
-form.d-flex .form-control:focus {
-  outline: none;
-  border-color: #ffd700;
-  box-shadow: 0 0 10px #ffd700;
-  background-color: #000000;
-}
-
-/* Nút Search */
-form.d-flex .btn {
-  color: #000000;
-  background-color: #1A472A;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  padding: 8px 16px;
-}
-
-form.d-flex .btn:hover {
-  background-color: #fff35b;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(42, 98, 61, 0.7);
-}
-
-form.d-flex .btn:active {
-  transform: translateY(1px);
-  box-shadow: none;
-}
-/* ============================= */
-/* 🌟 Hiệu ứng phép thuật cho nút Sign In / Sign Up */
-/* ============================= */
-
 .magic-btn {
   position: relative;
   display: inline-block;
-  padding: 10px 24px;
-  margin: 8px;
-  font-size: 1.1rem;
+  padding: 8px 20px;
+  font-size: 1rem;
   font-weight: 600;
-  color: #fff;
-  background: linear-gradient(45deg, #5a00ff, #9f00ff);
+  color: #000000;
+background: linear-gradient(45deg, #32CD32, #39FF14);
   border: none;
   border-radius: 50px;
   cursor: pointer;
@@ -456,10 +310,9 @@ form.d-flex .btn:active {
 
 .magic-btn:hover {
   transform: scale(1.08);
-  box-shadow: 0 0 20px rgba(159, 0, 255, 0.8);
+  box-shadow: 0 0 20px rgba(9, 255, 0, 0.8);
 }
 
-/* ✨ ánh sáng lấp lánh chạy qua nút */
 .magic-btn::before {
   content: "";
   position: absolute;
@@ -481,10 +334,555 @@ form.d-flex .btn:active {
 }
 
 @keyframes shimmer {
-  0% {
-    left: -75%;
+  0% { left: -75%; }
+  100% { left: 125%; }
+}
+
+/* ========================= RESPONSIVE ========================= */
+@media (max-width: 992px) {
+  .navbar {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
   }
-  100% {
-    left: 125%;
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
   }
+
+  form.d-flex .form-control {
+    width: 180px;
+  }
+
+  .auth-buttons {
+    justify-content: center;
+  }
+}
+
+/* ========================= BANNER ========================= */
+.banner {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+}
+
+/* Khung chứa các ảnh */
+.banner-carousel {
+  display: flex;
+  width: 300%; /* nếu có 3 ảnh */
+  height: 100%;
+  transition: transform 0.8s ease-in-out;
+}
+
+.banner-carousel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Nút điều hướng */
+.banner-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  border: none;    
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.3s;
+  width: 36px;          
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.banner-btn.prev { left: 20px; }
+.banner-btn.next { right: 20px; }
+
+
+/* ========================= CAROUSEL SECTION ========================= */
+.carousel-section {
+  margin-top: 60px;
+  margin-bottom: 80px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+
+  position: relative;
+  z-index: 1;
+
+  width: 100vw;              /* phủ toàn bộ chiều ngang */
+  max-width: 100vw;          /* không giới hạn theo container */
+  overflow: visible;         /* giữ hover card */
+  left: 0;                   /* ✅ căn lại về gốc trái */
+  right: 0;
+  margin-left: 0;            /* ✅ không cần bù trừ */
+  margin-right: 0;
+}
+
+/* ========================= HÌNH NỀN RẮN ========================= */
+.snake-bg {
+  position: absolute;
+  top: -50px; /* mở rộng hình ra ngoài một chút để che viền trên */
+  left: 0;
+  width: 100%;
+  height: calc(100% + 100px); /* tăng chiều cao để có vùng hòa mượt */
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.snake-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.2;
+  filter: blur(1px) brightness(0.8);
+}
+/* ✅ Làm mờ nhẹ cạnh trên và dưới để hòa với nền #001403 */
+.snake-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    #001403 0%,          /* Hòa vào nền trên cùng */
+    rgba(0, 20, 3, 0.7) 10%, /* Mờ dần */
+    transparent 25%,     /* Vùng giữa rõ ảnh */
+    transparent 75%,     
+    rgba(0, 20, 3, 0.7) 95%, /* Mờ dần xuống dưới */
+    #001403 100%         /* Hòa mượt vào nền dưới */
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.carousel-section h2 {
+  font-family: 'Rubik Mono One', sans-serif;
+  color: #AAAAAA;
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* ========================= SWIPER ========================= */
+swiper-container.mySwiper {
+  width: 420px;
+  height: 600px;
+  margin: 0 auto;
+  overflow: visible !important;
+}
+
+.swiper-wrapper {
+  overflow: visible !important;
+}
+
+swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  overflow: visible !important;
+  background: transparent;
+}
+
+/* ========================= FLIP CARD ========================= */
+.carousel-card {
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+  cursor: pointer;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  border-radius: 12px;
+
+}
+
+.carousel-card:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 0 25px rgba(55, 255, 20, 0.59),
+    0 0 50px rgba(55, 255, 20, 0.408),
+    0 0 80px rgba(55, 255, 20, 0.248);
+}
+
+/* Cấu trúc xoay */
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.carousel-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Hai mặt */
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  border: 4px solid #5D5D5D;
+  padding: 20px;
+  backface-visibility: hidden;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* ========================= FRONT SIDE ========================= */
+.card-front {
+  background: linear-gradient(145deg, #2A623D, #000000);
+  color: #AAAAAA;
+  text-align: center;
+}
+
+.teacher-frame {
+  width: 100%;
+  height: 70%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 6px solid #5D5D5D;
+  margin-bottom: 15px;
+}
+
+.teacher-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.carousel-card:hover .teacher-frame img {
+  transform: scale(1.05);
+}
+
+.card-front h3 {
+  font-family: 'Rye', cursive;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  color: #E8E8E8;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.card-front p.field {
+  font-family: 'Quintessential', cursive;
+  color: #a8ff60;
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.card-front p.instructor {
+  font-family: 'Quintessential', cursive;
+  color: #CCCCCC;
+  font-size: 1rem;
+}
+
+/* ========================= BACK SIDE ========================= */
+.card-back {
+  background: linear-gradient(145deg, #1A472A, #000000);
+  color: #AAAAAA;
+  transform: rotateY(180deg);
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* ✅ căn giữa theo chiều dọc */
+  align-items: center;      /* ✅ căn giữa theo chiều ngang */
+  padding: 30px 20px;
+
+}
+
+.card-back h3 {
+  font-family: 'Rye', cursive;
+  text-transform: uppercase;
+  color: #2CFF05;
+  margin-bottom: 10px;
+  text-shadow: 0 0 6px rgba(159, 255, 168, 0.8);
+   margin-bottom: 10px;
+}
+
+.card-back p {
+  font-family: 'Quintessential', cursive;
+  color: #dddddd;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+/* Rating */
+.card-back .rating {
+  margin: 8px 0;
+  color: gold;
+  font-size: 1rem;
+}
+.card-back .rating span {
+  color: #ccc;
+  font-size: 1rem;
+  margin-left: 4px;
+}
+
+/* Price */
+.card-back .price {
+  margin-top: 10px;
+}
+.card-back .price .current {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #00ff7f;
+  margin-right: 6px;
+}
+.card-back .price .old {
+  font-size: 0.9rem;
+  color: #888;
+  text-decoration: line-through;
+}
+
+
+
+
+
+/* ========================= COURSE SECTION ========================= */
+.section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 60px;
+}
+
+.section h2 {
+  font-family: 'Rubik Mono One', sans-serif;
+  color: #8c7519;
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  padding-left: 10px;
+}
+
+/* ========================= COURSE LIST ========================= */
+.course-list {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  padding: 0 10px;
+  scroll-snap-type: x mandatory;
+  scrollbar-color: #5D5D5D transparent;
+}
+
+.course-list::-webkit-scrollbar {
+  height: 8px;
+}
+.course-list::-webkit-scrollbar-thumb {
+  background: #5D5D5D;
+  border-radius: 4px;
+}
+
+/* ========================= COURSE CARD ========================= */
+.course-card {
+  flex: 0 0 250px;
+  background: linear-gradient(145deg,		#06ff00,	#000000);
+  border: 6px solid #000600 ;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  scroll-snap-align: start;
+  cursor: pointer;
+}
+
+.course-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* ========================= HÌNH ẢNH ========================= */
+.course-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  background-color: #f9f9f9;
+}
+
+/* ========================= THÔNG TIN KHÓA HỌC ========================= */
+.course-info {
+  padding: 14px 12px 16px;
+  text-align: left;
+}
+
+.course-info h3 {
+  font-family: 'Rye', cursive;
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1c1d1f;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  min-height: 42px; /* giữ chiều cao đều nhau */
+}
+
+/* Lĩnh vực / Category */
+.course-info p.category {
+  font-size: 0.8rem;
+  color: #002a00;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+/* Giảng viên */
+.course-info p.instructor {
+  font-size: 0.85rem;
+  color: #89F336;
+  margin-bottom: 8px;
+}
+
+/* ========================= ĐÁNH GIÁ SAO ========================= */
+.course-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.course-rating i {
+  color: #f4c150;
+  font-size: 0.9rem;
+}
+
+.course-rating span {
+  font-size: 0.85rem;
+  color: #f4c150;
+}
+
+/* ========================= GIÁ ========================= */
+.course-price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.course-price .current {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #FFD700;
+}
+
+.course-price .old {
+  font-size: 0.9rem;
+  color:   #1c1d1f;
+  text-decoration: line-through;
+}
+
+/* ========================= FIELD LIST ========================= */
+.field-list {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 20px;
+  padding: 0 10px;
+  scroll-snap-type: x mandatory;
+  scrollbar-color: #5D5D5D transparent;
+}
+
+.field-list::-webkit-scrollbar {
+  height: 8px;
+}
+
+.field-list::-webkit-scrollbar-thumb {
+  background: #5D5D5D;
+  border-radius: 4px;
+}
+
+/* ========================= FIELD CARD ========================= */
+.field-card {
+  flex: 0 0 220px;
+  background: linear-gradient(180deg, #32803e, #00610e, #002e07);
+  border-radius: 10px;
+  color: #ffffff;
+  padding: 25px 15px;
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  text-align: center;
+  font-family: 'Rye', cursive;
+  text-transform: uppercase;
+  transition: transform 0.3s ease, box-shadow 0.4s ease;
+}
+
+/* 💚 Khi hover: thẻ pop-up + phát sáng neon */
+.field-card:hover {
+  transform: translateY(-8px) scale(1.08);
+  box-shadow: 
+    0 0 20px rgba(57, 255, 20, 0.8),
+    0 0 40px rgba(57, 255, 20, 0.6),
+    0 0 60px rgba(57, 255, 20, 0.4);
+}
+
+/* ========================= FIELD TEXT ========================= */
+.field-card p {
+  color: #caffb3;
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+  text-shadow: 0 0 4px rgba(57, 255, 20, 0.7);
+}
+
+/* ========================= RESPONSIVE ========================= */
+@media (max-width: 768px) {
+  .field-card {
+    flex: 0 0 160px;
+    font-size: 0.8rem;
+    padding: 18px 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .course-card {
+    flex: 0 0 180px;
+  }
+  .course-card img {
+    height: 120px;
+  }
+}
+/* ========================= welcome ========================= */
+.nav-link.dropdown-toggle {
+  display: inline-block;
+  background: #00ff33;
+  color: #000;
+  font-weight: bold;
+  border-radius: 50px;
+  padding: 8px 18px;
+  text-decoration: none;
+  font-style: italic;
+  transition: 0.3s ease-in-out;
+  box-shadow: 0 0 12px #00ff33;
+}
+
+/* Hover effect same vibe */
+.nav-link.dropdown-toggle:hover {
+  background: #00ff55;
+  box-shadow: 0 0 18px #00ff55, 0 0 25px #00ff33 inset;
+  color: #000;
+}
+
+.field-card a,
+.course-card a{
+  text-decoration: none;
+  color: inherit;
+  display: block;  
+}
 }

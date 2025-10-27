@@ -1,0 +1,25 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/courselist.css">
+{{/section}}
+
+<div class="container mt-4">
+  <h2>Your Course List</h2>
+  {{#if courses.length}}
+    {{#each courses}}
+      <div class="course-card">
+        <img src="{{ImageUrl}}" alt="{{CourseName}}">
+        <div class="course-info">
+          <p class="category">{{CatName}}</p>
+          <h3>{{CourseName}}</h3>
+          <a href="/course/detail?id={{CourseID}}">
+            <button class="btn btn-primary mt-3">Continue Learning</button>
+          </a>
+        </div>
+      </div>
+    {{/each}}
+  {{else}}
+    <p style="color: #FFD700; text-align: center; font-weight: bold; font-size: 1.1rem;">
+      You are not enrolled in any courses yet.
+    </p>
+  {{/if}}
+</div>

@@ -6,17 +6,17 @@ import db from '../utils/db.js';
 
 const router = express.Router();
 
-router.get('/',async function (req, res) {
-    const topCourses = await courseModel.findTop10CoursesViews();
-    const top4Week = await courseModel.findTop4WeekViews();
-    const top10Week = await categoryModel.findtopcategories();
-    const top10Newest = await courseModel.findTop10Newest();
-    res.render('course/home',{
-        topCourses,
-        top4Week,
-        top10Week,
-        top10Newest
-    });
+router.get('/', async function (req, res) {
+  const topCourses = await courseModel.findTop10CoursesViews();
+  const top4Week = await courseModel.findTop4WeekViews();
+  const top10Week = await categoryModel.findtopcategories();
+  const top10Newest = await courseModel.findTop10Newest();
+  res.render('course/home', {
+    topCourses,
+    top4Week,
+    top10Week,
+    top10Newest
+  });
 });
 
 
@@ -28,13 +28,17 @@ router.get('/detail', async function (req, res) {
     const course = await courseModel.findById(courseId);
 
     let isInWishlist = false;
+    let isBought = false;
     if (userId) {
       const wishlist = await courseModel.checkIfInWishlist(userId, courseId);
       isInWishlist = wishlist.length > 0;
+
+      const enrollments = await courseModel.checkIfInEnrollments(userId, courseId);
+      isBought = enrollments.length > 0;
     }
 
     if (course) {
-      res.render('course/detail', { course, isInWishlist });
+      res.render('course/detail', { course, isInWishlist, isBought });
     } else {
       res.status(404).send('Course not found');
     }
@@ -87,18 +91,44 @@ router.get('/bycat', async function (req, res) {
   }
 });
 
-router.get('/enroll', function (req, res) {
-    res.render('course/enroll');
+router.get('/enroll', async function (req, res) {
+  const courseId = req.query.id;
+  const userId = req.session.authUser?.UserID;
+
+  try {
+    const course = await courseModel.findById(courseId);
+    const lessons = await courseModel.findLessonsByCourseId(courseId);
+
+    let completedLessons = [];
+    if (userId) {
+      completedLessons = await accountModel.getCompletedLessonsByUserId(userId, courseId);
+    }
+
+    const updatedLessons = lessons.map(lesson => {
+      const isCompleted = completedLessons.some(completed => completed.LessonID === lesson.LessonID);
+      return {
+        ...lesson,
+        isCompleted
+      };
+    });
+
+    res.render('course/enroll', { course, lessons: updatedLessons });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
 });
 
+
 router.get('/courselist', async function (req, res) {
-    const UserId = req.session.authUser?.UserID;
-    const courses = await courseModel.finduserenrollcourses(UserId);
-    res.render('course/courselist', {
-        layout: 'main',
-        courses,
-    });
-} );
+  const UserId = req.session.authUser?.UserID;
+  const courses = await courseModel.finduserenrollcourses(UserId);
+  res.render('course/courselist', {
+    layout: 'main',
+    courses,
+  });
+});
 
 router.get('/search', async (req, res) => {
   const keyword = req.query.q?.trim().toLowerCase();
@@ -124,7 +154,7 @@ router.get('/search', async (req, res) => {
 });
 
 router.get('/course-remake', function (req, res) {
-    res.render('course/course-remake');
+  res.render('course/course-remake');
 });
 
 

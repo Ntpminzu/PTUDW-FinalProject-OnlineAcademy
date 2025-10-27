@@ -177,11 +177,34 @@ export default {
         'users.Fullname as InstructorName',
         'categories.CatName as CategoryName'
       )
-      .first(); 
+      .first();
   },
   checkIfInWishlist(userId, courseId) {
     return db('watch_list')
       .where('UserID', userId)
       .andWhere('CourseID', courseId);
   },
+  checkIfInEnrollments(userId, courseId) {
+    return db('enrollments')
+      .where('UserID', userId)
+      .andWhere('CourseID', courseId);
+  },
+  findLessonsByCourseId(courseId) {
+    return db('lessons')
+      .where('CourseID', courseId)
+      .select(
+        'LessonID',
+        'LessonName',
+        'TinyDes',
+        'FullDes',
+        'VideoUrl',
+        'LessonStatus',
+        'LessonPermission',
+        'LastUpdate',
+        'CourseID',
+        'UserID'
+      )
+      .orderBy('LastUpdate', 'asc');
+  }
+
 };

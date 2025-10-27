@@ -45,11 +45,15 @@
             {{/if}}
 
 
-            <form action="/account/add-to-cart" method="post">
+            {{#unless isBought}}
+            <form action="/account/buy-now" method="post">
+              <input type="hidden" name="courseId" value="{{course.CourseID}}">
               <button type="submit" class="start-btn cart-btn" style="text-decoration: none;">
-                <i class="bi bi-cart"></i> Buy Course
+                <i class="bi bi-cart"></i> Buy Now
               </button>
             </form>
+            {{/unless}}
+
           </div>
 
         </div>
@@ -76,7 +80,11 @@
             <p class="card-text">Benefits: Certificate upon completion, lifetime access, community support</p>
             <p class="card-text">Tuition Fee: ${{course.CurrentPrice}}</p>
             <p class="card-text">Last Updated: {{course.Date}}</p>
-            <a href="/course/enroll" class="enroll-btn"><i class="bi bi-journal-plus"></i> Enroll Now</a>
+
+            {{#if isBought}}
+            <a href="/course/enroll?id={{course.CourseID}}" class="enroll-btn"><i class="bi bi-journal-plus"></i> Enroll Now</a>
+            {{/if}}
+
           </div>
           <div class="card-footer text-muted text-center">
             Hogwarts Academy © 2025

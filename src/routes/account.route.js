@@ -167,6 +167,7 @@ router.get('/change-password', (req, res) => {
   res.render('account/change-password');
 });
 
+
 router.get('/wishlist',async (req, res) => {
   if (!req.session.isAuthenticated) return res.redirect("/account/signin");
 
@@ -187,6 +188,39 @@ router.post("/wishlist/remove", async (req, res) => {
   res.redirect("/account/wishlist");
 });
 
+
+router.post("/add-to-watchlist", async (req, res) => {
+  if (!req.session.isAuthenticated)
+    return res.redirect("/account/signin");
+
+  const userId = req.session.authUser.UserID;
+  const { courseId } = req.body;
+
+  await accountModel.addToWatchlist(userId, courseId);
+  res.redirect(`/account/wishlist`);
+});
+
+router.post("/buy-now", async (req, res) => {
+  if (!req.session.isAuthenticated)
+    return res.redirect("/account/signin");
+
+  const userId = req.session.authUser.UserID;
+  const { courseId } = req.body;
+
+  await accountModel.buyNow(userId, courseId);
+  res.redirect(`/course/detail?id=` + courseId);
+});
+
+router.post("/finish-lesson", async (req, res) => {
+  if (!req.session.isAuthenticated)
+    return res.redirect("/account/signin");
+
+  const userId = req.session.authUser.UserID;
+  const { lessonId, courseId } = req.body;
+
+  await accountModel.finishLesson(userId, lessonId);
+  res.redirect(`/course/enroll?id=` + courseId);
+});
 
 export default router;
 

@@ -1,0 +1,17 @@
+<div class="auth-container">
+  <h2>🔐 Verify Your Account</h2>
+  <p>We’ve sent a 6-digit OTP code to your email. Please enter it below:</p>
+
+  <form class="auth-form" action="/account/verify-otp" method="POST">
+    <div class="form-group">
+      <label for="otp">Enter OTP</label>
+      <input type="text" id="otp" name="otp" maxlength="6" required>
+    </div>
+
+    <button type="submit" class="magic-btn">✨ Verify ✨</button>
+  </form>
+
+  <div class="auth-footer">
+    <a href="/account/resend-otp">Resend OTP</a>
+  </div>
+</div>

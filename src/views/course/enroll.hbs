@@ -1,0 +1,91 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/enroll.css">
+{{/section}}
+
+<div class="course-page container mt-4">
+  <!-- Course Header -->
+  <div class="card course-header">
+    <h5 class="card-header">
+      <i class="bi bi-book-half"></i> Course Details
+    </h5>
+
+    <div class="card-body">
+      <h5 class="card-title">Course Title: Example Course</h5>
+      <p class="card-text">Description: This is an example course description.</p>
+      <p class="card-text">Professor: John Doe</p>
+      <p class="card-text">Duration: 10 weeks</p>
+      <a href="#" class="btn btn-primary btn-sm" id="startCourseBtn">
+        <i class="bi bi-play-circle"></i> Start Learning
+      </a>
+    </div>
+  </div>
+
+  <!-- Video List Section -->
+  <div class="video-list mt-4">
+    <h5>Course Modules</h5>
+    <ul class="list-group">
+      <!-- Video 1 -->
+      <li class="list-group-item video-item" data-video="https://jumpshare.com/s/VnzryGB5STAk1goaKh1Q">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-play-circle"></i>
+          <span class="ms-2">Introduction to Course</span>
+        </div>
+      </li>
+      <!-- Video 2 -->
+      <li class="list-group-item video-item" data-video="https://jumpshare.com/s/VnzryGB5STAk1goaKh1Q">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-play-circle"></i>
+          <span class="ms-2">Module 1: Basics</span>
+        </div>
+      </li>
+      <!-- Video 3 -->
+      <li class="list-group-item video-item" data-video="https://jumpshare.com/s/VnzryGB5STAk1goaKh1Q">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-play-circle"></i>
+          <span class="ms-2">Module 2: Advanced Concepts</span>
+        </div>
+      </li>
+      <!-- More videos can go here -->
+    </ul>
+  </div>
+
+  <!-- Video Player Section -->
+  <div class="video-player mt-4">
+    <h5>Now Playing: <span id="videoTitle">Select a Video</span></h5>
+    <video id="videoPlayer" class="w-100" controls>
+      <source id="videoSource" src="" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const startCourseBtn = document.getElementById("startCourseBtn");
+    const videoItems = document.querySelectorAll(".video-item");
+    const videoPlayer = document.getElementById("videoPlayer");
+    const videoTitle = document.getElementById("videoTitle");
+    const videoSource = document.getElementById("videoSource");
+
+    startCourseBtn.addEventListener("click", function () {
+      document.querySelector(".video-item").click();
+    });
+
+    videoItems.forEach(item => {
+      item.addEventListener("click", function () {
+        videoItems.forEach(video => video.classList.remove("active"));
+
+        item.classList.add("active");
+
+        const videoFile = item.getAttribute("data-video");
+        const title = item.querySelector("span").textContent;
+
+        videoTitle.textContent = title;
+
+        videoSource.setAttribute("src", videoFile);
+        videoPlayer.load();
+        videoPlayer.play();
+      });
+    });
+  });
+
+</script>

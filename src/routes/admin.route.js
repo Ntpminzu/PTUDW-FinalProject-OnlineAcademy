@@ -1,6 +1,7 @@
 import express from 'express';
 import * as adminModel from '../model/admin.model.js';
 
+
 const router = express.Router();
 
 router.get('/user/list', async function (req, res) {
@@ -10,9 +11,13 @@ router.get('/user/list', async function (req, res) {
   });
 });
 
-
 router.get('/user/add', function (req, res) {
   res.render('Admin/user/UserAdd');
+});
+
+
+router.get('/adminpage', function (req, res) {
+  res.render('Admin/AdminPage');
 });
 
 router.get('/user/edit', async function (req, res) {
@@ -44,7 +49,7 @@ router.post('/user/add', async function (req, res) {
     UserPermission: req.body.UserPermission
   };
 
-  console.log('req.body =', req.body); 
+  console.log('req.body =', req.body);
   await adminModel.add(user);
   res.redirect('/admin/user/list');
 });
@@ -84,16 +89,12 @@ router.get('/category/edit', async function (req, res) {
 });
 
 router.post('/category/del', async function (req, res) {
-  const id = req.body.CatID; 
+  const id = req.body.CatID;
   console.log("Deleting category id =", id);
   await adminModel.delCategory(id);
   res.redirect('/admin/category/list');
 });
 
-
-router.get('/category/edit', function (req, res) {
-  res.render('Admin/category/CatEdit');
-});
 
 router.post('/category/add', async function (req, res) {
   const category = {
@@ -116,5 +117,73 @@ router.post('/category/patch', async function (req, res) {
   await adminModel.patchCategory(id, category);
   res.redirect('/admin/category/list');
 });
+/*===================== subcategories =====================*/
+router.get('/subcat/byCat', async function (req, res) {
+  const id = req.query.id || 0;
 
+  let CatName = '?';
+  let CatID = "?";
+  const category = await adminModel.findCategoryById(id);
+  if (category) {
+    CatName = category.CatName;
+    CatID = category.CatID;
+  }
+  const list = await adminModel.findSubCatByCat(id);
+  res.render('Admin/sub_cat/SubCatList', {
+    subcats: list,
+    empty: list.length === 0,
+    CatName: CatName,
+    CatID: CatID
+  });
+});
+router.get('/subcat/add/byCat', async function (req, res) {
+  const id = req.query.id || 0;
+  const category = await adminModel.findCategoryById(id);
+
+  res.render('Admin/sub_cat/SubCatAdd', {
+    CatID: id,
+    CatName: category ? category.CatName : '?'
+  });
+});
+
+router.post('/subcat/add', async function (req, res) {
+  const subcat = {
+    SubCatName: req.body.SubCatName,
+    SubCatDes: req.body.SubCatDes,
+    CatID: req.body.CatID
+  };
+  console.log('req.body =', req.body);
+  await adminModel.addSubCategory(subcat);
+  res.redirect(`/admin/subcat/byCat?id=${req.body.CatID}`);
+});
+
+
+router.get('/subcat/edit', async function (req, res) {
+  const id = req.query.id || 0;
+  const subcat = await adminModel.findSubCategoryById(id);
+  res.render('Admin/sub_cat/SubCatEdit', {
+    CatID: id,
+    subcat: subcat
+  });
+});
+
+router.post('/subcat/patch', async function (req, res) {
+  const id = req.body.SubCatID;
+  const subcat = {
+    SubCatName: req.body.SubCatName,
+    SubCatDes: req.body.SubCatDes,
+    CatID: req.body.CatID
+  };
+  await adminModel.patchSubCategory(id, subcat);
+  res.redirect('/admin/subcat/byCat?id=' + req.body.CatID);
+});
+
+
+router.post('/subcat/del', async function (req, res) {
+  const id = req.body.SubCatID;
+  const catid = req.body.CatID; // lấy CatID từ form ẩn
+  console.log('Deleting subcat id =', id, 'catid =', catid);
+  await adminModel.delSubCategory(id);
+  res.redirect('/admin/subcat/byCat?id=' + catid); // quay lại đúng category
+});
 export default router;

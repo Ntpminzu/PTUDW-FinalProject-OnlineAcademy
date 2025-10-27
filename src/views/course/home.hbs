@@ -1,148 +1,157 @@
  <!-- 🌄 BANNER -->
-  <section class="banner">
-    <img src="https://picsum.photos/400/300" alt="Banner">
-  </section>
+<section class="banner">
+  <div id="bannerCarousel" class="carousel slide h-100" data-bs-ride="carousel">
+    <!-- Chấm tròn điều hướng -->
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="0" class="active"></button>
+      <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="1"></button>
+      <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="2"></button>
+    </div>
 
- <!-- 🎠 FEATURED COURSES CAROUSEL (FLIP VERSION) -->
+    <!-- Các ảnh -->
+    <div class="carousel-inner banner-carousel">
+      <div class="carousel-item active">
+        <img src="https://picsum.photos/1200/500?random=1" class="d-block w-100" alt="Banner 1">
+      </div>
+      <div class="carousel-item">
+        <img src="https://picsum.photos/1200/500?random=2" class="d-block w-100" alt="Banner 2">
+      </div>
+      <div class="carousel-item">
+        <img src="https://picsum.photos/1200/500?random=3" class="d-block w-100" alt="Banner 3">
+      </div>
+    </div>
+    <!-- Nút điều hướng -->
+    <button class="carousel-control-prev banner-btn prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+
+    <button class="carousel-control-next banner-btn next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</section>
+
+<!-- 🎠 FEATURED COURSES CAROUSEL (FLIP VERSION) -->
 <section class="carousel-section">
   <h2>✨ Featured Courses of the Week ✨</h2>
-
+<div class="snake-bg">
+    <img src="/img/snake1.jpg" alt="Snake Background">
+  </div>
   <swiper-container class="mySwiper" effect="cards" grab-cursor="true" loop="true" autoplay-delay="3000">
-    
+
     <!-- 🪄 CARD 1 -->
+    {{#each top4Week}}
     <swiper-slide>
       <div class="carousel-card">
         <div class="card-inner">
+          <!-- Mặt trước -->
           <div class="card-front">
             <div class="teacher-frame">
-              <img src="https://picsum.photos/400/300" alt="Remus Lupin">
+              <img src="{{ImageUrl}}" alt="{{CourseName}}">
             </div>
-            <h3>Advanced Defense Against the Dark Arts</h3>
-            <p>Prof. Remus Lupin</p>
+            <h3>{{CourseName}}</h3>
+            <p class="field">{{CategoryName}}</p>
+            <p class="instructor">{{InstructorName}}</p>
           </div>
-          <div class="card-back">
-            <h3>Course Details</h3>
-            <p>Master defensive spells and practical techniques against dark creatures.</p>
-            <p><strong>Duration:</strong> 8 weeks</p>
-          </div>
-        </div>
-      </div>
-    </swiper-slide>
 
-    <!-- ⚗️ CARD 2 -->
-    <swiper-slide>
-      <div class="carousel-card">
-        <div class="card-inner">
-          <div class="card-front">
-            <div class="teacher-frame">
-              <img src="https://picsum.photos/400/300" alt="Severus Snape">
-            </div>
-            <h3>Advanced Potions</h3>
-            <p>Prof. Severus Snape</p>
-          </div>
+          <!-- Mặt sau -->
           <div class="card-back">
             <h3>Course Details</h3>
-            <p>Brew rare potions and uncover the hidden power of magical ingredients.</p>
-            <p><strong>Duration:</strong> 10 weeks</p>
+            <p>{{TinyDes}}</p>
+            <div class="rating">
+              ⭐ {{Rating}} <span>({{TotalStudent}} students)</span>
+            </div>
+            <div class="price">
+              <span class="current">${{CurrentPrice}}</span>
+              <span class="old">${{OriginalPrice}}</span>
+            </div>
           </div>
         </div>
       </div>
     </swiper-slide>
-
-    <!-- 🦉 CARD 3 -->
-    <swiper-slide>
-      <div class="carousel-card">
-        <div class="card-inner">
-          <div class="card-front">
-            <div class="teacher-frame">
-              <img src="https://picsum.photos/400/300" alt="Minerva McGonagall">
-            </div>
-            <h3>Quick Transfiguration</h3>
-            <p>Prof. Minerva McGonagall</p>
-          </div>
-          <div class="card-back">
-            <h3>Course Details</h3>
-            <p>Transform objects and animals with advanced spell precision and theory.</p>
-            <p><strong>Duration:</strong> 6 weeks</p>
-          </div>
-        </div>
-      </div>
-    </swiper-slide>
-
-    <!-- 🐉 CARD 4 -->
-    <swiper-slide>
-      <div class="carousel-card">
-        <div class="card-inner">
-          <div class="card-front">
-            <div class="teacher-frame">
-              <img src="https://picsum.photos/400/300" alt="Rubeus Hagrid">
-            </div>
-            <h3>Care of Magical Creatures</h3>
-            <p>Prof. Rubeus Hagrid</p>
-          </div>
-          <div class="card-back">
-            <h3>Course Details</h3>
-            <p>Learn to handle, feed, and care for various magical creatures safely.</p>
-            <p><strong>Duration:</strong> 7 weeks</p>
-          </div>
-        </div>
-      </div>
-    </swiper-slide>
+    {{/each}}
 
   </swiper-container>
 </section>
 
-
-  <!-- ==== TOP 10 MOST VIEWED COURSES ==== -->
-  <div class="section">
-    <h2>Top 10 Most Viewed Courses</h2>
-    <div class="course-list">
-      <div class="course-card"><h3>Ancient Magic</h3><p>Prof. Albus Dumbledore</p></div>
-      <div class="course-card"><h3>Basic Charms</h3><p>Prof. Filius Flitwick</p></div>
-      <div class="course-card"><h3>Potions</h3><p>Prof. Severus Snape</p></div>
-      <div class="course-card"><h3>History of Magic</h3><p>Prof. Bathilda Bagshot</p></div>
-      <div class="course-card"><h3>Advanced Transfiguration</h3><p>Prof. Minerva McGonagall</p></div>
-      <div class="course-card"><h3>Defense Against the Dark Arts</h3><p>Prof. Remus Lupin</p></div>
-      <div class="course-card"><h3>Wizardry Medicine</h3><p>Prof. Pomona Sprout</p></div>
-      <div class="course-card"><h3>Magical Pets</h3><p>Prof. Rubeus Hagrid</p></div>
-      <div class="course-card"><h3>Herbology</h3><p>Prof. Pomona Sprout</p></div>
-      <div class="course-card"><h3>Mystic Meditation</h3><p>Prof. Sybill Trelawney</p></div>
-    </div>
-  </div>
-
-  <!-- ==== TOP 10 NEWEST COURSES ==== -->
-  <div class="section">
-    <h2>Top 10 Newest Courses</h2>
-    <div class="course-list">
-      <div class="course-card"><h3>Magical Cyber Defense</h3><p>Prof. Kingsley Shacklebolt</p></div>
-      <div class="course-card"><h3>Dragon Language</h3><p>Prof. Charlie Weasley</p></div>
-      <div class="course-card"><h3>Ancient Sorcery</h3><p>Prof. Bathilda Bagshot</p></div>
-      <div class="course-card"><h3>Next Generation Wizardry</h3><p>Prof. Minerva McGonagall</p></div>
-      <div class="course-card"><h3>Detective Skills</h3><p>Prof. Remus Lupin</p></div>
-      <div class="course-card"><h3>Pet Care</h3><p>Prof. Rubeus Hagrid</p></div>
-      <div class="course-card"><h3>Advanced Charms</h3><p>Prof. Filius Flitwick</p></div>
-      <div class="course-card"><h3>Ultimate Potions</h3><p>Prof. Severus Snape</p></div>
-      <div class="course-card"><h3>Weather Magic</h3><p>Prof. Sybill Trelawney</p></div>
-      <div class="course-card"><h3>History of Wizardry</h3><p>Prof. Bathilda Bagshot</p></div>
-    </div>
-  </div>
-
-  <!-- ==== MOST STUDIED FIELDS ==== -->
+<!-- ==== MOST STUDIED FIELDS ==== -->
   <div class="section">
     <h2>Most Studied Fields This Week</h2>
     <div class="field-list">
-      <div class="field-card"><p>Defense Against the Dark Arts</p></div>
-      <div class="field-card"><p>Potions</p></div>
-      <div class="field-card"><p>Transfiguration</p></div>
-      <div class="field-card"><p>Charms</p></div>
-      <div class="field-card"><p>Magical Creatures</p></div>
-      <div class="field-card"><p>Herbology</p></div>
-      <div class="field-card"><p>Dragon Language</p></div>
-      <div class="field-card"><p>History of Magic</p></div>
-      <div class="field-card"><p>Mystic Meditation</p></div>
-      <div class="field-card"><p>Wizardry Medicine</p></div>
+      {{#each top10Week}}
+      <div class="field-card"><a href="/course/bycat?id={{CatID}}"><p>{{CatName}}</p></a></div>
+      {{/each}}
     </div>
   </div>
+ <!-- ==== TOP 10 MOST VIEWED COURSES ==== -->
+<div class="section">
+  <h2>Top 10 Most Viewed Courses</h2>
+  <div class="course-list">
+    {{#each topCourses}}
+    <div class="course-card">
+      <a href="/course/detail?id={{CourseID}}">
+      <img src="{{this.ImageUrl}}" alt="{{this.CourseName}}">
+      <div class="course-info">
+        <p class="category">{{this.CatName}}</p>
+        <h3>{{this.CourseName}}</h3>
+        <p class="instructor">{{this.InstructorName}}</p>
+        <div class="course-rating">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="far fa-star"></i>
+          <span>{{this.Rating}} ⭐ ({{this.Total_Review}})</span>
+        </div>
+        <div class="course-price">
+          <span class="current">${{this.CurrentPrice}}</span>
+          <span class="old">${{this.OriginalPrice}}</span>
+        </div>
+      </div> 
+      </a>
+    </div>
+   
+    {{/each}}
+  </div>
+</div>
+
+<!-- ==== TOP 10 NEWEST COURSES ==== -->
+<div class="section">
+  <h2>Top 10 Newest Courses</h2>
+  <div class="course-list">
+    {{#each top10Newest}}
+    <div class="course-card">
+      <a href="/course/detail?id={{CourseID}}">
+      <img src="{{ImageUrl}}" alt="{{CourseName}}">
+      <div class="course-info">
+        <p class="category">{{CategoryName}}</p>
+        <h3>{{CourseName}}</h3>
+        <p class="instructor">{{InstructorName}}</p>
+        <div class="course-rating">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="far fa-star"></i>
+          <span>{{Rating}} ({{TotalStudent}})</span>
+        </div>
+        <div class="course-price">
+          <span class="current">${{CurrentPrice}}</span>
+          <span class="old">${{OriginalPrice}}</span>
+        </div>
+      </div>
+      </a>
+    </div>
+    
+    {{/each}}
+
+  </div>
+</div>
+
+    <!-- ... (thêm các khóa khác tương tự) ... -->
+
+  </div>
+</div>
+
+  
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
   <script>
@@ -152,3 +161,23 @@ document.querySelectorAll('.carousel-card').forEach(card => {
   });
 });
 </script>
+<script>
+  const swiper = new Swiper('.banner-swiper', {
+    loop: true, 
+    autoplay: {
+      delay: 4000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    effect: 'slide', 
+    speed: 800, 
+  });
+</script>
+

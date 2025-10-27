@@ -152,22 +152,24 @@ export default {
 
   // finduserenrollcourses (Hàm này không join với bảng users nên không cần sửa)
   async finduserenrollcourses(UserId) {
-    return await db('enrollments')
-      .join('courses', 'enrollments.CourseID', 'courses.CourseID')
-      .join('categories', 'courses.SubCatID', 'categories.CatID')
+    return await db('enrollments as e')
+      .join('courses as c', 'e.CourseID', 'c.CourseID')
+      .join('sub_cat as s', 'c.SubCatID', 's.SubCatID')
+      .join('categories as ca', 's.CatID', 'ca.CatID')
       .select(
-        'courses.CourseID',
-        'courses.CourseName',
-        'courses.ImageUrl',
-        'categories.CatName',
-        'courses.CurrentPrice',
-        'courses.OriginalPrice',
-        'courses.Rating',
-        'courses.Total_Review',
-        'courses.TotalStudent'
+        'c.CourseID',
+        'c.CourseName',
+        'c.ImageUrl',
+        'ca.CatName',
+        'c.CurrentPrice',
+        'c.OriginalPrice',
+        'c.Rating',
+        'c.Total_Review',
+        'c.TotalStudent',
+        'e.enrolled_at'
       )
-      .where('enrollments.UserID', UserId)
-      .orderBy('enrollments.enrolled_at', 'desc');
+      .where('e.UserID', UserId)
+      .orderBy('e.enrolled_at', 'desc');
   },
 
   // THÊM HÀM MỚI (đã sửa): Dùng 'UserID'

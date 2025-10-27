@@ -20,14 +20,15 @@ import db from '../utils/db.js'
     return db('users').where('Email', email).first();
   }
 
-  export function patch(id, user) {
-    return db('users').where('id', id).update(user);
+  // Sửa lại hàm 'patch' theo đúng chuẩn
+  export function patch(userId, user) { // Đổi 'id' thành 'userId'
+    return db('users').where('UserID', userId).update(user); // Sửa 'id' thành 'UserID'
   }
 
   export function getByUser(userId) {
   return db("watch_list")
     .join("courses", "watch_list.CourseID", "=", "courses.CourseID")
-    .join("users", "courses.InstructorID", "=", "users.UserID")
+    .join("users", "courses.UserID", "=", "users.UserID")
     .where("watch_list.UserID", userId)
     .select(
       "courses.CourseID",

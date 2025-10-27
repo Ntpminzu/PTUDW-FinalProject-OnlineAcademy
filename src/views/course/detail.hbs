@@ -28,14 +28,15 @@
             </div>
           </div>
           <div class="button-container">
-            <a href="/course/enroll" class="start-btn enroll-btn">Enroll</a>
-            <h1 class="hero-title">Course Title</h1>
-            <p class="course-price">$99.99 <span class="original-price">$149.99</span> <span class="discount-info">(33%
-                off until Nov 1, 2025)</span></p>
-            <a href="/course/enroll" class="start-btn secondary-btn">Mark as complete</a>
-            <a href="/account/wishlist" class="start-btn wishlist-btn">
-              <i class="bi bi-heart"></i>
-            </a>
+            <!-- Enroll Button -->
+            <a href="/course/enroll" class="start-btn" style="text-decoration: none;">Enroll</a>
+            <a href="/course/enroll" class="start-btn" style="text-decoration: none;">Mark as complete</a>
+            <!-- Wishlist Button with Heart Icon -->
+            <form action="/course/add-to-watchlist" method="post">
+              <a href="/account/wishlist" class="start-btn wishlist-btn" style="text-decoration: none;">
+                <i class="bi bi-heart"></i>
+              </a>
+            </form>
           </div>
         </div>
       </section>

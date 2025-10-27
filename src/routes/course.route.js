@@ -1,8 +1,8 @@
 import express from 'express';
-import knex from 'knex';
 import courseModel from '../model/course.model.js';
 import categoryModel from '../model/category.model.js';
 import * as accountModel from '../model/account.model.js';
+
 
 const router = express.Router();
 
@@ -79,10 +79,6 @@ router.get('/search', async (req, res) => {
     results,
     notFound: false,
   });
-});
-
-router.get('/searchResults', (req, res) => {
-  res.render('course/searchResults');
 });
 
 router.get('/course-remake', function (req, res) {

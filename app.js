@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 // Import Routes
 import courseRouter from './src/routes/course.route.js';
 import accountRouter from './src/routes/account.route.js';
-// import categoryRouter from './src/routes/category.route.js'; // Bỏ nếu chỉ dùng trong admin
+import categoryRouter from './src/routes/category.route.js'; // Bỏ nếu chỉ dùng trong admin
 import managementRouter from './src/routes/management.route.js';
 import adminRouter from './src/routes/admin.route.js';
 
@@ -63,6 +63,24 @@ app.engine('hbs', engine({
     }
   }
 }));
+
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.set('view engine', 'hbs');
+app.set('views', './src/views');
+
+
+app.use(express.static('src/public'));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'mySecretKey',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'src/views'));
 
@@ -123,4 +141,6 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).render('500', { layout: false, message: 'Lỗi máy chủ.' });
 });
 
-app.listen(port, () => console.log(` Server đang chạy tại http://localhost:${port}`));
+app.listen(port, function () {
+  console.log(` Server is running at http://localhost:${port}`);
+});

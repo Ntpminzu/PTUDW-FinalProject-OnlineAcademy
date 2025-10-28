@@ -24,23 +24,40 @@ router.get('/', async function (req, res, next) {
 });
 
 // Trang chi tiết (GET /detail) - Cần hoàn thiện
-router.get('/detail', async function (req, res, next) {
+router.get('/detail', async function (req, res) {
+  const courseId = req.query.id;
+  const userId = req.session.authUser?.UserID;
+
   try {
-      const courseId = req.query.id;
-      if (!courseId) return res.redirect('/course');
+    const course = await courseModel.findById(courseId);
 
-      // Dùng hàm mới để lấy đủ chi tiết
-      const course = await courseModel.findByIdWithDetails(courseId);
-      if (!course) return res.status(404).render('404');
+    let isInWishlist = false;
+    let isBought = false;
+    let canFeedback = false;
+    const feedbacks = await courseModel.findFeedbacksByCourseId(courseId);
+    const relatedCourses = await courseModel.findRelatedCourses(courseId, course.SubCatID);
+    const lessons = await courseModel.findLessonsByCourseId(courseId);
 
-      // TODO: Lấy thêm lessons, feedbacks, related courses nếu cần
+    if (userId) {
+      const wishlist = await courseModel.checkIfInWishlist(userId, courseId);
+      isInWishlist = wishlist.length > 0;
 
-      res.render('course/detail', {
-          layout: 'main',
-          course // Truyền dữ liệu khóa học vào view
-          // , instructor: { Fullname: course.InstructorName, Email: course.InstructorEmail }, ...
-      });
-    } catch(err) { next(err); }
+      const enrollments = await courseModel.checkIfInEnrollments(userId, courseId);
+      isBought = enrollments.length > 0;
+
+      const feedbackList = await courseModel.checkIfInFeedbacks(userId, courseId);
+      canFeedback = feedbackList.length == 0 && isBought;
+    }
+
+    if (course) {
+      res.render('course/detail', { course, isInWishlist, isBought, feedbacks, canFeedback, relatedCourses, lessons });
+    } else {
+      res.status(404).send('Course not found');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
 });
 
 // Trang theo SubCategory (GET /bycat) - Đã sửa hoàn chỉnh

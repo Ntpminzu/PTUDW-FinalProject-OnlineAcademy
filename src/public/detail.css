@@ -30,7 +30,9 @@
 .CourseDetail .hero {
   position: relative;
   height: 360px;
+  width: 100%;
   background: url("https://cache.desktopnexus.com/thumbseg/1734/1734211-bigthumbnail.jpg") center center / cover no-repeat;
+   overflow: hidden;
 }
 
 .CourseDetail .hero-overlay {
@@ -329,7 +331,7 @@
 /*============================== Related Courses (Horizontal Scroll like Netflix) ==============================*/
 .CourseDetail .related-courses {
   background-color: #111;
-  padding: 60px 80px;
+  padding: 60px 5%;
   border-top: 1px solid #222;
   overflow: hidden;
   /* Prevent overflow outside section */
@@ -660,14 +662,14 @@
 /* FEEDBACK */
 /* General styles for the section */
 .feedback-section {
-  width: 1800px;           /* Limit the width for readability */
-  margin: 40px auto;          /* Center the section on the page */
+  width: 100%;
+ 
+  margin: 40px auto;
   padding: 20px;
-  background-color: #f9f9f9;  /* Light background for contrast */
-  border-radius: 10px;        /* Rounded corners for soft design */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 /* Heading style */
 .feedback-section h2 {
   font-size: 1.8rem;

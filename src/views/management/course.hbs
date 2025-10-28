@@ -97,15 +97,15 @@
                         <div class="form-row full">
                             <div class="form-group">
                                 <label class="form-label" for="TinyDes">Tiny Description *</label>
-                                <textarea class="form-textarea" id="TinyDes" name="TinyDes" rows="3" required
-                                    placeholder="Brief description...">{{formData.TinyDes}}</textarea>
+                                <textarea class="form-textarea wysiwyg-editor" id="TinyDes" name="TinyDes" rows="3"
+                                    required placeholder="Brief description...">{{formData.TinyDes}}</textarea>
                             </div>
                         </div>
                         <div class="form-row full">
                             <div class="form-group">
                                 <label class="form-label" for="FullDes">Full Description *</label>
-                                <textarea class="form-textarea" id="FullDes" name="FullDes" rows="6" required
-                                    placeholder="Detailed description...">{{formData.FullDes}}</textarea>
+                                <textarea class="form-textarea wysiwyg-editor" id="FullDes" name="FullDes" rows="6"
+                                    required placeholder="Detailed description...">{{formData.FullDes}}</textarea>
                             </div>
                         </div>
                         <div style="text-align: center; margin-top: 30px">
@@ -333,6 +333,16 @@
                 listTab.insertBefore(successMsg, listTab.querySelector('.search-filter-bar'));
                 setTimeout(() => successMsg.remove(), 4000);
             }
+        }
+
+        // Khởi tạo TinyMCE cho textarea trong tab "Add Course"
+        if (document.getElementById('courseAddTab')) { // Chỉ khởi tạo nếu tab tồn tại
+            tinymce.init({
+                selector: '#courseAddTab textarea.wysiwyg-editor', // Chọn textarea có class wysiwyg-editor trong tab add
+                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker',
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+                height: 300 // Chiều cao của editor
+            });
         }
     });
 </script>

@@ -31,6 +31,7 @@ router.get('/detail', async function (req, res) {
     let isBought = false;
     let canFeedback = false;
     const feedbacks = await courseModel.findFeedbacksByCourseId(courseId);
+    const relatedCourses = await courseModel.findRelatedCourses(courseId, course.SubCatID);
 
     if (userId) {
       const wishlist = await courseModel.checkIfInWishlist(userId, courseId);
@@ -44,7 +45,7 @@ router.get('/detail', async function (req, res) {
     }
 
     if (course) {
-      res.render('course/detail', { course, isInWishlist, isBought, feedbacks, canFeedback });
+      res.render('course/detail', { course, isInWishlist, isBought, feedbacks, canFeedback, relatedCourses });
     } else {
       res.status(404).send('Course not found');
     }

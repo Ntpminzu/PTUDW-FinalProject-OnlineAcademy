@@ -1,4 +1,5 @@
 <nav class="navbar">
+<<<<<<< HEAD
   <div class="logo">Hogwarts Academy</div>
   <ul class="nav-links">
     <li><a href="/course">Home</a></li>
@@ -16,6 +17,109 @@
             {{/each}}
           </ul>
           {{/if}}
+=======
+    <div class="logo">Hogwarts Academy</div>
+
+    <ul class="nav-links">
+      <li><a href="/course">Home</a></li>
+      <li class="dropdown">
+        <a href="#">Courses ▾</a>
+        <ul class="dropdown-menu">
+          {{#each global_categories}}
+          <li class="sub-dropdown">
+            <a>{{CatName}}</a>
+            <ul class="sub-menu">
+              {{#each subcategories}}
+              <li><a href="/course/bycat?catid={{CatID}}&subcatid={{SubCatID}}">{{SubCatName}}</a></li>
+              {{/each}}
+            </ul>
+          </li>
+          {{/each}}
+        </ul>
+      </li>
+    </ul>
+
+    <form class="d-flex" role="search" action="/course/search" method="get">
+      <input class="form-control" type="text" placeholder="Search courses or categories..." aria-label="Search" name="q"
+        required>
+      <button class="btn magic-btn" type="submit">
+        <i class="bi bi-search"></i>
+        Search
+      </button>
+    </form>
+    {{#if isAuthenticated}}
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Welcome, <b>{{authUser.UserName}}</b>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end">
+
+        {{! --- THAY THẾ CODE CŨ BẰNG CODE MỚI NÀY --- }}
+        {{#if (eq authUser.UserPermission "1")}}
+        {{! 1 = Instructor -> Gửi đến trang Sửa Profile Giảng viên }}
+        <li>
+          <a class="dropdown-item" href="/management/profile">
+            <i class="bi bi-person-circle"></i>
+            My Profile
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="/management/course">
+            <i class="bi bi-journal-bookmark"></i>
+            My Course list
+          </a>
+        </li>
+        {{else if (eq authUser.UserPermission "2")}}
+        {{! 2 = Student -> Gửi đến trang Profile Sinh viên }}
+        <li>
+          <a class="dropdown-item" href="/account/profile">
+            <i class="bi bi-person-circle"></i>
+            Profile
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="/course/courselist">
+            <i class="bi bi-journal-bookmark"></i>
+            My Course list
+          </a>
+        </li>
+        {{else if (eq authUser.UserPermission "0")}}
+        {{! 0 = Admin -> Gửi đến trang Profile (chỉ xem) }}
+        <li>
+          <a class="dropdown-item" href="/account/profile">
+            <i class="bi bi-person-circle"></i>
+            Admin Profile
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="/management/course">
+            <i class="bi bi-journal-bookmark"></i>
+            My Course list
+          </a>
+        </li>
+        {{/if}}
+        {{! --- KẾT THÚC THAY THẾ --- }}
+        <li>
+          <a class="dropdown-item" href="/account/wishlist">
+            <i class="bi bi-journal-text"></i>
+            wishlist
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="/account/change-password">
+            <i class="bi bi-key"></i>
+            Change Password
+          </a>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li>
+          <a class="dropdown-item" href="javascript:document.querySelector('#frmSignout').submit();">
+            <i class="bi bi-box-arrow-right"></i>
+            Sign Out
+          </a>
+>>>>>>> 959b19ee1589c233d8be9e51dbe1a0c329bff192
         </li>
         {{/each}}
       </ul>

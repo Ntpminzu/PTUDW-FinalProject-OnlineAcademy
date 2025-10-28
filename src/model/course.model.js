@@ -1,7 +1,7 @@
 import db from "../utils/db.js";
 
 export default {
-  
+
   findAll() {
     return db('courses as c')
       .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
@@ -46,7 +46,7 @@ export default {
       .join('categories as ca', 's.CatID', '=', 'ca.CatID')
       .select('c.*', 'ca.CatName', 's.SubCatName'); // Lấy tên Cat, SubCat
   },
-  
+
   // THÊM: Hàm thêm khóa học mới
   add(courseEntity) {
     return db('courses').insert(courseEntity);
@@ -54,8 +54,8 @@ export default {
 
   findByCategory(SubCatID) {
     return db('courses')
-      .join('users', 'courses.UserID', '=', 'users.UserID') 
-      .join('sub_cat', 'courses.SubCatID', '=', 'sub_cat.SubCatID') 
+      .join('users', 'courses.UserID', '=', 'users.UserID')
+      .join('sub_cat', 'courses.SubCatID', '=', 'sub_cat.SubCatID')
       .join('categories', 'sub_cat.CatID', '=', 'categories.CatID')
       .where('courses.SubCatID', SubCatID)
       .select(
@@ -151,7 +151,7 @@ export default {
         .join('courses as c', 'e.CourseID', 'c.CourseID')
         .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
         .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-        .select('c.*', 'ca.CatName', 's.SubCatName')
+        .select('c.*', 'ca.CatName', 's.SubCatName', 'e.enrolled_at')
         .where('e.UserID', UserId)
         .orderBy('e.enrolled_at', 'desc');
   },
@@ -202,11 +202,6 @@ export default {
     return counts;
   },
 
-  // Hàm tìm một khóa học theo CourseID (DDL xác nhận CourseID là uuid)
-  findById(courseId) {
-    return db('courses').where('CourseID', courseId).first();
-  },
-
   // Hàm cập nhật thông tin khóa học
   update(courseId, courseUpdates) {
     return db('courses').where('CourseID', courseId).update(courseUpdates);
@@ -215,5 +210,49 @@ export default {
   // Hàm xóa khóa học theo CourseID
   delete(courseId) {
     return db('courses').where('CourseID', courseId).del();
+  },
+
+  //--- HẾT CÁC HÀM THỐNG KÊ CHO QUẢN LÝ GIẢNG VIÊN ---//
+
+  // Các hàm khác
+  findById(courseId) {
+    return db('courses')
+      .leftJoin('users', 'courses.UserID', '=', 'users.UserID')
+      .leftJoin('categories', 'courses.SubCatID', '=', 'categories.CatID')
+      .where('courses.CourseID', courseId)
+      .select(
+        'courses.*',
+        'users.Fullname as InstructorName',
+        'categories.CatName as CategoryName'
+      )
+      .first();
+  },
+  checkIfInWishlist(userId, courseId) {
+    return db('watch_list')
+      .where('UserID', userId)
+      .andWhere('CourseID', courseId);
+  },
+  checkIfInEnrollments(userId, courseId) {
+    return db('enrollments')
+      .where('UserID', userId)
+      .andWhere('CourseID', courseId);
+  },
+  findLessonsByCourseId(courseId) {
+    return db('lessons')
+      .where('CourseID', courseId)
+      .select(
+        'LessonID',
+        'LessonName',
+        'TinyDes',
+        'FullDes',
+        'VideoUrl',
+        'LessonStatus',
+        'LessonPermission',
+        'LastUpdate',
+        'CourseID',
+        'UserID'
+      )
+      .orderBy('LastUpdate', 'asc');
   }
+
 };

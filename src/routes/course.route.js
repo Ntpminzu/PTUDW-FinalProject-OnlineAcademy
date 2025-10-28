@@ -75,8 +75,33 @@ router.get('/bycat', async function (req, res, next) {
   } catch (err) { next(err); }
 });
 
-router.get('/enroll', function (req, res) {
-    res.render('course/enroll');
+router.get('/enroll', async function (req, res) {
+  const courseId = req.query.id;
+  const userId = req.session.authUser?.UserID;
+
+  try {
+    const course = await courseModel.findById(courseId);
+    const lessons = await courseModel.findLessonsByCourseId(courseId);
+
+    let completedLessons = [];
+    if (userId) {
+      completedLessons = await accountModel.getCompletedLessonsByUserId(userId, courseId);
+    }
+
+    const updatedLessons = lessons.map(lesson => {
+      const isCompleted = completedLessons.some(completed => completed.LessonID === lesson.LessonID);
+      return {
+        ...lesson,
+        isCompleted
+      };
+    });
+
+    res.render('course/enroll', { course, lessons: updatedLessons });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
 });
 
 router.get('/courselist', async function (req, res, next) {
@@ -103,7 +128,7 @@ router.get('/search', async (req, res, next) => {
 });
 
 router.get('/course-remake', function (req, res) {
-    res.render('course/course-remake');
+  res.render('course/course-remake');
 });
 
 // Thêm vào Wishlist (POST /add-to-watchlist) - Đã sửa

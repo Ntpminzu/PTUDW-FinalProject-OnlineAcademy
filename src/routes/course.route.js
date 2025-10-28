@@ -6,17 +6,17 @@ import db from '../utils/db.js';
 
 const router = express.Router();
 
-router.get('/',async function (req, res) {
-    const topCourses = await courseModel.findTop10CoursesViews();
-    const top4Week = await courseModel.findTop4WeekViews();
-    const top10Week = await categoryModel.findTopSubCategories();
-    const top10Newest = await courseModel.findTop10Newest();
-    res.render('course/home',{
-        topCourses,
-        top4Week,
-        top10Week,
-        top10Newest
-    });
+router.get('/', async function (req, res) {
+  const topCourses = await courseModel.findTop10CoursesViews();
+  const top4Week = await courseModel.findTop4WeekViews();
+  const top10Week = await categoryModel.findTopSubCategories();
+  const top10Newest = await courseModel.findTop10Newest();
+  res.render('course/home', {
+    topCourses,
+    top4Week,
+    top10Week,
+    top10Newest
+  });
 });
 
 
@@ -29,16 +29,22 @@ router.get('/detail', async function (req, res) {
 
     let isInWishlist = false;
     let isBought = false;
+    let canFeedback = false;
+    const feedbacks = await courseModel.findFeedbacksByCourseId(courseId);
+
     if (userId) {
       const wishlist = await courseModel.checkIfInWishlist(userId, courseId);
       isInWishlist = wishlist.length > 0;
 
       const enrollments = await courseModel.checkIfInEnrollments(userId, courseId);
       isBought = enrollments.length > 0;
+
+      const feedbackList = await courseModel.checkIfInFeedbacks(userId, courseId);
+      canFeedback = feedbackList.length == 0 && isBought;
     }
 
     if (course) {
-      res.render('course/detail', { course, isInWishlist, isBought });
+      res.render('course/detail', { course, isInWishlist, isBought, feedbacks, canFeedback });
     } else {
       res.status(404).send('Course not found');
     }

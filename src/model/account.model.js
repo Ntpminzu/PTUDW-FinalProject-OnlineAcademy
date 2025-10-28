@@ -57,6 +57,15 @@ export function buyNow(userId, courseId) {
   });
 }
 
+export function addFeedback(userId, courseId, feedback) {
+  return db("course_feedback").insert({
+    UserID: userId,
+    CourseID: courseId,
+    Feedback: feedback,
+    created_at: db.fn.now()
+  });
+}
+
 export function finishLesson(userId, lessonId) {
   return db("lesson_status").insert({
     UserID: userId,

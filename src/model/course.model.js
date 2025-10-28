@@ -76,23 +76,23 @@ export default {
   // SỬA: 'courses.InstructorID' -> 'courses.UserID'
   findTop10Newest() {
     return db('courses as c')
-    .join('users as u', 'c.UserID', '=', 'u.UserID')
-    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
-    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-    .select(
-      'c.CourseID',
-      'c.CourseName',
-      'c.ImageUrl',
-      'c.Rating',
-      'c.Total_Review',
-      'c.CurrentPrice',
-      'c.OriginalPrice',
-      'u.Fullname as InstructorName',
-      'ca.CatName as CategoryName',
-      'c.Date'
-    )
-    .orderByRaw('"c"."Date" DESC NULLS LAST')
-    .limit(10);
+      .join('users as u', 'c.UserID', '=', 'u.UserID')
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .select(
+        'c.CourseID',
+        'c.CourseName',
+        'c.ImageUrl',
+        'c.Rating',
+        'c.Total_Review',
+        'c.CurrentPrice',
+        'c.OriginalPrice',
+        'u.Fullname as InstructorName',
+        'ca.CatName as CategoryName',
+        'c.Date'
+      )
+      .orderByRaw('"c"."Date" DESC NULLS LAST')
+      .limit(10);
   },
 
   // SỬA: 'courses.InstructorID' -> 'courses.UserID'
@@ -197,6 +197,11 @@ export default {
       .where('UserID', userId)
       .andWhere('CourseID', courseId);
   },
+  checkIfInFeedbacks(userId, courseId) {
+    return db('course_feedback')
+      .where('UserID', userId)
+      .andWhere('CourseID', courseId);
+  },
   findLessonsByCourseId(courseId) {
     return db('lessons')
       .where('CourseID', courseId)
@@ -213,6 +218,17 @@ export default {
         'UserID'
       )
       .orderBy('LastUpdate', 'asc');
+  },
+  findFeedbacksByCourseId(courseId) {
+    return db('course_feedback')
+      .where('CourseID', courseId)
+      .leftJoin('users', 'course_feedback.UserID', '=', 'users.UserID')
+      .select(
+        'Fullname',
+        'CourseID',
+        'Feedback',
+        'created_at'
+      )
+      .orderBy('created_at', 'asc');
   }
-
 };

@@ -655,3 +655,71 @@
   background-color: #218838;
   /* Darker green on hover */
 }
+
+
+/* FEEDBACK */
+/* General styles for the section */
+.feedback-section {
+  width: 1800px;           /* Limit the width for readability */
+  margin: 40px auto;          /* Center the section on the page */
+  padding: 20px;
+  background-color: #f9f9f9;  /* Light background for contrast */
+  border-radius: 10px;        /* Rounded corners for soft design */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Heading style */
+.feedback-section h2 {
+  font-size: 1.8rem;
+  color: white;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+/* Styling for the feedback list container */
+.feedback-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between feedback items */
+}
+
+/* Individual feedback item */
+.feedback-item {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feedback-item:hover {
+  transform: translateY(-5px); /* Lift the item slightly on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+/* User name style */
+.feedback-user {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #2d3e50;
+}
+
+/* Feedback content style */
+.feedback-content {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Date styling */
+.feedback-date {
+  display: block;
+  font-size: 0.9rem;
+  color: #888;
+  margin-top: 10px;
+  text-align: right;
+  font-style: italic;
+}

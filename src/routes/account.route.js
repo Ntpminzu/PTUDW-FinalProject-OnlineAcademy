@@ -211,6 +211,18 @@ router.post("/buy-now", async (req, res) => {
   res.redirect(`/course/detail?id=` + courseId);
 });
 
+router.post("/add-feedback", async (req, res) => {
+  if (!req.session.isAuthenticated)
+    return res.redirect("/account/signin");
+
+  const userId = req.session.authUser.UserID;
+  const { courseId, feedback } = req.body;
+
+  await accountModel.addFeedback(userId, courseId, feedback);
+  res.redirect(`/course/detail?id=` + courseId);
+});
+
+
 router.post("/finish-lesson", async (req, res) => {
   if (!req.session.isAuthenticated)
     return res.redirect("/account/signin");

@@ -4,6 +4,7 @@ import hbs_sections from 'express-handlebars-sections';
 import session from 'express-session';
 import path from 'path';
 import { fileURLToPath } from "url";
+import Handlebars from 'handlebars';
 
 // Import Routes
 import courseRouter from './src/routes/course.route.js';
@@ -61,7 +62,31 @@ app.engine('hbs', engine({
       const numValue = parseFloat(value);
       if (isNaN(numValue)) return value;
       return numValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    }
+    },
+    renderStars: function (rating) {
+        let html = "";
+        const fullStars = Math.floor(rating);
+        const halfStar = rating - fullStars >= 0.5;
+        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+        // Full stars
+        for (let i = 0; i < fullStars; i++) {
+          html += '<i class="fas fa-star"></i>';
+        }
+
+        // Half star
+        if (halfStar) {
+          html += '<i class="fas fa-star-half-alt"></i>';
+        }
+
+        // Empty stars
+        for (let i = 0; i < emptyStars; i++) {
+          html += '<i class="far fa-star"></i>';
+        }
+
+        return new Handlebars.SafeString(html);
+
+      },
   }
 }));
 app.set('view engine', 'hbs');

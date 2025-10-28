@@ -63,6 +63,7 @@
             <h3>Course Details</h3>
             <p>{{{TinyDes}}}</p>
             <div class="rating">
+              {{{renderStars Rating}}}
               ⭐ {{Rating}} <span>({{TotalStudent}} students)</span>
             </div>
             <div class="price">
@@ -105,9 +106,7 @@
           <h3>{{this.CourseName}}</h3>
           <p class="instructor">{{this.InstructorName}}</p>
           <div class="course-rating">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i>
-            <i class="fas fa-star"></i><i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
+            {{{renderStars this.Rating}}}
             <span>{{this.Rating}} ⭐ ({{this.Total_Review}})</span>
           </div>
           <div class="course-price">
@@ -135,9 +134,7 @@
           <h3>{{CourseName}}</h3>
           <p class="instructor">{{InstructorName}}</p>
           <div class="course-rating">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i>
-            <i class="fas fa-star"></i><i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
+            {{{renderStars Rating}}}
             <span>{{Rating}} ({{TotalStudent}})</span>
           </div>
           <div class="course-price">

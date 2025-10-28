@@ -1,0 +1,83 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/Adminn.css">
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchInput = document.querySelector(".search-box input");
+        const rows = document.querySelectorAll(".user-table tbody tr");
+        if (!searchInput || !rows.length) return;
+        searchInput.addEventListener("input", () => {
+            const keyword = searchInput.value.trim().toLowerCase();
+            rows.forEach((row) => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(keyword) ? "" : "none";
+            });
+        });
+    });
+</script>
+{{/section}}
+
+<div class="user-container">
+    <h2>Sub Category in > {{CatName}}</h2>
+
+    <div class="toolbar">
+        <div class="filters">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search">
+            </div>
+        </div>
+        <a href="/admin/subcat/add/byCat?id={{CatID}}">
+            <button class="btn-add"><i class="bi bi-plus-circle"></i> Add Sub-Category</button>
+        </a>
+
+    </div>
+    {{#if empty}}
+    <p>Dont have any Sub Category!</p>
+    {{else}}
+    <div class="table-wrapper">
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each subcats}}
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <span>{{SubCatID}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <span>{{SubCatName}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <span>{{SubCatDes}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="/admin/subcat/edit?id={{SubCatID}}" class="actions">
+                            <i class="bi bi-pencil" data-tooltip="Edit"></i>
+                        </a>
+                        <form action="/admin/subcat/del" method="POST" style="display:inline;">
+                            <input type="hidden" name="SubCatID" value="{{SubCatID}}">
+                            <input type="hidden" name="CatID" value="{{CatID}}"> <!-- thêm dòng này -->
+                            <button type="submit" class="actions" onclick="return confirm('Delete {{SubCatName}}?')">
+                                <i class="bi bi-trash" data-tooltip="Delete"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    {{/if}}
+</div>

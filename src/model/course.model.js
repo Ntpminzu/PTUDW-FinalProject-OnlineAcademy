@@ -110,6 +110,7 @@ export default {
       .limit(10);
   },
 
+
   // Dùng SubCatID
   findByCategoryPaging(subCatId, limit, offset) { // Đổi tên param
     return db('courses as c')
@@ -122,9 +123,12 @@ export default {
       .offset(offset);
   },
 
-  // Dùng SubCatID
-  countByCategory(subCatId) { 
-      return db('courses').where('SubCatID', subCatId).count('* as total').first();
+  
+  countByCategory(SubCatID) {
+    return db('courses')
+      .where('SubCatID', SubCatID)
+      .count('* as total')
+      .first();
   },
 
   findByName(keyword) {
@@ -144,7 +148,6 @@ export default {
                 [term, term, term, term, term, term])
       .select('c.*', 'u.Fullname as InstructorName', 'ca.CatName', 's.SubCatName');
   },
-
   // finduserenrollcourses 
   async finduserenrollcourses(UserId) {
       return db('enrollments as e')

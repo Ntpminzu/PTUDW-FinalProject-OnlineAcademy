@@ -1,0 +1,38 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/Adminn.css">
+{{/section}}
+
+<form class="edit-user-form" method="POST" action="/admin/subcat/patch">
+  <div class="edit-user-form">
+    <h3>Edit SubCategory</h3>
+
+    <div class="form-group">
+      <label>SubCategory ID</label>
+      <input type="text" value="{{subcat.SubCatID}}" name="SubCatID" readonly />
+    </div>
+
+    <div class="form-group">
+      <label>SubCategory Name</label>
+      <input type="text" value="{{subcat.SubCatName}}" name="SubCatName" required />
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea class="big-input" name="SubCatDes">{{subcat.SubCatDes}}</textarea>
+    </div>
+
+    <!-- Truyền CatID ẩn để redirect lại đúng danh mục -->
+    <input type="hidden" name="CatID" value="{{subcat.CatID}}" />
+
+    <div class="form-actions">
+      <a href="/admin/subcat/byCat?id={{subcat.CatID}}">
+        <button type="button" class="btn-cancel">
+          <i class="bi bi-x-circle"></i> Cancel
+        </button>
+      </a>
+      <button type="submit" class="btn-save">
+        <i class="bi bi-check-circle"></i> Save
+      </button>
+    </div>
+  </div>
+</form>

@@ -26,7 +26,7 @@
                     <div class="form-row full">
                         <div class="form-group">
                             <label class="form-label">Username (Can not change)</label>
-                            <input type="text" class="form-input" value="{{users.UserName}}" disabled />
+                            <input type="text" class="form-input" value="{{instructor.UserName}}" disabled />
                         </div>
                     </div>
 
@@ -35,12 +35,12 @@
                         <div class="form-group">
                             <label class="form-label" for="Fullname">Full name</label>
                             <input type="text" class="form-input" id="Fullname" name="fullname"
-                                value="{{users.Fullname}}" required />
+                                value="{{instructor.Fullname}}" required />
                         </div>
                         {{! DDL xác nhận: Email }}
                         <div class="form-group">
                             <label class="form-label" for="Email">Email</label>
-                            <input type="email" class="form-input" id="Email" name="email" value="{{users.Email}}"
+                            <input type="email" class="form-input" id="Email" name="email" value="{{instructor.Email}}"
                                 required />
                         </div>
                     </div>

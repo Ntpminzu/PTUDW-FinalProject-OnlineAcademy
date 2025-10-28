@@ -20,20 +20,25 @@ export default{
     return db('categories')
       .whereRaw('LOWER("CatName") LIKE ?', [`%${keyword.toLowerCase()}%`])
     },
-    findTopSubCategories(limit) {
+
+    // Sửa hàm findTopSubCategories
+    findTopSubCategories(limit = 10) {
         return db('sub_cat as s')
-            .leftJoin('courses as c', 's.SubCatID', 'c.SubCatID')
-            .leftJoin('categories as ca', 's.CatID', 'ca.CatID')
-            .select(
-            's.SubCatID',
-            's.SubCatName',
-            's.CatID',
-            's.SubCatDes',
-            'ca.CatName',
-            db.raw('COALESCE(SUM(c."WeekView"), 0) as total_week_views')
+            .leftJoin( // Subquery tính tổng WeekView cho từng SubCatID
+                db('courses')
+                .select('SubCatID')
+                .sum('WeekView as TotalWeekView')
+                .groupBy('SubCatID')
+                .as('course_views'),
+                's.SubCatID', '=', 'course_views.SubCatID'
             )
-            .groupBy('s.SubCatID', 's.SubCatName', 's.SubCatDes','s.CatID', 'ca.CatName')
+            .leftJoin('categories as ca', 's.CatID', 'ca.CatID') // Join categories cha
+            .select(
+                's.SubCatID', 's.SubCatName', 's.CatID', 'ca.CatName',
+                // Lấy tổng WeekView, nếu không có course thì là 0
+                db.raw('COALESCE(course_views."TotalWeekView", 0) as total_week_views')
+            )
             .orderBy('total_week_views', 'desc')
-            .limit(10);
+            .limit(limit);
     },
 };

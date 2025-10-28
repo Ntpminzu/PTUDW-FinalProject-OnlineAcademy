@@ -1,8 +1,50 @@
 import db from "../utils/db.js";
 
 export default {
+
   findAll() {
-    return db('courses');
+    return db('courses as c')
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .join('users as u', 'c.UserID', '=', 'u.UserID') // Dùng UserID
+      .select('c.*', 'ca.CatName', 's.SubCatName', 'u.Fullname as InstructorName');
+  },
+
+  // Lấy chi tiết khóa học (bao gồm tên GV, Cat, SubCat)
+  async findByIdWithDetails(courseId) {
+    return db('courses as c')
+      .where('c.CourseID', courseId)
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .join('users as u', 'c.UserID', '=', 'u.UserID') // Dùng UserID
+      .select('c.*', 'ca.CatName', 's.SubCatName', 'u.Fullname as InstructorName')
+      .first(); // Chỉ lấy 1 kết quả
+  },
+
+  // Hàm mới cho app.js lấy course cho dropdown navbar
+  findByCategoryLimit(catId, limit) {
+    return db('courses as c')
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .where('s.CatID', catId)
+      .orderBy('c.Views', 'desc')
+      .limit(limit)
+      .select('c.CourseID', 'c.CourseName');
+  },
+
+  // Dùng UserID, SubCatID
+  findBySubCategory(subCatId) { // Tìm theo SubCategory
+    return db('courses')
+      .join('users', 'courses.UserID', '=', 'users.UserID') // Dùng UserID
+      .where('courses.SubCatID', subCatId)
+      .select('courses.*', 'users.Fullname as InstructorName');
+  },
+
+  findByUserId(userId) { // Tìm course của giảng viên
+    return db('courses as c')
+      .where('c.UserID', userId) // Dùng UserID
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .select('c.*', 'ca.CatName', 's.SubCatName'); // Lấy tên Cat, SubCat
   },
 
   // THÊM: Hàm thêm khóa học mới
@@ -10,7 +52,6 @@ export default {
     return db('courses').insert(courseEntity);
   },
 
-  // SỬA: 'courses.InstructorID' -> 'courses.UserID'
   findByCategory(SubCatID) {
     return db('courses')
       .join('users', 'courses.UserID', '=', 'users.UserID')
@@ -25,37 +66,23 @@ export default {
       );
   },
 
-  // SỬA: 'c.InstructorID' -> 'c.UserID'
   findTop10CoursesViews() {
     return db('courses as c')
-      .leftJoin('users as u', 'c.UserID', 'u.UserID')
-      .leftJoin('categories as ca', 'c.SubCatID', 'ca.CatID')
+      .leftJoin('users as u', 'c.UserID', 'u.UserID') // UserID
+      .leftJoin('sub_cat as s', 'c.SubCatID', 's.SubCatID')
+      .leftJoin('categories as ca', 's.CatID', 'ca.CatID')
       .orderBy('c.Views', 'desc')
-      .select(
-        'c.CourseID',
-        'c.CourseName',
-        'c.ImageUrl',
-        'c.Rating',
-        'c.Total_Review',
-        'c.CurrentPrice',
-        'c.OriginalPrice',
-        'u.Fullname as InstructorName',
-        'ca.CatName'
-      )
+      .select('c.*', 'u.Fullname as InstructorName', 'ca.CatName', 's.SubCatName')
       .limit(10);
   },
 
-  // SỬA: 'courses.InstructorID' -> 'courses.UserID'
   findTop4WeekViews() {
-    return db('courses')
-      .join('users', 'courses.UserID', '=', 'users.UserID')
-      .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
-      .select(
-        'courses.*',
-        'users.Fullname as InstructorName',
-        'categories.CatName as CategoryName'
-      )
-      .orderBy('WeekView', 'desc')
+    return db('courses as c')
+      .join('users as u', 'c.UserID', '=', 'u.UserID') // UserID
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .select('c.*', 'u.Fullname as InstructorName', 'ca.CatName', 's.SubCatName')
+      .orderBy('c.WeekView', 'desc')
       .limit(4);
   },
 
@@ -73,50 +100,31 @@ export default {
       .limit(10);
   },
 
-  // SỬA: 'courses.InstructorID' -> 'courses.UserID'
   findTop10Newest() {
     return db('courses as c')
-    .join('users as u', 'c.UserID', '=', 'u.UserID')
-    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
-    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-    .select(
-      'c.CourseID',
-      'c.CourseName',
-      'c.ImageUrl',
-      'c.Rating',
-      'c.Total_Review',
-      'c.CurrentPrice',
-      'c.OriginalPrice',
-      'u.Fullname as InstructorName',
-      'ca.CatName as CategoryName',
-      'c.Date'
-    )
-    .orderByRaw('"c"."Date" DESC NULLS LAST')
-    .limit(10);
+      .join('users as u', 'c.UserID', '=', 'u.UserID') // UserID
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .select('c.*', 'u.Fullname as InstructorName', 'ca.CatName', 's.SubCatName')
+      .orderBy('c.Date', 'desc') // Sắp xếp theo ngày tạo
+      .limit(10);
   },
 
-  // SỬA: 'courses.InstructorID' -> 'courses.UserID'
-  findByCategoryPaging(SubCatID, limit, offset) {
-    return db('courses')
-      .join('users', 'courses.UserID', '=', 'users.UserID')
-      .join('sub_cat', 'courses.SubCatID', '=', 'sub_cat.SubCatID')
-      .join('categories', 'sub_cat.CatID', '=', 'categories.CatID')
-      .where('courses.SubCatID', SubCatID)
-      .select(
-        'courses.*',
-        'users.Fullname as InstructorName',
-        'categories.CatName as CategoryName',
-        'sub_cat.SubCatName as SubCategoryName'
-      )
+  // Dùng SubCatID
+  findByCategoryPaging(subCatId, limit, offset) { // Đổi tên param
+    return db('courses as c')
+      .join('users as u', 'c.UserID', '=', 'u.UserID') // UserID
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .where('c.SubCatID', subCatId)
+      .select('c.*', 'u.Fullname as InstructorName', 'ca.CatName', 's.SubCatName')
       .limit(limit)
       .offset(offset);
   },
 
-  countByCategory(SubCatID) {
-    return db('courses')
-      .where('SubCatID', SubCatID)
-      .count('* as total')
-      .first();
+  // Dùng SubCatID
+  countByCategory(subCatId) { 
+      return db('courses').where('SubCatID', subCatId).count('* as total').first();
   },
 
   findByName(keyword) {
@@ -125,58 +133,100 @@ export default {
       .first();
   },
 
-  // SỬA: 'courses.InstructorID' -> 'courses.UserID'
+  // SỬA: 'courses.UserID'
   findByKeyword(keyword) {
-    return db('courses')
-      .join('users', 'courses.UserID', '=', 'users.UserID')
-      .join('categories', 'courses.SubCatID', '=', 'categories.CatID')
-      .whereRaw(`
-        LOWER(courses."CourseName") LIKE ? 
-        OR LOWER(courses."TinyDes") LIKE ?
-        OR LOWER(courses."FullDes") LIKE ?
-        OR LOWER(categories."CatName") LIKE ?
-        OR LOWER(users."Fullname") LIKE ?
-      `, [
-        `%${keyword}%`,
-        `%${keyword}%`,
-        `%${keyword}%`,
-        `%${keyword}%`,
-        `%${keyword}%`
-      ])
-      .select(
-        'courses.*',
-        'users.Fullname as InstructorName',
-        'categories.CatName as CategoryName'
-      );
+    const term = `%${keyword.toLowerCase()}%`;
+    return db('courses as c')
+      .join('users as u', 'c.UserID', '=', 'u.UserID') // UserID
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .whereRaw(`LOWER(c."CourseName") LIKE ? OR LOWER(c."TinyDes") LIKE ? OR LOWER(c."FullDes") LIKE ? OR LOWER(ca."CatName") LIKE ? OR LOWER(s."SubCatName") LIKE ? OR LOWER(u."Fullname") LIKE ?`,
+                [term, term, term, term, term, term])
+      .select('c.*', 'u.Fullname as InstructorName', 'ca.CatName', 's.SubCatName');
   },
 
-  // finduserenrollcourses (Hàm này không join với bảng users nên không cần sửa)
+  // finduserenrollcourses 
   async finduserenrollcourses(UserId) {
-    return await db('enrollments as e')
-      .join('courses as c', 'e.CourseID', 'c.CourseID')
-      .join('sub_cat as s', 'c.SubCatID', 's.SubCatID')
-      .join('categories as ca', 's.CatID', 'ca.CatID')
-      .select(
-        'c.CourseID',
-        'c.CourseName',
-        'c.ImageUrl',
-        'ca.CatName',
-        'c.CurrentPrice',
-        'c.OriginalPrice',
-        'c.Rating',
-        'c.Total_Review',
-        'c.TotalStudent',
-        'e.enrolled_at'
-      )
-      .where('e.UserID', UserId)
-      .orderBy('e.enrolled_at', 'desc');
+      return db('enrollments as e')
+        .join('courses as c', 'e.CourseID', 'c.CourseID')
+        .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+        .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+        .select('c.*', 'ca.CatName', 's.SubCatName', 'e.enrolled_at')
+        .where('e.UserID', UserId)
+        .orderBy('e.enrolled_at', 'desc');
   },
 
-  // THÊM HÀM MỚI (đã sửa): Dùng 'UserID'
-  findByUserId(userId) {
-    // Tìm các khóa học có 'UserID' (trường foreign key) khớp với 'userId' (param)
-    return db('courses').where('UserID', userId);
+  //--- CÁC HÀM THỐNG KÊ CHO QUẢN LÝ GIẢNG VIÊN ---//
+  // Hàm trợ giúp để tạo điều kiện WHERE
+  _createWhereClause(userId = null) {
+      return userId ? { UserID: userId } : {}; // Lọc theo UserID
+    },
+
+  // Đếm tổng số khóa học (của GV hoặc tất cả)
+  async countCourses(userId = null) {
+    const whereClause = this._createWhereClause(userId);
+    const result = await db('courses').where(whereClause).count('CourseID as total').first();
+    return result.total || 0;
   },
+
+  // Tính tổng số học viên (của GV hoặc tất cả)
+  async sumStudents(userId = null) {
+    const whereClause = this._createWhereClause(userId);
+    const result = await db('courses').where(whereClause).sum('TotalStudent as total').first();
+    return result.total || 0;
+  },
+
+  // Tính rating trung bình (của GV hoặc tất cả)
+  async averageRating(userId = null) {
+      const whereClause = this._createWhereClause(userId); // Dùng UserID theo schema mới
+      const result = await db('courses')
+          .where(whereClause)
+          .andWhere('Rating', '>', 0) // Chỉ tính các khóa học có rating
+          .avg('Rating as average')
+          .first();
+
+      // SỬA: Kiểm tra result.average trước khi gọi toFixed
+      if (result && typeof result.average === 'number') {
+          return parseFloat(result.average.toFixed(1)); // Làm tròn nếu là số
+      } else if (result && typeof result.average === 'string') {
+          // Nếu kết quả avg trả về là string (một số DB có thể làm vậy)
+          const numAvg = parseFloat(result.average);
+          return isNaN(numAvg) ? 0 : parseFloat(numAvg.toFixed(1));
+      }
+      // Nếu không có kết quả hoặc không phải số, trả về 0
+      return 0;
+  },
+
+  // Đếm số khóa học theo từng trạng thái (của GV hoặc tất cả)
+  async countCoursesByStatus(userId = null) {
+    const whereClause = this._createWhereClause(userId);
+    const results = await db('courses')
+      .where(whereClause)
+      .groupBy('CourseStatus')
+      .select('CourseStatus')
+      .count('CourseID as count');
+    
+    // Chuyển kết quả thành dạng { complete: 5, not complete: 10, ... }
+    const counts = {};
+    results.forEach(row => {
+      counts[row.CourseStatus || 'unknown'] = row.count;
+    });
+    return counts;
+  },
+
+  // Hàm cập nhật thông tin khóa học
+  update(courseId, courseUpdates) {
+    return db('courses').where('CourseID', courseId).update(courseUpdates);
+  },
+
+  // Hàm xóa khóa học theo CourseID
+  delete(courseId) {
+    return db('courses').where('CourseID', courseId).del();
+  },
+
+  //--- HẾT CÁC HÀM THỐNG KÊ CHO QUẢN LÝ GIẢNG VIÊN ---//
+
+  // Các hàm khác
   findById(courseId) {
     return db('courses')
       .leftJoin('users', 'courses.UserID', '=', 'users.UserID')

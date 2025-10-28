@@ -6,7 +6,7 @@ import  courseRouter from './src/routes/course.route.js';
 import  accountRouter from './src/routes/account.route.js';
 import  categoryRouter from './src/routes/category.route.js';
 import categoryModel from './src/model/category.model.js';
-import courseModel from './src/model/course.model.js';
+
 import  managementRouter from './src/routes/management.route.js';
 import userRouter from './src/routes/admin.route.js';
 

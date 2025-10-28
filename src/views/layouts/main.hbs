@@ -11,136 +11,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
 </head>
 
 <body>
   <!-- 🌟 NAVBAR -->
-<<<<<<< HEAD
-  <nav class="navbar">
-    <div class="logo">Hogwarts Academy</div>
-
-    <ul class="nav-links">
-      <li><a href="/course">Home</a></li>
-      <li class="dropdown">
-        <a href="#">Courses ▾</a>
-        <ul class="dropdown-menu">
-          {{#each global_categories}}
-          <li class="sub-dropdown">
-            <a href="/course/bycat?id={{CatID}}">{{CatName}}</a>
-            <ul class="sub-menu">
-              {{#each courses}}
-              <li><a href="#">{{CourseName}}</a></li>
-              {{/each}}
-            </ul>
-          </li>
-          {{/each}}
-        </ul>
-      </li>
-    </ul>
-
-    <form class="d-flex" role="search" action="/course/search" method="get">
-      <input class="form-control" type="text" placeholder="Search courses or categories..." aria-label="Search" name="q"
-        required>
-      <button class="btn magic-btn" type="submit">
-        <i class="bi bi-search"></i>
-        Search
-      </button>
-    </form>
-    {{#if isAuthenticated}}
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Welcome, <b>{{authUser.Fullname}}</b>
-      </a>
-      <ul class="dropdown-menu dropdown-menu-end">
-
-        {{! --- THAY THẾ CODE CŨ BẰNG CODE MỚI NÀY --- }}
-        {{#if (eq authUser.UserPermission "1")}}
-        {{! 1 = Instructor -> Gửi đến trang Sửa Profile Giảng viên }}
-        <li>
-          <a class="dropdown-item" href="/management/profile">
-            <i class="bi bi-person-circle"></i>
-            My Profile
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="/management/course">
-            <i class="bi bi-journal-bookmark"></i>
-            My Course list
-          </a>
-        </li>
-        {{else if (eq authUser.UserPermission "2")}}
-        {{! 2 = Student -> Gửi đến trang Profile Sinh viên }}
-        <li>
-          <a class="dropdown-item" href="/account/profile">
-            <i class="bi bi-person-circle"></i>
-            Profile
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="/course/courselist">
-            <i class="bi bi-journal-bookmark"></i>
-            My Course list
-          </a>
-        </li>
-        {{else if (eq authUser.UserPermission "0")}}
-        {{! 0 = Admin -> Gửi đến trang Profile (chỉ xem) }}
-        <li>
-          <a class="dropdown-item" href="/account/profile">
-            <i class="bi bi-person-circle"></i>
-            Admin Profile
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="/management/course">
-            <i class="bi bi-journal-bookmark"></i>
-            My Course list
-          </a>
-        </li>
-        {{/if}}
-        {{! --- KẾT THÚC THAY THẾ --- }}
-        <li>
-          <a class="dropdown-item" href="/account/wishlist">
-            <i class="bi bi-journal-text"></i>
-            wishlist
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="/account/history">
-            <i class="bi bi-collection-play"></i>
-            History
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="/account/change-password">
-            <i class="bi bi-key"></i>
-            Change Password
-          </a>
-        </li>
-        <li>
-          <hr class="dropdown-divider">
-        </li>
-        <li>
-          <a class="dropdown-item" href="javascript:document.querySelector('#frmSignout').submit();">
-            <i class="bi bi-box-arrow-right"></i>
-            Sign Out
-          </a>
-        </li>
-      </ul>
-
-    </li>
-    <form id="frmSignout" action="/account/signout" method="post"></form>
-    {{else}}
-    <div class="auth-buttons">
-      <a href="/account/signin"> <button class="magic-btn">Sign In</button></a>
-    </div>
-    {{/if}}
-  </nav>
-=======
   <header class="navbar">
     {{> navbar}}
   </header>
->>>>>>> 74659300bff7a355590d38176a721294c494dc23
 
   {{{body}}}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -148,4 +26,4 @@
     crossorigin="anonymous"></script>
 </body>
 
-  </html>
+</html>

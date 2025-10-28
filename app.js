@@ -1,5 +1,3 @@
-// File: app.js
-import 'dotenv/config' // <-- Đặt lên đầu tiên
 import express from 'express';
 import { engine } from 'express-handlebars';
 import hbs_sections from 'express-handlebars-sections';
@@ -23,7 +21,7 @@ import db from './src/utils/db.js';
 import { restrict, restrictAdmin } from './src/middlewares/auth.mdw.js'; // Chỉ import restrict và restrictAdmin
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -61,7 +59,7 @@ app.engine('hbs', engine({
         },
         formatCurrency: (value) => { // Helper format tiền
            if (typeof value !== 'number') return value;
-           return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+           return value.toLocaleString('us-US', { style: 'currency', currency: '$' });
         }
     }
 }));
@@ -70,10 +68,10 @@ app.set('views', path.join(__dirname, 'src/views'));
 
 // Cấu hình Session
 app.use(session({
-    secret: process.env.SESSION_SECRET, // Đọc từ .env
-    resave: false,
-    saveUninitialized: false, // Quan trọng
-    cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }
+  secret: 'thay-chuoi-nay-bang-mot-chuoi-bi-mat-dai-hon-cua-ban!',
+  resave: false,
+  saveUninitialized: false, // Quan trọng
+  cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }
 }));
 
 // --- TẢI DỮ LIỆU GLOBAL (CATEGORIES + SUBCATEGORIES) 1 LẦN ---
@@ -114,7 +112,7 @@ app.get('/', (req, res) => res.redirect('/course'));
 
 // Route trang lỗi
 app.get('/403', (req, res) => res.status(403).render('403')); 
-app.get('/500', (req, res) => res.status(500).render('500')); // Tạo file 500.hbs
+app.get('/500', (req, res) => res.status(500).render('500')); 
 
 // Middleware 404 (cuối cùng)
 app.use((req, res, next) => { res.status(404).render('404'); });

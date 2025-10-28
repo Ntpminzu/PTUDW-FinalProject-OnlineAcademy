@@ -178,11 +178,23 @@ export default {
 
   // Tính rating trung bình (của GV hoặc tất cả)
   async averageRating(userId = null) {
-    const whereClause = this._createWhereClause(userId);
-    // Tính trung bình rating, chỉ tính các khóa học có rating > 0 để tránh làm sai lệch
-    const result = await db('courses').where(whereClause).andWhere('Rating', '>', 0).avg('Rating as average').first();
-     // Làm tròn đến 1 chữ số thập phân
-    return result.average ? parseFloat(result.average.toFixed(1)) : 0;
+      const whereClause = this._createWhereClause(userId); // Dùng UserID theo schema mới
+      const result = await db('courses')
+          .where(whereClause)
+          .andWhere('Rating', '>', 0) // Chỉ tính các khóa học có rating
+          .avg('Rating as average')
+          .first();
+
+      // SỬA: Kiểm tra result.average trước khi gọi toFixed
+      if (result && typeof result.average === 'number') {
+          return parseFloat(result.average.toFixed(1)); // Làm tròn nếu là số
+      } else if (result && typeof result.average === 'string') {
+          // Nếu kết quả avg trả về là string (một số DB có thể làm vậy)
+          const numAvg = parseFloat(result.average);
+          return isNaN(numAvg) ? 0 : parseFloat(numAvg.toFixed(1));
+      }
+      // Nếu không có kết quả hoặc không phải số, trả về 0
+      return 0;
   },
 
   // Đếm số khóa học theo từng trạng thái (của GV hoặc tất cả)

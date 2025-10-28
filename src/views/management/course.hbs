@@ -259,23 +259,27 @@
     // Filter client-side cho danh sách khóa học
     function filterCourseListClientSide() {
         const searchTerm = document.getElementById('courseSearchInputClient').value.toLowerCase();
-        const categoryFilter = document.getElementById('categoryFilterClient').value;
+        // Sửa: Lấy đúng giá trị SubCatID từ select box
+        const subCategoryFilter = document.getElementById('categoryFilterClient').value;
         const statusFilter = document.getElementById('statusFilterClient').value;
         const courseCards = document.querySelectorAll('.course-card-item');
 
         courseCards.forEach(card => {
             const courseName = card.querySelector('.course-name')?.textContent.toLowerCase() || '';
-            const catId = card.getAttribute('data-catid');
+            // Sửa: Lấy đúng data attribute data-subcatid
+            const subCatId = card.getAttribute('data-subcatid');
             const status = card.getAttribute('data-status');
 
-            const matchesSearch = courseName.includes(searchTerm);
-            const matchesCategory = !categoryFilter || catId === categoryFilter;
+            const matchesSearch = !searchTerm || courseName.includes(searchTerm); // Sửa: Cho phép search trống
+            // Sửa: So sánh subCatId với subCategoryFilter
+            const matchesSubCategory = !subCategoryFilter || subCatId === subCategoryFilter;
             const matchesStatus = !statusFilter || status === statusFilter;
 
-            if (matchesSearch && matchesCategory && matchesStatus) {
-                card.style.display = ''; // Hiển thị card
+            // Hiển thị hoặc ẩn card dựa trên kết quả lọc
+            if (matchesSearch && matchesSubCategory && matchesStatus) {
+                card.style.display = '';
             } else {
-                card.style.display = 'none'; // Ẩn card
+                card.style.display = 'none';
             }
         });
     }
@@ -283,40 +287,47 @@
     // Mặc định hiển thị tab 'list' và xử lý redirect
     document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
-        const errorAdd = {{ #if errorAdd }
-    }true{{ else}}false{{/if}};
-    const addSuccess = urlParams.has('addSuccess');
-    const updateSuccess = urlParams.has('updateSuccess'); // Thêm kiểm tra update
-    const deleteSuccess = urlParams.has('deleteSuccess'); // THÊM KIỂM TRA DELETE
-    const requestedTab = '{{activeTab}}';
 
-    let activeDefaultTab = 'list'; // Mặc định là list
+        // Sửa: Lấy giá trị boolean trực tiếp từ Handlebars
+        const _errorAddStr = "{{#if errorAdd}}true{{else}}false{{/if}}"; // Render thành chuỗi "true" hoặc "false"
+        const errorAdd = (_errorAddStr === 'true'); // Chuyển chuỗi thành boolean true/false
+        const addSuccess = urlParams.has('addSuccess');
+        const updateSuccess = urlParams.has('updateSuccess');
+        const deleteSuccess = urlParams.has('deleteSuccess');
 
-    if (errorAdd || requestedTab === 'add') {
-        activeDefaultTab = 'add';
-    }
-    // Không cần else if cho success vì chúng ta muốn về tab list sau khi thành công
+        // Sửa: Lấy giá trị chuỗi, đảm bảo trong dấu nháy kép
+        const requestedTab = "{{activeTab}}"; // Lấy giá trị chuỗi
 
-    switchCourseTab(activeDefaultTab); // Active tab mặc định hoặc tab add nếu có lỗi
+        let activeDefaultTab = 'list'; // Mặc định là list
 
-    // Hiển thị thông báo thành công (chung cho Add, Update, Delete)
-    let successMessage = '';
-    if (addSuccess) successMessage = 'New course added successfully!';
-    else if (updateSuccess) successMessage = 'Course update successful!';
-    else if (deleteSuccess) successMessage = 'Course deleted successfully!'; // THÊM THÔNG BÁO DELETE
-
-    if (successMessage) {
-        const listTab = document.getElementById('courseListTab');
-        if (listTab) {
-            const successMsg = document.createElement('div');
-            successMsg.className = 'alert alert-success';
-            successMsg.setAttribute('role', 'alert');
-            successMsg.style = "background-color: #27ae60; color: white; border: none; margin: 0 auto 20px auto; max-width: 900px; text-align: center; font-weight: bold;";
-            successMsg.textContent = successMessage;
-            // Chèn vào đầu tab list
-            listTab.insertBefore(successMsg, listTab.querySelector('.search-filter-bar'));
-            setTimeout(() => successMsg.remove(), 4000);
+        // Kiểm tra requestedTab trước
+        if (requestedTab === 'add') {
+            activeDefaultTab = 'add';
+        } else if (errorAdd) { // Nếu có lỗi add thì mới chuyển sang add
+            activeDefaultTab = 'add';
         }
-    }
-});
+        // Các trường hợp success sẽ mặc định về 'list'
+
+        switchCourseTab(activeDefaultTab); // Active tab mặc định hoặc tab add nếu có lỗi
+
+        // Hiển thị thông báo thành công (chung cho Add, Update, Delete)
+        let successMessage = '';
+        if (addSuccess) successMessage = 'New course added successfully!';
+        else if (updateSuccess) successMessage = 'Course update successful!';
+        else if (deleteSuccess) successMessage = 'Course deleted successfully!';
+
+        if (successMessage) {
+            const listTab = document.getElementById('courseListTab');
+            if (listTab) {
+                const successMsg = document.createElement('div');
+                successMsg.className = 'alert alert-success';
+                successMsg.setAttribute('role', 'alert');
+                successMsg.style = "background-color: #27ae60; color: white; border: none; margin: 0 auto 20px auto; max-width: 900px; text-align: center; font-weight: bold;";
+                successMsg.textContent = successMessage;
+                // Chèn vào đầu tab list
+                listTab.insertBefore(successMsg, listTab.querySelector('.search-filter-bar'));
+                setTimeout(() => successMsg.remove(), 4000);
+            }
+        }
+    });
 </script>

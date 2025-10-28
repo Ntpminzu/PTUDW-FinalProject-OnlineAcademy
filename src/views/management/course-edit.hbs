@@ -72,12 +72,12 @@
                         <div class="form-group">
                             <label class="form-label" for="CourseStatus">Status *</label>
                             <select class="form-select" id="CourseStatus" name="CourseStatus" required>
-                                <option value="complete" {{#ifCond CourseStatus '===' 'complete' }}selected{{/ifCond}}>
-                                    Complete
-                                </option>
-                                <option value="not complete" {{#ifCond CourseStatus '===' 'not complete'
+                                <option value="Completed" {{#ifCond CourseStatus '===' 'Completed'
                                     }}selected{{/ifCond}}>
-                                    Not Complete
+                                    Completed
+                                </option>
+                                <option value="draft" {{#ifCond CourseStatus '===' 'draft' }}selected{{/ifCond}}>
+                                    Draft
                                 </option>
                             </select>
                         </div>

@@ -86,15 +86,15 @@ export function remove(userId, courseId) {
 
 export function getCompletedLessonsByUserId(userId, courseId) {
   return db('lesson_status')
-    .join('lessons', 'lesson_status.LessonID', '=', 'lessons.LessonID') 
+    .join('lessons', 'lesson_status.LessonID', '=', 'lessons.LessonID')
     .join('courses', 'lessons.CourseID', '=', 'courses.CourseID')
     .where('lesson_status.UserID', userId)
     .andWhere('lessons.CourseID', courseId)
     .andWhere('lesson_status.UserStatus', 'DONE')
     .select(
-      'lesson_status.LessonID', 
-      'lessons.LessonName', 
-      'lessons.VideoUrl', 
+      'lesson_status.LessonID',
+      'lessons.LessonName',
+      'lessons.VideoUrl',
       'courses.CourseID',
       'courses.CourseName'
     );
@@ -104,4 +104,19 @@ export function updatePassword(userId, hashedPassword) {
   return db('users')
     .where('UserID', userId)
     .update({ Password: hashedPassword });
+}
+
+export function findEnrolledStudentsByCourseId(courseId) {
+  return db('enrollments as e')
+    .join('users as u', 'e.UserID', '=', 'u.UserID') // Join với bảng users
+    .where('e.CourseID', courseId) // Lọc theo CourseID
+    .andWhere('u.UserPermission', '2') // Chỉ lấy những người là Student ('2')
+    .select(
+      'u.UserID',
+      'u.Fullname',
+      'u.Email',
+      'u.UserName', // Thêm UserName nếu muốn hiển thị
+      'e.enrolled_at' // Ngày đăng ký
+    )
+    .orderBy('e.enrolled_at', 'desc'); // Sắp xếp theo ngày đăng ký mới nhất
 }

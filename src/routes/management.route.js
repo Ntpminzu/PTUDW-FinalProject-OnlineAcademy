@@ -374,4 +374,23 @@ router.post('/course/:courseId/lessons/:lessonId/delete', checkCourseOwnership, 
     }
 });
 
+// Quản lý học viên đã đăng ký khóa học (GET)
+router.get('/course/:courseId/students', checkCourseOwnership, async (req, res, next) => {
+    try {
+        const courseId = req.params.courseId;
+
+        // Gọi hàm model mới để lấy danh sách sinh viên
+        const students = await accountModel.findEnrolledStudentsByCourseId(courseId);
+
+        res.render('management/student-list', { // Render view mới
+            layout: 'main',
+            course: req.course, // Lấy thông tin khóa học từ middleware checkCourseOwnership
+            students: students,
+            hasStudents: students.length > 0
+        });
+    } catch (err) {
+        next(err); // Chuyển lỗi cho middleware xử lý lỗi
+    }
+});
+
 export default router;

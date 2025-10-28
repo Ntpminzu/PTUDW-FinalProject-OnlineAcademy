@@ -1,0 +1,97 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/course-form.css" /> {{!-- Dùng chung CSS --}}
+<style>
+    /* CSS bổ sung nếu cần */
+    .student-table th,
+    .student-table td {
+        padding: 12px 15px;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--secondary-green);
+    }
+
+    .student-table thead th {
+        background-color: var(--primary-green);
+        color: var(--accent-gold);
+        font-weight: bold;
+    }
+
+    .student-table tbody tr:hover {
+        background-color: rgba(45, 122, 79, 0.1);
+        /* Màu hover nhẹ */
+    }
+
+    .table-container {
+        background-color: var(--dark-bg);
+        padding: 20px;
+        border-radius: 10px;
+    }
+</style>
+{{/section}}
+
+<main class="main-content">
+    <div class="container">
+        <section class="section active">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 class="section-title" style="margin-bottom: 0;">👥 Student List: {{course.CourseName}}</h2>
+                {{!-- Nút quay lại danh sách khóa học --}}
+                <a href="/management/course" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-left"></i> Back to
+                    Course List</a>
+            </div>
+
+            <div class="table-container">
+                {{#if hasStudents}}
+                <table class="student-table" style="width: 100%; color: var(--light-silver);">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Full Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Enrollment Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each students}}
+                        <tr>
+                            <td>{{@index_1}}</td> {{!-- Số thứ tự bắt đầu từ 1 --}}
+                            <td>{{Fullname}}</td>
+                            <td>{{UserName}}</td>
+                            <td>{{Email}}</td>
+                            <td>{{enrolled_at}}</td> {{!-- Cần format ngày tháng đẹp hơn --}}
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+                {{else}}
+                <div class="empty-state">
+                    <h3>👥 This course has no students enrolled yet.</h3>
+                </div>
+                {{/if}}
+            </div>
+        </section>
+    </div>
+</main>
+
+{{#section "scripts" append=true}}
+<script>
+    // Có thể thêm JavaScript để format ngày tháng nếu cần
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateCells = document.querySelectorAll('.student-table tbody td:last-child');
+        dateCells.forEach(cell => {
+            try {
+                const date = new Date(cell.textContent);
+                if (!isNaN(date)) {
+                    // Format lại ngày tháng theo ý muốn, ví dụ: DD/MM/YYYY HH:mm
+                    cell.textContent = date.toLocaleString('vi-VN', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+            } catch (e) { console.error("Error formatting date:", e); }
+        });
+    });
+</script>
+{{/section}}

@@ -1,4 +1,4 @@
- <!-- 🌄 BANNER -->
+<!-- 🌄 BANNER -->
 <section class="banner">
   <div id="bannerCarousel" class="carousel slide h-100" data-bs-ride="carousel">
     <!-- Chấm tròn điều hướng -->
@@ -21,12 +21,14 @@
       </div>
     </div>
     <!-- Nút điều hướng -->
-    <button class="carousel-control-prev banner-btn prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+    <button class="carousel-control-prev banner-btn prev" type="button" data-bs-target="#bannerCarousel"
+      data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
 
-    <button class="carousel-control-next banner-btn next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+    <button class="carousel-control-next banner-btn next" type="button" data-bs-target="#bannerCarousel"
+      data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
@@ -36,7 +38,7 @@
 <!-- 🎠 FEATURED COURSES CAROUSEL (FLIP VERSION) -->
 <section class="carousel-section">
   <h2>✨ Featured Courses of the Week ✨</h2>
-<div class="snake-bg">
+  <div class="snake-bg">
     <img src="/img/snake1.jpg" alt="Snake Background">
   </div>
   <swiper-container class="mySwiper" effect="cards" grab-cursor="true" loop="true" autoplay-delay="3000">
@@ -59,7 +61,7 @@
           <!-- Mặt sau -->
           <div class="card-back">
             <h3>Course Details</h3>
-            <p>{{TinyDes}}</p>
+            <p>{{{TinyDes}}}</p>
             <div class="rating">
               ⭐ {{Rating}} <span>({{TotalStudent}} students)</span>
             </div>
@@ -80,40 +82,42 @@
 </section>
 
 <!-- ==== MOST STUDIED FIELDS ==== -->
-  <div class="section">
-    <h2>Most Studied Fields This Week</h2>
-    <div class="field-list">
-      {{#each top10Week}}
-      <div class="field-card"><a href="/course/bycat?catid={{CatID}}&subcatid={{SubCatID}}"><p>{{SubCatName}}</p></a></div>
-      {{/each}}
-    </div>
+<div class="section">
+  <h2>Most Studied Fields This Week</h2>
+  <div class="field-list">
+    {{#each top10Week}}
+    <div class="field-card"><a href="/course/bycat?catid={{CatID}}&subcatid={{SubCatID}}">
+        <p>{{SubCatName}}</p>
+      </a></div>
+    {{/each}}
   </div>
- <!-- ==== TOP 10 MOST VIEWED COURSES ==== -->
+</div>
+<!-- ==== TOP 10 MOST VIEWED COURSES ==== -->
 <div class="section">
   <h2>Top 10 Most Viewed Courses</h2>
   <div class="course-list">
     {{#each topCourses}}
     <div class="course-card">
       <a href="/course/detail?id={{CourseID}}">
-      <img src="{{this.ImageUrl}}" alt="{{this.CourseName}}">
-      <div class="course-info">
-        <p class="category">{{this.CatName}}</p>
-        <h3>{{this.CourseName}}</h3>
-        <p class="instructor">{{this.InstructorName}}</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="far fa-star"></i>
-          <span>{{this.Rating}} ⭐ ({{this.Total_Review}})</span>
+        <img src="{{this.ImageUrl}}" alt="{{this.CourseName}}">
+        <div class="course-info">
+          <p class="category">{{this.CatName}}</p>
+          <h3>{{this.CourseName}}</h3>
+          <p class="instructor">{{this.InstructorName}}</p>
+          <div class="course-rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+            <span>{{this.Rating}} ⭐ ({{this.Total_Review}})</span>
+          </div>
+          <div class="course-price">
+            <span class="current">${{this.CurrentPrice}}</span>
+            <span class="old">${{this.OriginalPrice}}</span>
+          </div>
         </div>
-        <div class="course-price">
-          <span class="current">${{this.CurrentPrice}}</span>
-          <span class="old">${{this.OriginalPrice}}</span>
-        </div>
-      </div> 
       </a>
     </div>
-   
+
     {{/each}}
   </div>
 </div>
@@ -125,48 +129,48 @@
     {{#each top10Newest}}
     <div class="course-card">
       <a href="/course/detail?id={{CourseID}}">
-      <img src="{{ImageUrl}}" alt="{{CourseName}}">
-      <div class="course-info">
-        <p class="category">{{CategoryName}}</p>
-        <h3>{{CourseName}}</h3>
-        <p class="instructor">{{InstructorName}}</p>
-        <div class="course-rating">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="far fa-star"></i>
-          <span>{{Rating}} ({{TotalStudent}})</span>
+        <img src="{{ImageUrl}}" alt="{{CourseName}}">
+        <div class="course-info">
+          <p class="category">{{CategoryName}}</p>
+          <h3>{{CourseName}}</h3>
+          <p class="instructor">{{InstructorName}}</p>
+          <div class="course-rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+            <span>{{Rating}} ({{TotalStudent}})</span>
+          </div>
+          <div class="course-price">
+            <span class="current">${{CurrentPrice}}</span>
+            <span class="old">${{OriginalPrice}}</span>
+          </div>
         </div>
-        <div class="course-price">
-          <span class="current">${{CurrentPrice}}</span>
-          <span class="old">${{OriginalPrice}}</span>
-        </div>
-      </div>
       </a>
     </div>
-    
+
     {{/each}}
 
   </div>
 </div>
 
-    <!-- ... (thêm các khóa khác tương tự) ... -->
+<!-- ... (thêm các khóa khác tương tự) ... -->
 
-  </div>
+</div>
 </div>
 
-  
 
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
-  <script>
-document.querySelectorAll('.carousel-card').forEach(card => {
-  card.addEventListener('click', () => {
-    card.classList.toggle('flipped');
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+<script>
+  document.querySelectorAll('.carousel-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+    });
   });
-});
 </script>
 <script>
   const swiper = new Swiper('.banner-swiper', {
-    loop: true, 
+    loop: true,
     autoplay: {
       delay: 4000,
       disableOnInteraction: false,
@@ -179,8 +183,7 @@ document.querySelectorAll('.carousel-card').forEach(card => {
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',
     },
-    effect: 'slide', 
-    speed: 800, 
+    effect: 'slide',
+    speed: 800,
   });
 </script>
-

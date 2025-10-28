@@ -15,7 +15,7 @@
         <div class="card-body">
           <h5 class="card-title">{{CourseName}}</h5>
           <p class="card-text">Professor: {{InstructorName}}</p>
-          <p class="card-text">{{TinyDes}}</p>
+          <p class="card-text">{{{TinyDes}}}</p>
           <a href="/course/detail?id={{CourseID}}" class="btn btn-primary">View Details</a>
           <form action="/account/wishlist/remove" method="post" class="float-end ms-2">
             <input type="hidden" name="courseId" value="{{CourseID}}">

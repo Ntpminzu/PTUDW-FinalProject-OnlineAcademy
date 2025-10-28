@@ -134,7 +134,7 @@
             <form action="/admin/user/del" method="POST" style="display:inline;">
               <input type="hidden" name="UserID" value="{{UserID}}">
               <button type="submit" class="actions"
-                onclick="return confirm('Are you sure you want to delete this user?')">
+                onclick="return confirm('Are you sure you want to delete {{UserName}} ?')">
                 <i class="bi bi-trash" data-tooltip="Delete"></i>
               </button>
             </form>

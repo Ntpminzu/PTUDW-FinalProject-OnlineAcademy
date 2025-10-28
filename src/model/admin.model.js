@@ -28,8 +28,6 @@ export async function countAll() {
   return result[0];
 }
 
-
-
 /*=================categories=================*/
 export function findCategoryById(id) {
   return db('categories').where('CatID', id).first();
@@ -46,4 +44,23 @@ export function delCategory(id) {
 export function patchCategory(id, category) {
   return db('categories').where('CatID', id).update(category);
 }
-/*=================courses=================*/
+/*=================sub_categories=================*/
+export function findSubCategoryById(id) {
+  return db('sub_cat').where('SubCatID', id).first();
+}
+export function findSubCatByCat(CatID) {
+  return db('sub_cat')
+    .select('SubCatID', 'SubCatName', 'SubCatDes', 'CatID')
+    .where('CatID', CatID)
+    .orderBy("SubCatID","asc");
+}
+
+export function addSubCategory(subcat) {
+  return db('sub_cat').insert(subcat);
+}
+export function delSubCategory(id) {
+  return db('sub_cat').where('SubCatID', id).del();
+}
+export function patchSubCategory(id, subcat) {
+  return db('sub_cat').where('SubCatID', id).update(subcat);
+}

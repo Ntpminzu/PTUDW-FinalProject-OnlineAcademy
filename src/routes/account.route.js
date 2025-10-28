@@ -128,7 +128,9 @@ router.post('/verify-signin-otp', async (req, res) => {
     req.session.signinOtp = null;
     req.session.signinOtpAt = null;
 
-    res.redirect('/');
+    const retUrl = req.session.retUrl || '/';
+    delete req.session.retUrl;
+    res.redirect(retUrl);
   } catch (error) {
     console.error(error);
     res.render('account/signin', { error: 'Lỗi khi xác minh OTP.', showOtp: true });
@@ -166,6 +168,46 @@ router.post('/signout', (req, res) => {
 router.get('/change-password', (req, res) => {
   res.render('account/change-password');
 });
+
+router.post('/change-password', async function (req, res) {
+  if (!req.session.isAuthenticated)
+    return res.redirect('/account/signin');
+
+  const userId = req.session.authUser.UserID;
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    return res.render('account/change-password', {
+      error: 'Vui lòng nhập đầy đủ thông tin.'
+    });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.render('account/change-password', {
+      error: 'Mật khẩu mới không khớp.'
+    });
+  }
+
+  const user = await accountModel.findById(userId);
+
+  const isMatch = bcrypt.compareSync(currentPassword, user.Password);
+  if (!isMatch) {
+    return res.render('account/change-password', {
+      error: 'Mật khẩu hiện tại không đúng.'
+    });
+  }
+
+  const hashedPassword = bcrypt.hashSync(newPassword, 10);
+
+  await accountModel.patch(userId, { Password: hashedPassword });
+
+  req.session.authUser.Password = hashedPassword;
+
+  res.render('account/change-password', {
+    success: 'Đổi mật khẩu thành công!'
+  });
+});
+
 
 
 router.get('/wishlist',async (req, res) => {

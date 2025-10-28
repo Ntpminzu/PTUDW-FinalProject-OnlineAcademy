@@ -4,6 +4,7 @@ import hbs_sections from 'express-handlebars-sections';
 import session from 'express-session';
 import path from 'path';
 import { fileURLToPath } from "url";
+import Handlebars from 'handlebars';
 
 // Import Routes
 import courseRouter from './src/routes/course.route.js';
@@ -40,45 +41,69 @@ app.engine('hbs', engine({
     defaultLayout: "main",
       helpers: {
     section: hbs_sections(),
-    gt: function (a, b) {
-      return a > b;
-    },
-    eq: function (a, b) {
-      return a === b;
-    },
-    lt: function (a, b) {
-      return a < b;
-    },
-    add: function (a, b) {
-      return a + b;
-    },
-    range: function (start, end) {
-      let arr = [];
-      for (let i = start; i <= end; i++) {
-        arr.push(i);
-      }
-      return arr;
-    },
-    plus: (a, b) => a + b,
-    minus: (a, b) => a - b,
-    ifCond: function (v1, operator, v2, options) {
-      switch (operator) {
-        case '==': return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===': return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '!=': return (v1 != v2) ? options.fn(this) : options.inverse(this);
-        case '<': return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=': return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>': return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=': return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        default: return options.inverse(this);
-      }
-    },
-    subtract: (a, b) => a - b,
-    formatCurrency: (value) => { // Helper format tiền
-           if (typeof value !== 'number') return value;
-           return value.toLocaleString('us-US', { style: 'currency', currency: '$' });
-        },
-  }
+      gt: function (a, b) {
+        return a > b;
+      },
+      eq: function (a, b) {
+        return a === b;
+      },
+      lt: function (a, b) {
+        return a < b;
+      },
+      add: function (a, b) {
+        return a + b;
+      },
+      range: function (start, end) {
+        let arr = [];
+        for (let i = start; i <= end; i++) {
+          arr.push(i);
+        }
+        return arr;
+      },
+      plus: (a, b) => a + b,
+      minus: (a, b) => a - b,
+      ifCond: function (v1, operator, v2, options) {
+        switch (operator) {
+          case '==': return (v1 == v2) ? options.fn(this) : options.inverse(this);
+          case '===': return (v1 === v2) ? options.fn(this) : options.inverse(this);
+          case '!=': return (v1 != v2) ? options.fn(this) : options.inverse(this);
+          case '<': return (v1 < v2) ? options.fn(this) : options.inverse(this);
+          case '<=': return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+          case '>': return (v1 > v2) ? options.fn(this) : options.inverse(this);
+          case '>=': return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+          default: return options.inverse(this);
+        }
+      },
+      subtract: (a, b) => a - b,
+      formatCurrency: (value) => { // Helper format tiền
+            if (typeof value !== 'number') return value;
+            return value.toLocaleString('us-US', { style: 'currency', currency: '$' });
+      },
+      renderStars: function (rating) {
+        let html = "";
+        const fullStars = Math.floor(rating);
+        const halfStar = rating - fullStars >= 0.5;
+        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+        // Full stars
+        for (let i = 0; i < fullStars; i++) {
+          html += '<i class="fas fa-star"></i>';
+        }
+
+        // Half star
+        if (halfStar) {
+          html += '<i class="fas fa-star-half-alt"></i>';
+        }
+
+        // Empty stars
+        for (let i = 0; i < emptyStars; i++) {
+          html += '<i class="far fa-star"></i>';
+        }
+
+        return new Handlebars.SafeString(html);
+
+      },
+    }
 }));
 
 

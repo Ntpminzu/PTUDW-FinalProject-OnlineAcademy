@@ -67,14 +67,14 @@
           </h5>
           <div class="card-body">
             <h5 class="card-title">{{course.CourseName}}</h5>
-            <p class="card-text">Description: {{course.TinyDes}}</p>
+            <p class="card-text">Description: {{{course.TinyDes}}}</p>
             <p class="card-text">Instructor: {{course.InstructorName}}</p>
-            <p class="card-text">Duration: {{course.TinyDes}}</p>
+            <p class="card-text">Duration: {{{course.TinyDes}}}</p>
             <p class="card-text">Level: {{course.Level}}</p>
             <p class="card-text">Prerequisites: Basic knowledge of programming and mathematics</p>
             <p class="card-text">What You'll Learn:
             <ul>
-              <li>{{course.FullDes}}</li>
+              <li>{{{course.FullDes}}}</li>
             </ul>
             </p>
             <p class="card-text">Benefits: Certificate upon completion, lifetime access, community support</p>
@@ -99,11 +99,11 @@
               <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
                 alt="">
               <span>{{this.LessonName}}</span>
-              <p>{{this.TinyDes}}</p>
+              <p>{{{this.TinyDes}}}</p>
               <button class="preview-btn" onclick="togglePreview('lesson-{{this.LessonID}}')">Preview</button>
               <div id="lesson-{{this.LessonID}}" class="preview-content" style="display: none; text-align: center;">
                 <h5>Content:</h5>
-                <p>{{this.FullDes}}</p>
+                <p>{{{this.FullDes}}}</p>
                 <!-- Add video -->
                 <div style="margin: 0 auto; display: block; max-width: 600px;">
                   <iframe width="100%" height="340" src="{{this.VideoUrl}}" frameborder="0"

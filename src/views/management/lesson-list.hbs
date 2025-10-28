@@ -70,13 +70,12 @@
                         </div>
                         <div class="card-content" style="padding: 15px 20px;"> {{!-- Style content --}}
                             <p><strong>Short Description:</strong> {{#if
-                                TinyDes}}{{TinyDes}}{{else}}<i>(None)</i>{{/if}}
+                                TinyDes}}{{{TinyDes}}}{{else}}<i>(None)</i>{{/if}}
                             </p>
-                            <p><strong>Video URL:</strong> <a href="{{VideoUrl}}" target="_blank"
-                                    style="color: var(--accent-gold); word-break: break-all;">{{VideoUrl}}</a></p>
+                            {{!-- <p><strong>Video URL:</strong> <a href="{{VideoUrl}}" target="_blank"
+                                    style="color: var(--accent-gold); word-break: break-all;">{{VideoUrl}}</a></p> --}}
                             {{!-- Có thể thêm preview video nhỏ --}}
-                            {{!-- <video class="video-preview" src="{{VideoUrl}}"
-                                onclick="this.requestFullscreen()"></video> --}}
+                            <video class="video-preview" src="{{VideoUrl}}" onclick="this.requestFullscreen()"></video>
                             <p style="font-size: 0.8em; color: #888; margin-top: 10px;">Last updated:
                                 {{LastUpdate}}</p>
                         </div>

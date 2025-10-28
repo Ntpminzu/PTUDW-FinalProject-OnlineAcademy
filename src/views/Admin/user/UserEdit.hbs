@@ -29,9 +29,12 @@
     <fieldset class="account-type">
       <legend>Role</legend>
 
-      <label><input type="radio" class="admin" name="UserPermission" value="0" {{#ifCond user.UserPermission '==' 0}}checked{{/ifCond}}> Admin</label>
-      <label><input type="radio" class="instructor" name="UserPermission" value="1" {{#ifCond user.UserPermission '==' 1}}checked{{/ifCond}}> Instructor</label>
-      <label><input type="radio" class="student" name="UserPermission" value="2" {{#ifCond user.UserPermission '==' 2}}checked{{/ifCond}}> Student</label>
+      <label><input type="radio" name="UserPermission" value="0" {{#ifCond user.UserPermission '==='
+          0}}checked{{/ifCond}}> Admin</label>
+      <label><input type="radio" name="UserPermission" value="1" {{#ifCond user.UserPermission '==='
+          1}}checked{{/ifCond}}> Instructor</label>
+      <label><input type="radio" name="UserPermission" value="2" {{#ifCond user.UserPermission '==='
+          2}}checked{{/ifCond}}> Student</label>
     </fieldset>
 
     <div class="form-actions">
@@ -45,3 +48,6 @@
       </button>
     </div>
   </div>
+ </form>
+
+

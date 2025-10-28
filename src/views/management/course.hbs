@@ -1,170 +1,209 @@
 {{#section "styles" append=true}}
 <link rel="stylesheet" href="/course-form.css" />
-<script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
 {{/section}}
 
 <main class="main-content">
     <div class="container">
-        <!-- Welcome Section -->
         <div class="welcome-section">
-            <h1 class="welcome-title" id="welcomeTitle">
-                Course Management System &amp; Instructor Portal
-            </h1>
+            <h1 class="welcome-title" id="welcomeTitle">Course Management</h1>
             <p class="welcome-text" id="welcomeText">
-                Welcome to your personal course management dashboard.
+                {{#if (eq @root.authUser.UserPermission "0")}}
+                Manage all courses in the system.
+                {{else if (eq @root.authUser.UserPermission "1")}}
+                Manage your courses.
+                {{/if}}
             </p>
         </div>
-        <!-- Course Management Section -->
+
         <section id="coursesSection" class="section active">
             <h2 class="section-title">📚 Course Management</h2>
             <div class="tab-nav">
-                <button class="tab-btn active" onclick="switchCourseTab('list')">
-                    📋 Course List
-                </button>
-                <button class="tab-btn" onclick="switchCourseTab('add')">
-                    ➕ Add Course
-                </button>
-                <button class="tab-btn" onclick="switchCourseTab('stats')">
-                    📊 Stats
-                </button>
+                <button class="tab-btn active" data-tab="list" onclick="switchCourseTab('list')">📋 Course List</button>
+                {{#if (eq @root.authUser.UserPermission "1")}} {{!-- Chỉ Giảng viên thấy nút Add --}}
+                <button class="tab-btn" data-tab="add" onclick="switchCourseTab('add')">➕ Add Course</button>
+                {{/if}}
+                <button class="tab-btn" data-tab="stats" onclick="switchCourseTab('stats')">📊 Stats</button>
             </div>
 
-            <!-- Add Course Tab -->
-            {{! ----- BẮT ĐẦU THAY THẾ TAB THÊM KHÓA HỌC ----- }}
+            {{! ----- TAB THÊM KHÓA HỌC (Chỉ hiển thị cho Giảng viên) ----- }}
+            {{#if (eq @root.authUser.UserPermission "1")}}
             <div id="courseAddTab" class="tab-content">
-
-                {{! Hiển thị thông báo lỗi nếu có }}
                 {{#if errorAdd}}
                 <div class="alert alert-danger" role="alert"
                     style="background-color: #c0392b; color: white; border: none; margin: 0 auto 20px auto; max-width: 900px; text-align: center; font-weight: bold;">
-                    {{errorAdd}}
-                </div>
+                    {{errorAdd}}</div>
                 {{/if}}
-
                 <div class="form-container" style="max-width: 900px; margin: 0 auto;">
-                    {{! Form POST đến route backend }}
                     <form action="/management/course/add" method="POST">
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label" for="CourseName">Course name *</label>
-                                {{! Dùng formData để giữ lại giá trị cũ nếu có lỗi }}
                                 <input type="text" class="form-input" id="CourseName" name="CourseName"
                                     value="{{formData.CourseName}}" required />
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="Level">Level *</label>
                                 <select class="form-select" id="Level" name="Level" required>
-                                    <option value="" {{#unless formData.Level}}selected{{/unless}}>Select Level
-                                    </option>
+                                    <option value="" {{#unless formData.Level}}selected{{/unless}}>Select Level</option>
                                     <option value="Beginner" {{#if (eq formData.Level "Beginner" )}}selected{{/if}}>
                                         Beginner</option>
                                     <option value="Intermediate" {{#if (eq formData.Level "Intermediate"
                                         )}}selected{{/if}}>Intermediate</option>
                                     <option value="Advanced" {{#if (eq formData.Level "Advanced" )}}selected{{/if}}>
                                         Advanced</option>
-                                    <option value="Expert" {{#if (eq formData.Level "Expert" )}}selected{{/if}}>
-                                        Expert</option>
+                                    <option value="Expert" {{#if (eq formData.Level "Expert" )}}selected{{/if}}>Expert
+                                    </option>
                                 </select>
                             </div>
                         </div>
-
                         <div class="form-row full">
                             <div class="form-group">
-                                <label class="form-label" for="CatID">Category *</label>
-                                <select class="form-select" id="CatID" name="CatID" required>
-                                    <option value="" {{#unless formData.CatID}}selected{{/unless}}>Select Category
+                                <label class="form-label" for="SubCatID">Subcategory *</label>
+                                <select class="form-select" id="SubCatID" name="SubCatID" required>
+                                    <option value="" {{#unless formData.SubCatID}}selected{{/unless}}>Select Subcategory
                                     </option>
-                                    {{! Sử dụng biến 'categories' được truyền từ route GET /course }}
-                                    {{#each categories}}
-                                    <option value="{{CatID}}" {{#if (eq ../formData.CatID CatID)}}selected{{/if}}>
-                                        {{CatName}}</option>
+                                    {{#each categories}} {{!-- Dùng categories từ route --}}
+                                    <optgroup label="{{CatName}}">
+                                        {{#each subcategories}}
+                                        <option value="{{SubCatID}}" {{#if (eq ../../formData.SubCatID
+                                            SubCatID)}}selected{{/if}}>{{SubCatName}}</option>
+                                        {{/each}}
+                                    </optgroup>
                                     {{/each}}
                                 </select>
                             </div>
                         </div>
-
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label" for="OriginalPrice">Original Price (VNĐ) *</label>
+                                <label class="form-label" for="OriginalPrice">Original Price ($) *</label>
                                 <input type="number" class="form-input" id="OriginalPrice" name="OriginalPrice" min="0"
                                     value="{{#if formData.OriginalPrice}}{{formData.OriginalPrice}}{{else}}0{{/if}}"
                                     required />
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="CurrentPrice">Current Price (VNĐ) *</label>
+                                <label class="form-label" for="CurrentPrice">Current Price ($) *</label>
                                 <input type="number" class="form-input" id="CurrentPrice" name="CurrentPrice" min="0"
                                     value="{{#if formData.CurrentPrice}}{{formData.CurrentPrice}}{{else}}0{{/if}}"
                                     required />
                             </div>
                         </div>
-
                         <div class="form-row full">
                             <div class="form-group">
-                                <label class="form-label" for="ImageUrl">Image URL (Tùy chọn)</label>
+                                <label class="form-label" for="ImageUrl">Image URL (Optional)</label>
                                 <input type="url" class="form-input" id="ImageUrl" name="ImageUrl"
                                     value="{{formData.ImageUrl}}" placeholder="https://..." />
                             </div>
                         </div>
-
                         <div class="form-row full">
                             <div class="form-group">
                                 <label class="form-label" for="TinyDes">Tiny Description *</label>
                                 <textarea class="form-textarea" id="TinyDes" name="TinyDes" rows="3" required
-                                    placeholder="Brief description of the course...">{{formData.TinyDes}}</textarea>
+                                    placeholder="Brief description...">{{formData.TinyDes}}</textarea>
                             </div>
                         </div>
                         <div class="form-row full">
                             <div class="form-group">
                                 <label class="form-label" for="FullDes">Full Description *</label>
                                 <textarea class="form-textarea" id="FullDes" name="FullDes" rows="6" required
-                                    placeholder="Detailed description of course content and objectives...">{{formData.FullDes}}</textarea>
+                                    placeholder="Detailed description...">{{formData.FullDes}}</textarea>
                             </div>
                         </div>
-
                         <div style="text-align: center; margin-top: 30px">
-                            <button type="submit" class="btn btn-primary">
-                                ➕ Create
-                            </button>
+                            <button type="submit" class="btn btn-primary">➕ Create Course</button>
                         </div>
                     </form>
                 </div>
             </div>
-            {{! ----- KẾT THÚC THAY THẾ TAB THÊM KHÓA HỌC ----- }}
-            {{! Tab Thống kê (Giữ nguyên) }}
-            <div id="courseStatsTab" class="tab-content">
-                <p>Logic cho thống kê sẽ được xây dựng ở đây.</p>
-            </div>
+            {{/if}}
 
-            {{! Tab Danh sách (Cần sửa để hiển thị đúng dữ liệu) }}
+            {{! ----- BẮT ĐẦU THAY THẾ TAB THỐNG KÊ ----- }}
+            <div id="courseStatsTab" class="tab-content">
+                {{#with statistics}} {{! Sử dụng dữ liệu statistics được truyền từ route }}
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        {{! Hiển thị tổng số khóa học }}
+                        <div class="stat-number">{{totalCourses}}</div>
+                        <div class="stat-label">Total Courses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        {{! Hiển thị tổng số học viên }}
+                        <div class="stat-number">{{totalStudents}}</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        {{! Hiển thị rating trung bình }}
+                        <div class="stat-number">{{avgRating}}</div>
+                        <div class="stat-label">Average Rating</div>
+                    </div>
+                    {{! Có thể thêm thẻ stat-card khác nếu cần }}
+                </div>
+
+                {{! Hiển thị số lượng theo trạng thái }}
+                <div id="categoryStatsContainer">
+                    <div class="category-stats">
+                        <h4>📊 Course Status</h4>
+                        {{#each statusCounts}}
+                        <div class="category-item">
+                            {{!-- @key là tên trạng thái (ví dụ: 'draft'), this là số lượng --}}
+                            <span>{{@key}}:</span>
+                            <span>{{this}}</span>
+                        </div>
+                        {{else}}
+                        <p style="color: var(--light-silver); text-align: center;">No status data yet.</p>
+                        {{/each}}
+                    </div>
+                    {{! TODO: Có thể thêm thống kê theo danh mục ở đây }}
+                </div>
+                {{else}}
+                <div class="empty-state">
+                    <h3>📊 No statistical data available</h3>
+                    <p>Statistics will appear when courses are available.</p>
+                </div>
+                {{/with}}
+            </div>
+            {{! ----- KẾT THÚC THAY THẾ TAB THỐNG KÊ ----- }}
+
+            {{! ----- TAB DANH SÁCH KHÓA HỌC ----- }}
             <div id="courseListTab" class="tab-content active">
-                {{! ... Phần hiển thị danh sách khóa học ... Bạn cần sửa lại phần này để dùng biến 'courses' thay vì
-                script }}
+                {{!-- Thông báo thành công khi redirect từ Add --}}
+                {{#if query.addSuccess}}
+                <div class="alert alert-success" role="alert"
+                    style="background-color: #27ae60; color: white; border: none; margin: 0 auto 20px auto; max-width: 900px; text-align: center; font-weight: bold;">
+                    Thêm khóa học mới thành công!</div>
+                {{/if}}
                 <div class="search-filter-bar">
-                    <input type="text" class="search-input" placeholder="🔍 Tìm kiếm khóa học..." />
-                    <select class="form-select" id="categoryFilter" style="width: auto">
-                        <option value="*">All Categories</option>
-                        {{#each categories}} {{! Dùng categories từ route GET}}
-                        <option value="{{CatName}}">{{CatName}}</option>
+                    <input type="text" id="courseSearchInputClient" class="search-input" placeholder="🔍 Filter list..."
+                        onkeyup="filterCourseListClientSide()" />
+                    <select class="form-select" id="categoryFilterClient" style="width: auto"
+                        onchange="filterCourseListClientSide()">
+                        <option value="">All Subcategories</option>
+                        {{#each categories}}
+                        <optgroup label="{{CatName}}">
+                            {{#each subcategories}} <option value="{{SubCatID}}">{{SubCatName}}</option> {{/each}}
+                        </optgroup>
                         {{/each}}
                     </select>
-                    <select class="form-select" id="statusFilter" style="width: auto">
-                        <option value="">All State</option>
-                        {{#each courses}} {{! Dùng courses từ route GET}}
-                        <option value="{{CourseStatus}}">{{CourseStatus}}</option>
-                        {{/each}}
+                    <select class="form-select" id="statusFilterClient" style="width: auto"
+                        onchange="filterCourseListClientSide()">
+                        <option value="">All Status</option>
+                        <option value="complete">complete</option>
+                        <option value="not complete">not complete</option>
                     </select>
                 </div>
 
                 <div id="coursesList">
                     <div class="card-grid">
-                        {{#each courses}} {{! Dùng courses từ route GET}}
-                        <div class="card">
+                        {{#each courses}}
+                        <div class="card course-card-item" data-subcatid="{{SubCatID}}" data-status="{{CourseStatus}}">
                             <div class="card-header">
                                 <div class="card-avatar">📚</div>
                                 <div class="card-info">
-                                    <h3>{{CourseName}}</h3>
-                                    {{! Cần join để lấy tên Giảng viên và Category }}
-                                    <p>ID: {{CourseID}} | CatID: {{CatID}}</p>
+                                    <h3 class="course-name">{{CourseName}}</h3>
+                                    <p>{{SubCatName}} • {{CatName}} {{#if InstructorName}} • {{InstructorName}}{{/if}}
+                                    </p> {{!-- Hiển thị tên --}}
                                 </div>
                             </div>
                             <div class="card-content">
@@ -176,27 +215,27 @@
                                 <span class="status-badge status-{{CourseStatus}}">{{CourseStatus}}</span>
                             </div>
                             <div class="price-display">
-                                <span class="price-current">{{CurrentPrice}} VNĐ</span>
-                                <span class="price-original">{{OriginalPrice}} VNĐ</span>
+                                <span class="price-current">$ {{CurrentPrice}}</span>
+                                <span class="price-original">$ {{OriginalPrice}}</span>
                             </div>
                             <div class="card-actions">
-                                {{! Thêm link/button Sửa/Xóa sau }}
-                                <button class="btn btn-secondary btn-sm">✏️ Edit</button>
-                                <button class="btn btn-danger btn-sm">🗑️ Delete</button>
+                                <a href="/management/course/edit?id={{CourseID}}" class="btn btn-secondary btn-sm">✏️
+                                    Edit</a>
+                                <form action="/management/course/delete" method="POST" style="display: inline;"
+                                    onsubmit="return confirm('Are you sure you want to delete this course? This action cannot be undone.');">
+                                    <input type="hidden" name="CourseID" value="{{CourseID}}" />
+                                    <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                                </form>
                             </div>
                         </div>
                         {{else}}
                         <div class="empty-state">
-                            <h3>📚 You do not have any courses yet.</h3>
+                            <h3>📚 No courses found.</h3>
+                            {{#if (eq @root.authUser.UserPermission "1")}}
                             <p>Go to the "Add Course" tab to create your first course.</p>
+                            {{/if}}
                         </div>
                         {{/each}}
-                    </div>
-                </div>
-                <div id="coursesList">
-                    <div class="loading">
-                        <div class="spinner"></div>
-                        <p>Loading courses...</p>
                     </div>
                 </div>
             </div>
@@ -204,26 +243,91 @@
     </div>
 </main>
 
-{{! Dán đoạn script này vào cuối file course-mgm.hbs SAU KHI XÓA 2 SCRIPT CŨ }}
+{{! ----- SCRIPT CHUYỂN TAB VÀ FILTER CLIENT-SIDE ----- }}
 <script>
     function switchCourseTab(tabName) {
-        // Ẩn tất cả các tab content và bỏ active khỏi các nút tab
         document.querySelectorAll("#coursesSection .tab-btn").forEach(btn => btn.classList.remove("active"));
         document.querySelectorAll("#coursesSection .tab-content").forEach(content => content.classList.remove("active"));
 
-        // Hiện tab content được chọn và đánh dấu active cho nút tab tương ứng
-        // Giả sử event là biến toàn cục hoặc bạn cần truyền nó vào hàm
-        if (event && event.target) {
-            event.target.classList.add("active");
-        } else {
-            // Nếu không có event, tìm nút dựa trên tabName (cách này kém tin cậy hơn)
-            document.querySelector(`#coursesSection .tab-btn[onclick*="'${tabName}'"]`)?.classList.add('active');
-        }
-        document.getElementById("course" + tabName.charAt(0).toUpperCase() + tabName.slice(1) + "Tab").classList.add("active");
+        const activeButton = document.querySelector(`#coursesSection .tab-btn[data-tab='${tabName}']`);
+        if (activeButton) activeButton.classList.add("active");
+
+        const activeContent = document.getElementById("course" + tabName.charAt(0).toUpperCase() + tabName.slice(1) + "Tab");
+        if (activeContent) activeContent.classList.add("active");
     }
 
-    // Mặc định hiển thị tab 'list' khi trang tải xong (nếu cần)
+    // Filter client-side cho danh sách khóa học
+    function filterCourseListClientSide() {
+        const searchTerm = document.getElementById('courseSearchInputClient').value.toLowerCase();
+        // Sửa: Lấy đúng giá trị SubCatID từ select box
+        const subCategoryFilter = document.getElementById('categoryFilterClient').value;
+        const statusFilter = document.getElementById('statusFilterClient').value;
+        const courseCards = document.querySelectorAll('.course-card-item');
+
+        courseCards.forEach(card => {
+            const courseName = card.querySelector('.course-name')?.textContent.toLowerCase() || '';
+            // Sửa: Lấy đúng data attribute data-subcatid
+            const subCatId = card.getAttribute('data-subcatid');
+            const status = card.getAttribute('data-status');
+
+            const matchesSearch = !searchTerm || courseName.includes(searchTerm); // Sửa: Cho phép search trống
+            // Sửa: So sánh subCatId với subCategoryFilter
+            const matchesSubCategory = !subCategoryFilter || subCatId === subCategoryFilter;
+            const matchesStatus = !statusFilter || status === statusFilter;
+
+            // Hiển thị hoặc ẩn card dựa trên kết quả lọc
+            if (matchesSearch && matchesSubCategory && matchesStatus) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Mặc định hiển thị tab 'list' và xử lý redirect
     document.addEventListener('DOMContentLoaded', () => {
-        switchCourseTab('list'); // Gọi hàm này nếu bạn muốn tab list luôn active khi tải trang
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Sửa: Lấy giá trị boolean trực tiếp từ Handlebars
+        const _errorAddStr = "{{#if errorAdd}}true{{else}}false{{/if}}"; // Render thành chuỗi "true" hoặc "false"
+        const errorAdd = (_errorAddStr === 'true'); // Chuyển chuỗi thành boolean true/false
+        const addSuccess = urlParams.has('addSuccess');
+        const updateSuccess = urlParams.has('updateSuccess');
+        const deleteSuccess = urlParams.has('deleteSuccess');
+
+        // Sửa: Lấy giá trị chuỗi, đảm bảo trong dấu nháy kép
+        const requestedTab = "{{activeTab}}"; // Lấy giá trị chuỗi
+
+        let activeDefaultTab = 'list'; // Mặc định là list
+
+        // Kiểm tra requestedTab trước
+        if (requestedTab === 'add') {
+            activeDefaultTab = 'add';
+        } else if (errorAdd) { // Nếu có lỗi add thì mới chuyển sang add
+            activeDefaultTab = 'add';
+        }
+        // Các trường hợp success sẽ mặc định về 'list'
+
+        switchCourseTab(activeDefaultTab); // Active tab mặc định hoặc tab add nếu có lỗi
+
+        // Hiển thị thông báo thành công (chung cho Add, Update, Delete)
+        let successMessage = '';
+        if (addSuccess) successMessage = 'New course added successfully!';
+        else if (updateSuccess) successMessage = 'Course update successful!';
+        else if (deleteSuccess) successMessage = 'Course deleted successfully!';
+
+        if (successMessage) {
+            const listTab = document.getElementById('courseListTab');
+            if (listTab) {
+                const successMsg = document.createElement('div');
+                successMsg.className = 'alert alert-success';
+                successMsg.setAttribute('role', 'alert');
+                successMsg.style = "background-color: #27ae60; color: white; border: none; margin: 0 auto 20px auto; max-width: 900px; text-align: center; font-weight: bold;";
+                successMsg.textContent = successMessage;
+                // Chèn vào đầu tab list
+                listTab.insertBefore(successMsg, listTab.querySelector('.search-filter-bar'));
+                setTimeout(() => successMsg.remove(), 4000);
+            }
+        }
     });
 </script>

@@ -1,228 +1,310 @@
-/* ========================= RESET ========================= */
+/* File: src/public/navbar.css */
 @import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Quintessential&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Changa:wght@300;400;500;600;700&display=swap');
+
 * {
   box-sizing: border-box;
-  margin: 0 ;
-  padding: 0 ;
+  margin: 0;
+  padding: 0;
 }
-/* ========================= NAVBAR ========================= */
+
+/* ========================= NAVBAR CONTAINER ========================= */
 .navbar {
   width: 100%;
   background-color: #000;
   display: flex;
+  /* Use Flexbox for layout */
   align-items: center;
+  /* Vertically align items */
   justify-content: space-between;
-  padding: 12px 40px;
+  /* Space out sections */
+  padding: 10px 30px;
+  /* Adjust padding */
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  z-index: 100;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-  flex-wrap: nowrap; /* tránh xuống dòng */
+  z-index: 1000;
+  /* Ensure navbar is on top */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   gap: 20px;
+  /* Space between flex items */
+  color: #AAAAAA;
+  /* Default text color for navbar */
 }
 
+/* ========================= LOGO ========================= */
 .logo {
   font-family: 'Bungee', sans-serif;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
+  /* Slightly larger */
   font-weight: bold;
   color: #2CFF05;
+  /* Neon green */
+  text-decoration: none;
+  /* Remove underline if it's a link */
   white-space: nowrap;
+  /* Prevent wrapping */
+  flex-shrink: 0;
+  /* Prevent logo from shrinking */
 }
 
-/* Links */
+/* ========================= NAVIGATION LINKS ========================= */
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 25px;
+  align-items: center;
+  /* Align links vertically */
+  gap: 30px;
+  /* Space between links */
   margin: 0;
   padding: 0;
+  /* Allow links section to grow but give space to search/auth */
+  flex-grow: 1;
+  justify-content: flex-start;
+  /* Align links to the left after logo */
+  margin-left: 30px;
+  /* Add space after logo */
 }
 
 .nav-links a {
   text-decoration: none;
-  color: #AAAAAA;
+  color: #fffefe;
+  /* Light grey */
   font-weight: 500;
-  transition: color 0.2s, transform 0.2s;
+  font-family: 'Rubik', sans-serif;
+  /* Use a more standard font */
+  transition: color 0.2s ease;
+  font-size: 0.95rem;
 }
 
 .nav-links a:hover {
-  color: #2A623D;
-  transform: scale(1.1);
-}
-/* ======= DROPDOWN (CẤP 1) ======= */
-.nav-links li {
-  position: relative;
-}
-/* Bỏ dấu chấm và khoảng cách mặc định trong các menu */
-.nav-links ul,
-.dropdown-menu,
-.sub-menu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  color: cornsilk;
+  color: #FFF;
+  /* White on hover */
 }
 
-.dropdown-menu {
+/* Highlight Admin/Instructor links */
+.nav-link-highlight {
+  color: #FFD700 !important;
+  /* Gold color */
+  font-weight: bold;
+}
+
+/* ========================= DROPDOWNS ========================= */
+.nav-links li {
+  position: relative;
+  /* Needed for absolute positioning of dropdowns */
+}
+
+.dropdown-menu,
+.sub-menu {
   display: none;
+  /* Hidden by default */
   position: absolute;
   top: 100%;
+  /* Position below parent */
   left: 0;
   background: #111;
-  padding: 10px 0;
-  border-radius: 8px;
-  min-width: 200px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-  z-index: 200;
+  /* Dark background */
+  padding: 8px 0;
+  border-radius: 6px;
+  min-width: 180px;
+  /* Adjust width */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+  /* Above navbar */
+  list-style: none;
 }
 
 .dropdown:hover .dropdown-menu {
   display: block;
+  /* Show on hover */
 }
 
-.dropdown-menu li {
-  position: relative;
-}
-
-.dropdown-menu a {
+#main-navbar .dropdown-menu a,
+#main-navbar .sub-menu a {
   display: block;
-  color: #ddd;
-  padding: 10px 20px;
+  color: #ffffff;
+  /* Lighter grey for dropdown text */
+  padding: 8px 15px;
   text-decoration: none;
-  transition: background 0.2s;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.dropdown-menu a:hover {
+#main-navbar .dropdown-menu a:hover,
+#main-navbar .sub-menu a:hover {
   background: #06FF00;
-  color: #000000;
+  /* Neon green background */
+  color: #000;
+  /* Black text */
 }
 
-/* ======= SUB-DROPDOWN (CẤP 2) ======= */
+/* Sub-dropdown */
 .sub-menu {
-  display: none;
-  position: absolute;
-  top: 0;
+  top: -8px;
+  /* Align top edge with parent item's padding */
   left: 100%;
+  /* Position to the right */
   background: #222;
-  min-width: 200px;
-  border-radius: 8px;
-  padding: 10px 0;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  /* Slightly lighter dark */
+}
+
+.sub-dropdown>a::after {
+  /* Add arrow indicator */
+  content: '▸';
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 0.7em;
+  vertical-align: middle;
 }
 
 .sub-dropdown:hover .sub-menu {
   display: block;
+  /* Show on hover */
 }
 
-.sub-menu a {
-  color: #ccc;
-  padding: 10px 20px;
-}
 
-.sub-menu a:hover {
- background: #06FF00;
-  color: #000000;
-}
 /* ========================= SEARCH FORM ========================= */
-form.d-flex {
+.search-form {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-shrink: 0;
+  /* Prevent shrinking */
+  margin-left: auto;
+  /* Push search to the right, before auth */
 }
 
-form.d-flex .form-control {
-  background-color: #000;
+.search-form .form-control {
+  background-color: #222;
+  /* Darker input */
   color: #fff;
-  border: 1px solid #06ff00;
-  border-radius: 10px;
-  padding: 8px 14px;
-  width: 350px;
+  border: 1px solid #444;
+  /* Grey border */
+  border-radius: 20px;
+  /* Rounded input */
+  padding: 6px 15px;
+  width: 250px;
+  /* Adjust width */
+  font-size: 0.9rem;
   transition: all 0.3s ease;
 }
 
-form.d-flex .form-control:focus {
+.search-form .form-control:focus {
   outline: none;
   border-color: #00ff88;
-  box-shadow: 0 0 10px #00ff88;
+  /* Neon green border on focus */
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+  /* Neon green glow */
+  background-color: #333;
 }
 
-/* ==== Nút Search với hiệu ứng neon xanh ==== */
-form.d-flex .btn {
-  position: relative;
-  display: inline-block;
-  padding: 8px 20px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #000; /* chữ đen */
-  background: linear-gradient(45deg, #32CD32, #39FF14); /* neon green gradient */
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  overflow: hidden;
-  box-shadow: 0 0 12px rgba(0, 255, 128, 0.6);
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+.search-form .search-btn {
+  padding: 6px 15px;
+  /* Adjust button padding */
+  font-size: 0.9rem;
 }
 
-form.d-flex .btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 25px rgba(0, 255, 128, 0.9);
+/* ========================= AUTH SECTION / USER MENU ========================= */
+.auth-section {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  /* Prevent shrinking */
 }
 
-form.d-flex .btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -75%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.6) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transform: skewX(-25deg);
-}
-
-form.d-flex .btn:hover::before {
-  animation: shimmer 1.2s infinite;
-}
-
-/* ========================= MAGIC BUTTONS ========================= */
 .auth-buttons {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
+.user-menu .nav-link.dropdown-toggle {
+  color: #000000;
+  /* Light indigo for user name */
+  font-weight: 500;
+  font-family: 'Rubik', sans-serif;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.user-menu .nav-link.dropdown-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffff;
+}
+
+.user-menu .dropdown-menu {
+  background-color: #1f2937;
+  /* Darker blue-grey for user menu */
+  border: 1px solid #374151;
+}
+
+.user-menu .dropdown-item {
+  color: #d1d5db;
+  /* Light grey text */
+  font-size: 0.9rem;
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* Space between icon and text */
+}
+
+.user-menu .dropdown-item i {
+  width: 16px;
+  /* Ensure icons align */
+  text-align: center;
+}
+
+.user-menu .dropdown-item:hover {
+  background-color: #374151;
+  /* Slightly lighter on hover */
+  color: #fff;
+}
+
+.user-menu .dropdown-divider {
+  border-top: 1px solid #4b5563;
+  /* Darker divider */
+}
+
+
+/* ========================= MAGIC BUTTONS (Sign In/Up) ========================= */
 .magic-btn {
   position: relative;
   display: inline-block;
-  padding: 8px 20px;
-  font-size: 1rem;
+  padding: 7px 18px;
+  /* Slightly smaller */
+  font-size: 0.9rem;
+  /* Slightly smaller */
   font-weight: 600;
+  font-family: 'Rubik', sans-serif;
   color: #000000;
-background: linear-gradient(45deg, #32CD32, #39FF14);
+  background: linear-gradient(45deg, #32CD32, #39FF14);
   border: none;
   border-radius: 50px;
   cursor: pointer;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(159, 0, 255, 0.4);
-  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  text-decoration: none;
+  /* Ensure links look like buttons */
+  white-space: nowrap;
 }
 
 .magic-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 20px rgba(9, 255, 0, 0.8);
+  transform: scale(1.05);
+  /* Slightly less pop */
+  box-shadow: 0 0 18px rgba(0, 255, 128, 0.8);
 }
 
+/* Shimmer effect (keep as is) */
 .magic-btn::before {
   content: "";
   position: absolute;
@@ -230,48 +312,116 @@ background: linear-gradient(45deg, #32CD32, #39FF14);
   left: -75%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.6) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
   transform: skewX(-25deg);
-}
-
-.magic-btn:hover::before {
-  animation: shimmer 1.2s infinite;
+  animation: shimmer 1.5s infinite linear;
+  /* Slower shimmer */
 }
 
 @keyframes shimmer {
-  0% { left: -75%; }
-  100% { left: 125%; }
+  0% {
+    left: -75%;
+  }
+
+  50% {
+    left: 125%;
+  }
+
+  100% {
+    left: 125%;
+  }
+
+  /* Hold at end */
 }
 
+
 /* ========================= RESPONSIVE ========================= */
-@media (max-width: 992px) {
+@media (max-width: 1100px) {
+
+  /* Adjust breakpoint if needed */
   .navbar {
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
+    /* Allow wrapping */
+    justify-content: space-between;
+    padding: 10px 20px;
   }
 
   .nav-links {
-    flex-wrap: wrap;
+    order: 3;
+    /* Move links below logo/auth */
+    width: 100%;
     justify-content: center;
+    /* Center links on smaller screens */
+    margin-top: 10px;
+    gap: 15px;
+    margin-left: 0;
+    /* Remove left margin */
   }
 
-  form.d-flex .form-control {
-    width: 180px;
+  .search-form {
+    order: 2;
+    /* Search after logo */
+    margin-left: 0;
+    /* Remove push */
+    width: auto;
+    /* Adjust width */
+    flex-grow: 1;
+    /* Allow search to take space */
+    margin-right: 15px;
   }
 
-  .auth-buttons {
-    justify-content: center;
+  .search-form .form-control {
+    width: 100%;
+    /* Full width within its container */
+  }
+
+  .auth-section {
+    order: 1;
+    /* Auth section comes after logo */
+  }
+
+  .logo {
+    order: 0;
+  }
+
+  /* Adjust dropdown positioning if needed */
+  .dropdown-menu {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .sub-menu {
+    left: -100%;
+    /* Position sub-menu to the left */
+    top: 0;
   }
 }
-.field-card a,
-.course-card a{
-  text-decoration: none;
-  color: inherit;
-  display: block;  
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  .logo {
+    font-size: 1.3rem;
+  }
+
+  .search-form {
+    margin-right: 10px;
+  }
+
+  .auth-buttons .magic-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  .user-menu .nav-link.dropdown-toggle {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+
+  .nav-links {
+    gap: 10px;
+    font-size: 0.9rem;
+  }
 }

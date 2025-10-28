@@ -185,4 +185,84 @@ router.post('/subcat/del', async function (req, res) {
   await adminModel.delSubCategory(id);
   res.redirect('/admin/subcat/byCat?id=' + catid); // quay lại đúng category
 });
+/*================= SubCategories =================*/
+
+// Danh sách SubCategories
+router.get('/subcategory/list', async function (req, res, next) {
+  try {
+    const list = await db('sub_cat as s')
+                      .join('categories as c', 's.CatID', 'c.CatID')
+                      .select('s.*', 'c.CatName')
+                      .orderBy('c.CatName', 'asc').orderBy('s.SubCatName', 'asc');
+    res.render('Admin/subcategory/SubCatList', { // Tạo view mới
+      layout: 'main', 
+      subcategories: list 
+    });
+  } catch(err) { next(err); }
+});
+
+// Form thêm SubCategory
+router.get('/subcategory/add', async function (req, res, next) {
+   try {
+       const categories = await categoryModel.findAll(); 
+       res.render('Admin/subcategory/SubCatAdd', { // Tạo view mới
+           layout: 'main',
+           categories: categories
+       });
+   } catch(err) { next(err); }
+});
+
+// Xử lý thêm SubCategory
+router.post('/subcategory/add', async function (req, res, next) {
+  try {
+      const { SubCatName, SubCatDes, CatID } = req.body; 
+      if (!SubCatName || !CatID) { /* Validation */ }
+      await db('sub_cat').insert({ SubCatName, SubCatDes, CatID: parseInt(CatID) }); 
+      res.redirect('/admin/subcategory/list'); 
+  } catch(err) { next(err); }
+});
+
+// Form sửa SubCategory
+router.get('/subcategory/edit', async function (req, res, next) {
+  try {
+      const id = req.query.id; 
+      if (!id) return res.redirect('/admin/subcategory/list');
+      const [subcategory, categories] = await Promise.all([
+           db('sub_cat').where('SubCatID', id).first(),
+           categoryModel.findAll()
+      ]);
+      if (!subcategory) return res.status(404).render('404'); 
+      res.render('Admin/subcategory/SubCatEdit', { // Tạo view mới
+          layout: 'main', subcategory, categories 
+      });
+  } catch(err) { next(err); }
+});
+
+// Xử lý sửa SubCategory
+router.post('/subcategory/patch', async function (req, res, next) {
+  try {
+      const { SubCatID, SubCatName, SubCatDes, CatID } = req.body; 
+       if (!SubCatName || !CatID) { /* Validation */ }
+      await db('sub_cat').where('SubCatID', SubCatID).update({ 
+          SubCatName, SubCatDes, CatID: parseInt(CatID) 
+      }); 
+      res.redirect('/admin/subcategory/list'); 
+  } catch(err) { next(err); }
+});
+
+// Xử lý xóa SubCategory
+// router.post('/subcategory/del', async function (req, res, next) {
+//   try {
+//       const id = req.body.SubCatID; 
+//       const courseCount = await db('courses').where('SubCatID', id).count('CourseID as count').first();
+//       if (courseCount && courseCount.count > 0) {
+//             // Không cho xóa, render lại list với lỗi
+//             const list = await db('sub_cat as s').join(...).select(...);
+//             return res.render('Admin/subcategory/SubCatList', { layout: 'main', subcategories: list, errorDelete: `Còn ${courseCount.count} khóa học.` });
+//       }
+//       await db('sub_cat').where('SubCatID', id).del(); 
+//       res.redirect('/admin/subcategory/list');
+//   } catch(err) { next(err); }
+// });
+
 export default router;

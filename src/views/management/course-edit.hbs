@@ -94,14 +94,14 @@
                     <div class="form-row full">
                         <div class="form-group">
                             <label class="form-label" for="TinyDes">Tiny Description *</label>
-                            <textarea class="form-textarea" id="TinyDes" name="TinyDes" rows="3"
+                            <textarea class="form-textarea wysiwyg-editor" id="TinyDes" name="TinyDes" rows="3"
                                 required>{{TinyDes}}</textarea>
                         </div>
                     </div>
                     <div class="form-row full">
                         <div class="form-group">
                             <label class="form-label" for="FullDes">Full Description *</label>
-                            <textarea class="form-textarea" id="FullDes" name="FullDes" rows="6"
+                            <textarea class="form-textarea wysiwyg-editor" id="FullDes" name="FullDes" rows="6"
                                 required>{{FullDes}}</textarea>
                         </div>
                     </div>
@@ -121,3 +121,14 @@
         </section>
     </div>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        tinymce.init({
+            selector: 'textarea.wysiwyg-editor', // Chọn tất cả textarea có class này trên trang edit
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            height: 300
+        });
+    });
+</script>

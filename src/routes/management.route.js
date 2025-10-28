@@ -1,6 +1,6 @@
 // File: src/routes/management.route.js
 import express from 'express';
-import categoryModel from '../model/category.model.js';
+import lessonModel from '../model/lesson.model.js';
 import courseModel from '../model/course.model.js';
 import * as accountModel from '../model/account.model.js';
 import db from '../utils/db.js';
@@ -64,7 +64,6 @@ router.get('/course', async function (req, res, next) {
 
 // POST /management/course/add (Đã sửa hoàn chỉnh)
 router.post('/course/add', async (req, res, next) => {
-    // Middleware restrictInstructor sẽ chạy trước nếu bạn thêm vào app.js
     // Nếu không thì check ở đây:
     if (req.session.authUser.UserPermission !== '1') { return res.status(403).render('403'); }
     try {
@@ -77,15 +76,17 @@ router.post('/course/add', async (req, res, next) => {
             ]);
             return res.render('management/course', {
                 layout: 'main', categories: categoriesForForm, courses: listCourses,
-                errorAdd: 'Vui lòng điền đủ trường (*).', formData: req.body, activeTab: 'add'
+                errorAdd: 'Please fill in all fields (*).', formData: req.body, activeTab: 'add'
             });
         }
 
         // Dùng UserID và SubCatID
-        const newCourse = { CourseName, TinyDes, FullDes, ImageUrl: ImageUrl || null, Level, CurrentPrice: parseFloat(CurrentPrice) || 0, OriginalPrice: parseFloat(OriginalPrice) || 0,
-                            UserID: instructorId, // Dùng UserID
-                            SubCatID: parseInt(SubCatID), // Dùng SubCatID
-                            Rating: 0.0, Total_Review: 0, TotalLession: 0, TotalStudent: 0, Views: 0, WeekView: 0, Date: new Date(), CourseStatus: 'draft' };
+        const newCourse = {
+            CourseName, TinyDes, FullDes, ImageUrl: ImageUrl || null, Level, CurrentPrice: parseFloat(CurrentPrice) || 0, OriginalPrice: parseFloat(OriginalPrice) || 0,
+            UserID: instructorId, // Dùng UserID
+            SubCatID: parseInt(SubCatID), // Dùng SubCatID
+            Rating: 0.0, Total_Review: 0, TotalLession: 0, TotalStudent: 0, Views: 0, WeekView: 0, Date: new Date(), CourseStatus: 'draft'
+        };
         await courseModel.add(newCourse);
         res.redirect('/management/course?addSuccess=true');
     } catch (err) { next(err); }
@@ -106,7 +107,7 @@ router.get('/course/edit', async (req, res, next) => {
 
         // Kiểm tra bằng UserID
         if (!course || course.UserID !== instructorId) {
-            return res.status(403).render('403', { message: 'Không có quyền sửa.' });
+            return res.status(403).render('403', { message: 'No edit permission.' });
         }
         res.render('management/course-edit', { layout: 'main', course: course, categories: categoriesForForm });
     } catch (err) { next(err); }
@@ -120,20 +121,22 @@ router.post('/course/update', async (req, res, next) => {
         const instructorId = req.session.authUser.UserID;
         const { CourseName, TinyDes, FullDes, ImageUrl, Level, CurrentPrice, OriginalPrice, SubCatID, CourseStatus } = req.body;
         if (!CourseName || !TinyDes || !FullDes || !Level || !SubCatID || OriginalPrice === undefined || CurrentPrice === undefined || !CourseStatus) {
-            const [course, categoriesForForm] = await Promise.all([ courseModel.findById(courseId), getCategoriesForForm() ]);
+            const [course, categoriesForForm] = await Promise.all([courseModel.findById(courseId), getCategoriesForForm()]);
             if (!course || course.UserID !== instructorId) { return res.status(403).render('403'); }
-            return res.render('management/course-edit', { layout: 'main', course: course, categories: categoriesForForm, errorUpdate: 'Vui lòng điền đủ trường (*).' });
+            return res.render('management/course-edit', { layout: 'main', course: course, categories: categoriesForForm, errorUpdate: 'Please fill in all fields (*).' });
         }
 
         // Kiểm tra bằng UserID
         const existingCourse = await courseModel.findById(courseId);
         if (!existingCourse || existingCourse.UserID !== instructorId) {
-            return res.status(403).render('403', { message: 'Không có quyền cập nhật.' });
+            return res.status(403).render('403', { message: 'No update permission.' });
         }
 
         // Cập nhật SubCatID
-        const courseUpdates = { CourseName, TinyDes, FullDes, ImageUrl: ImageUrl || existingCourse.ImageUrl, Level, CurrentPrice: parseFloat(CurrentPrice) || 0, OriginalPrice: parseFloat(OriginalPrice) || 0,
-                                SubCatID: parseInt(SubCatID), CourseStatus };
+        const courseUpdates = {
+            CourseName, TinyDes, FullDes, ImageUrl: ImageUrl || existingCourse.ImageUrl, Level, CurrentPrice: parseFloat(CurrentPrice) || 0, OriginalPrice: parseFloat(OriginalPrice) || 0,
+            SubCatID: parseInt(SubCatID), CourseStatus
+        };
         await courseModel.update(courseId, courseUpdates);
         res.redirect('/management/course?updateSuccess=true');
     } catch (err) { next(err); }
@@ -150,7 +153,7 @@ router.post('/course/delete', async (req, res, next) => {
         // Kiểm tra bằng UserID
         const course = await courseModel.findById(courseIdToDelete);
         if (!course || course.UserID !== instructorId) {
-            return res.status(403).render('403', { message: 'Không có quyền xóa.' });
+            return res.status(403).render('403', { message: 'No delete permission.' });
         }
         // TODO: Kiểm tra xem có học viên nào đang enroll không trước khi xóa?
         await courseModel.delete(courseIdToDelete);
@@ -161,35 +164,214 @@ router.post('/course/delete', async (req, res, next) => {
 
 // GET /management/profile (Đã sửa)
 router.get('/profile', async (req, res, next) => {
-    if (req.session.authUser.UserPermission !== '1') { return res.status(403).render('403');}
+    if (req.session.authUser.UserPermission !== '1') { return res.status(403).render('403'); }
     try {
         // Sửa: dùng instructor thay vì users
-        const instructor = await accountModel.findById(req.session.authUser.UserID); 
-        if (!instructor) { return res.status(404).send('Không tìm thấy thông tin.');}
+        const instructor = await accountModel.findById(req.session.authUser.UserID);
+        if (!instructor) { return res.status(404).send('No information found.'); }
         res.render('management/profile', { layout: 'main', instructor: instructor }); // Sửa: truyền instructor
     } catch (err) { next(err); }
 });
 
 // POST /management/profile/update (Đã sửa)
 router.post('/profile/update', async (req, res, next) => {
-    if (req.session.authUser.UserPermission !== '1') { return res.status(403).render('403');}
+    if (req.session.authUser.UserPermission !== '1') { return res.status(403).render('403'); }
     try {
-        const { Fullname, Email } = req.body; 
+        const { Fullname, Email } = req.body;
         const instructorId = req.session.authUser.UserID;
-        if (!Fullname || !Email) { 
+        if (!Fullname || !Email) {
             const instructor = await accountModel.findById(instructorId);
-            return res.render('management/profile', { layout: 'main', instructor, error: 'Họ tên và Email không được trống.' });
+            return res.render('management/profile', { layout: 'main', instructor, error: 'Full name and Email cannot be blank.' });
         }
         await accountModel.update(instructorId, { Fullname, Email });
         const updatedInstructor = await accountModel.findById(instructorId);
         // Cập nhật session
-        req.session.authUser.Fullname = updatedInstructor.Fullname; 
+        req.session.authUser.Fullname = updatedInstructor.Fullname;
         req.session.authUser.Email = updatedInstructor.Email;
         req.session.save(err => {
             if (err) return next(err); // Chuyển lỗi nếu không lưu được session
-            res.render('management/profile', { layout: 'main', instructor: updatedInstructor, success: 'Cập nhật thành công!' });
+            res.render('management/profile', { layout: 'main', instructor: updatedInstructor, success: 'Update successful!' });
         });
     } catch (err) { next(err); }
+});
+
+// --- QUẢN LÝ BÀI HỌC (LESSON MANAGEMENT) ---
+
+// Middleware kiểm tra quyền sở hữu khóa học cho các route bài học
+async function checkCourseOwnership(req, res, next) {
+    // Chỉ Giảng viên ('1') mới vào được
+    if (req.session.authUser?.UserPermission !== '1') {
+        return res.status(403).render('403');
+    }
+    try {
+        const courseId = req.params.courseId; // Lấy ID khóa học từ URL
+        const instructorId = req.session.authUser.UserID;
+        const course = await courseModel.findById(courseId);
+
+        // Kiểm tra khóa học tồn tại VÀ thuộc về giảng viên này
+        if (!course || course.UserID !== instructorId) {
+            console.warn(`Instructor ${instructorId} tried to access lessons for course ${courseId} owned by ${course?.UserID}`);
+            return res.status(403).render('403', { message: 'You do not have permission to manage lessons for this course.' });
+        }
+        // Lưu thông tin khóa học vào req để các route sau sử dụng
+        req.course = course;
+        next(); // Cho phép đi tiếp
+    } catch (err) {
+        next(err); // Chuyển lỗi
+    }
+}
+
+// HIỂN THỊ DANH SÁCH BÀI HỌC CỦA KHÓA HỌC (GET)
+// Áp dụng middleware kiểm tra quyền sở hữu trước
+router.get('/course/:courseId/lessons', checkCourseOwnership, async (req, res, next) => {
+    try {
+        const courseId = req.params.courseId;
+        const lessons = await lessonModel.findAllByCourseId(courseId);
+
+        res.render('management/lesson-list', { // Render view mới
+            layout: 'main',
+            course: req.course, // Lấy thông tin khóa học từ middleware
+            lessons: lessons,
+            hasLessons: lessons.length > 0,
+            query: req.query // Truyền query param cho thông báo
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+// HIỂN THỊ FORM THÊM BÀI HỌC MỚI (GET)
+router.get('/course/:courseId/lessons/add', checkCourseOwnership, (req, res) => {
+    res.render('management/lesson-form', { // Render view form (dùng chung cho add/edit)
+        layout: 'main',
+        course: req.course,
+        isEditing: false // Đánh dấu là đang thêm mới
+    });
+});
+
+// XỬ LÝ THÊM BÀI HỌC MỚI (POST)
+router.post('/course/:courseId/lessons/add', checkCourseOwnership, async (req, res, next) => {
+    try {
+        const courseId = req.params.courseId;
+        const instructorId = req.session.authUser.UserID;
+        const { LessonName, TinyDes, FullDes, VideoUrl, LessonStatus, LessonPermission } = req.body;
+
+        // Validation cơ bản
+        if (!LessonName || !VideoUrl) {
+            return res.render('management/lesson-form', {
+                layout: 'main', course: req.course, isEditing: false,
+                error: 'Please enter Lesson Name and Video URL.',
+                formData: req.body // Giữ lại dữ liệu form
+            });
+        }
+
+        const newLesson = {
+            LessonName,
+            TinyDes, FullDes, VideoUrl,
+            LessonStatus: LessonStatus || 'draft', // Mặc định là draft
+            LessonPermission: LessonPermission || 'private', // Mặc định là private
+            CourseID: courseId, // Gán ID khóa học
+            UserID: instructorId // Gán ID giảng viên (người tạo)
+            // LastUpdate có DEFAULT trong DB
+        };
+
+        await lessonModel.add(newLesson);
+        res.redirect(`/management/course/${courseId}/lessons?addSuccess=true`); // Về trang danh sách bài học
+
+    } catch (err) {
+        next(err);
+    }
+});
+
+// HIỂN THỊ FORM SỬA BÀI HỌC (GET)
+router.get('/course/:courseId/lessons/:lessonId/edit', checkCourseOwnership, async (req, res, next) => {
+    try {
+        const lessonId = req.params.lessonId;
+        const courseId = req.params.courseId; // Đã được check ownership ở middleware
+        const instructorId = req.session.authUser.UserID;
+
+        // Dùng hàm kiểm tra sở hữu bài học (an toàn hơn)
+        const lesson = await lessonModel.findLessonIfOwned(lessonId, courseId, instructorId);
+
+        if (!lesson) {
+            return res.status(404).render('404', { message: 'Lesson not found or you do not have permission to edit.' });
+        }
+
+        res.render('management/lesson-form', { // Dùng lại view form
+            layout: 'main',
+            course: req.course, // Lấy từ middleware
+            lesson: lesson,     // Dữ liệu bài học cần sửa
+            isEditing: true     // Đánh dấu là đang sửa
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+// XỬ LÝ CẬP NHẬT BÀI HỌC (POST)
+router.post('/course/:courseId/lessons/:lessonId/update', checkCourseOwnership, async (req, res, next) => {
+    try {
+        const lessonId = req.params.lessonId;
+        const courseId = req.params.courseId;
+        const instructorId = req.session.authUser.UserID;
+        const { LessonName, TinyDes, FullDes, VideoUrl, LessonStatus, LessonPermission } = req.body;
+
+        // Validation
+        if (!LessonName || !VideoUrl) {
+            const lesson = await lessonModel.findById(lessonId); // Lấy lại dữ liệu cũ
+            return res.render('management/lesson-form', {
+                layout: 'main', course: req.course, lesson: lesson, isEditing: true,
+                error: 'Please enter Lesson Name and Video URL.',
+                formData: req.body // Không nên gửi lại hết, chỉ gửi lỗi
+            });
+        }
+
+        // Kiểm tra quyền sở hữu trước khi update
+        const existingLesson = await lessonModel.findLessonIfOwned(lessonId, courseId, instructorId);
+        if (!existingLesson) {
+            return res.status(403).render('403', { message: 'You do not have permission to update this lesson.' });
+        }
+
+        const lessonUpdates = {
+            LessonName, TinyDes, FullDes, VideoUrl,
+            LessonStatus: LessonStatus || 'draft',
+            LessonPermission: LessonPermission || 'private'
+            // UserID và CourseID không đổi
+        };
+
+        await lessonModel.update(lessonId, lessonUpdates);
+        res.redirect(`/management/course/${courseId}/lessons?updateSuccess=true`); // Về danh sách bài học
+
+    } catch (err) {
+        next(err);
+    }
+});
+
+// XỬ LÝ XÓA BÀI HỌC (POST)
+router.post('/course/:courseId/lessons/:lessonId/delete', checkCourseOwnership, async (req, res, next) => {
+    try {
+        const lessonId = req.params.lessonId;
+        const courseId = req.params.courseId;
+        const instructorId = req.session.authUser.UserID;
+
+        // Kiểm tra quyền sở hữu trước khi xóa
+        const existingLesson = await lessonModel.findLessonIfOwned(lessonId, courseId, instructorId);
+        if (!existingLesson) {
+            return res.status(403).render('403', { message: 'You do not have permission to delete this lesson.' });
+        }
+
+        // TODO: Kiểm tra xem có sinh viên nào đã hoàn thành bài học này không (bảng lesson_status) trước khi xóa?
+
+        await lessonModel.delete(lessonId);
+        res.redirect(`/management/course/${courseId}/lessons?deleteSuccess=true`); // Về danh sách bài học
+
+    } catch (err) {
+        // Xử lý lỗi nếu xóa không thành công (vd: do foreign key constraint)
+        console.error("Error deleting lesson:", err);
+        // Có thể redirect về với thông báo lỗi
+        res.redirect(`/management/course/${req.params.courseId}/lessons?errorDelete=true`);
+        // next(err); // Hoặc chuyển lỗi
+    }
 });
 
 export default router;

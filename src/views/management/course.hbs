@@ -189,8 +189,8 @@
                     <select class="form-select" id="statusFilterClient" style="width: auto"
                         onchange="filterCourseListClientSide()">
                         <option value="">All Status</option>
-                        <option value="complete">complete</option>
-                        <option value="not complete">not complete</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Not Completed">Not Completed</option>
                     </select>
                 </div>
 
@@ -226,6 +226,8 @@
                                     <input type="hidden" name="CourseID" value="{{CourseID}}" />
                                     <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
                                 </form>
+                                <a href="/management/course/{{CourseID}}/lessons" class="btn btn-primary btn-sm">📖
+                                    Manage Lessons</a>
                             </div>
                         </div>
                         {{else}}

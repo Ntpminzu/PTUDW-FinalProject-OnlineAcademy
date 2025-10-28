@@ -1,0 +1,97 @@
+{{!-- File: src/views/management/lesson-list.hbs --}}
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/course-form.css" /> {{!-- Dùng chung CSS --}}
+<style>
+    .lesson-card {
+        margin-bottom: 15px;
+    }
+
+    /* Thêm khoảng cách giữa các bài học */
+    .lesson-actions form {
+        display: inline-block;
+        margin-left: 5px;
+    }
+
+    .video-preview {
+        max-width: 150px;
+        max-height: 80px;
+        margin-top: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+{{/section}}
+
+<main class="main-content">
+    <div class="container">
+        <section class="section active">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 class="section-title" style="margin-bottom: 0;">📖 Lesson management for: {{course.CourseName}}</h2>
+                <a href="/management/course" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-left"></i> Back to
+                    Course List</a>
+            </div>
+
+            {{!-- Hiển thị thông báo --}}
+            {{#if query.addSuccess}}<div class="alert alert-success ...">Lesson added successfully!</div>{{/if}}
+            {{#if query.updateSuccess}}<div class="alert alert-success ...">Lesson updated successfully!</div>{{/if}}
+            {{#if query.deleteSuccess}}<div class="alert alert-success ...">Lesson deleted successfully!</div>{{/if}}
+            {{#if query.errorDelete}}<div class="alert alert-danger ...">Error deleting lesson!</div>{{/if}}
+
+
+            <div class="search-filter-bar" style="justify-content: flex-end;">
+                {{!-- Nút Thêm bài học --}}
+                <a href="/management/course/{{course.CourseID}}/lessons/add" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add New Lesson
+                </a>
+            </div>
+
+            <div id="lessonsList">
+                {{#if hasLessons}}
+                <div class="card-grid"> {{!-- Dùng lại card-grid --}}
+                    {{#each lessons}}
+                    <div class="card lesson-card">
+                        <div class="card-header" style="padding: 15px 20px;"> {{!-- Style header --}}
+                            <div class="card-info" style="flex-grow: 1;">
+                                <h3 style="font-size: 1.1rem;">{{LessonName}}</h3>
+                                <p style="font-size: 0.85rem; color: var(--light-silver);">Status: {{LessonStatus}}
+                                    | View Permission: {{LessonPermission}}</p>
+                            </div>
+                            <div class="lesson-actions">
+                                {{!-- Nút Sửa --}}
+                                <a href="/management/course/{{../course.CourseID}}/lessons/{{LessonID}}/edit"
+                                    class="btn btn-secondary btn-sm">✏️ Edit</a>
+                                {{!-- Nút Xóa (Form) --}}
+                                <form action="/management/course/{{../course.CourseID}}/lessons/{{LessonID}}/delete"
+                                    method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this lesson?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-content" style="padding: 15px 20px;"> {{!-- Style content --}}
+                            <p><strong>Short Description:</strong> {{#if
+                                TinyDes}}{{TinyDes}}{{else}}<i>(None)</i>{{/if}}
+                            </p>
+                            <p><strong>Video URL:</strong> <a href="{{VideoUrl}}" target="_blank"
+                                    style="color: var(--accent-gold); word-break: break-all;">{{VideoUrl}}</a></p>
+                            {{!-- Có thể thêm preview video nhỏ --}}
+                            {{!-- <video class="video-preview" src="{{VideoUrl}}"
+                                onclick="this.requestFullscreen()"></video> --}}
+                            <p style="font-size: 0.8em; color: #888; margin-top: 10px;">Last updated:
+                                {{LastUpdate}}</p>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                {{else}}
+                <div class="empty-state">
+                    <h3>📖 This course has no lessons yet</h3>
+                    <p>Start by adding the first lesson.</p>
+                    <a href="/management/course/{{course.CourseID}}/lessons/add" class="btn btn-primary">➕ Add New
+                        Lesson</a>
+                </div>
+                {{/if}}
+            </div>
+        </section>
+    </div>
+</main>

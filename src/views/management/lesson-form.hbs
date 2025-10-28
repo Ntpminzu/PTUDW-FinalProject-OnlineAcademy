@@ -1,0 +1,101 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/course-form.css" />
+{{/section}}
+
+<main class="main-content">
+    <div class="container">
+        <section class="section active">
+            <h2 class="section-title">{{#if isEditing}}✏️ Edit lessons{{else}}➕ Add New Lesson{{/if}} for:
+                {{course.CourseName}}</h2>
+
+            {{#if error}}
+            <div class="alert alert-danger" role="alert"
+                style="background-color: #c0392b; color: white; border: none; margin: 0 auto 20px auto; max-width: 900px; text-align: center; font-weight: bold;">
+                {{error}}
+            </div>
+            {{/if}}
+
+            <div class="form-container" style="max-width: 900px; margin: 0 auto;">
+                {{!-- Form POST đến route add hoặc update --}}
+                <form
+                    action="/management/course/{{course.CourseID}}/lessons/{{#if isEditing}}{{lesson.LessonID}}/update{{else}}add{{/if}}"
+                    method="POST">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="LessonName">Lesson name *</label>
+                            {{!-- Lấy giá trị từ lesson nếu đang sửa, hoặc từ formData nếu có lỗi --}}
+                            <input type="text" class="form-input" id="LessonName" name="LessonName"
+                                value="{{#if lesson}}{{lesson.LessonName}}{{else}}{{formData.LessonName}}{{/if}}"
+                                required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="VideoUrl">Video URL *</label>
+                            <input type="url" class="form-input" id="VideoUrl" name="VideoUrl"
+                                value="{{#if lesson}}{{lesson.VideoUrl}}{{else}}{{formData.VideoUrl}}{{/if}}"
+                                placeholder="https://..." required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="LessonStatus">Status</label>
+                            <select class="form-select" id="LessonStatus" name="LessonStatus">
+                                {{! SỬA LỖI:
+                                1. Bỏ dấu ()
+                                2. Thêm logic: Nếu không phải 'isEditing', chọn 'draft' làm mặc định
+                                3. Nếu đang 'isEditing', so sánh với 'lesson.LessonStatus'
+                                }}
+                                <option value="draft" {{#if isEditing}}{{#ifCond lesson.LessonStatus '===' 'draft'
+                                    }}selected{{/ifCond}}{{else}}selected{{/if}}>Draft</option>
+                                <option value="published" {{#if isEditing}}{{#ifCond
+                                    lesson.LessonStatus '===' 'published' }}selected{{/ifCond}}{{/if}}>Published
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="LessonPermission">View Permission</label>
+                            <select class="form-select" id="LessonPermission" name="LessonPermission">
+                                {{! SỬA LỖI: Tương tự như trên, mặc định là 'private' }}
+                                <option value="private" {{#if isEditing}}{{#ifCond
+                                    lesson.LessonPermission '===' 'private'
+                                    }}selected{{/ifCond}}{{else}}selected{{/if}}>Private (Registered students only)
+                                </option>
+                                <option value="public" {{#if isEditing}}{{#ifCond lesson.LessonPermission '===' 'public'
+                                    }}selected{{/ifCond}}{{/if}}>Public (Preview)</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label" for="TinyDes">Short Description (Optional)</label>
+                            <textarea class="form-textarea" id="TinyDes" name="TinyDes"
+                                rows="2">{{#if lesson}}{{lesson.TinyDes}}{{else}}{{formData.TinyDes}}{{/if}}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label" for="FullDes">Full Description (Optional)</label>
+                            <textarea class="form-textarea" id="FullDes" name="FullDes"
+                                rows="5">{{#if lesson}}{{lesson.FullDes}}{{else}}{{formData.FullDes}}{{/if}}</textarea>
+                        </div>
+                    </div>
+
+                    <div
+                        style="text-align: center; margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
+                        {{!-- Nút Quay lại --}}
+                        <a href="/management/course/{{course.CourseID}}/lessons" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Lesson List
+                        </a>
+                        {{!-- Nút Lưu/Thêm --}}
+                        <button type="submit" class="btn btn-primary">
+                            {{#if isEditing}}💾 Save Changes{{else}}➕ Add Lesson{{/if}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</main>

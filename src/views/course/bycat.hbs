@@ -37,7 +37,7 @@
 
     <div class="pagination">
       {{#if (gt currentPage 1)}}
-      <a href="/course/bycat?catid={{category.CatID}}&subcatid={{subcatId}}&page={{minus currentPage 1}}">
+      <a href="/course/bycat?catid={{category.CatID}}&subcatid={{subcatId}}&page={{subtract currentPage 1}}">
         Previous
       </a>
       {{/if}}

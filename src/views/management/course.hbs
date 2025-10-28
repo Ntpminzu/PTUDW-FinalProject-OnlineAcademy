@@ -58,13 +58,17 @@
                         </div>
                         <div class="form-row full">
                             <div class="form-group">
-                                <label class="form-label" for="CatID">Category *</label>
-                                <select class="form-select" id="CatID" name="CatID" required>
-                                    <option value="" {{#unless formData.CatID}}selected{{/unless}}>Select Category
+                                <label class="form-label" for="SubCatID">Subcategory *</label>
+                                <select class="form-select" id="SubCatID" name="SubCatID" required>
+                                    <option value="" {{#unless formData.SubCatID}}selected{{/unless}}>Select Subcategory
                                     </option>
-                                    {{#each categories}}
-                                    <option value="{{CatID}}" {{#if (eq ../formData.CatID CatID)}}selected{{/if}}>
-                                        {{CatName}}</option>
+                                    {{#each categories}} {{!-- Dùng categories từ route --}}
+                                    <optgroup label="{{CatName}}">
+                                        {{#each subcategories}}
+                                        <option value="{{SubCatID}}" {{#if (eq ../../formData.SubCatID
+                                            SubCatID)}}selected{{/if}}>{{SubCatName}}</option>
+                                        {{/each}}
+                                    </optgroup>
                                     {{/each}}
                                 </select>
                             </div>
@@ -175,9 +179,11 @@
                         onkeyup="filterCourseListClientSide()" />
                     <select class="form-select" id="categoryFilterClient" style="width: auto"
                         onchange="filterCourseListClientSide()">
-                        <option value="">All Categories</option>
+                        <option value="">All Subcategories</option>
                         {{#each categories}}
-                        <option value="{{CatID}}">{{CatName}}</option>
+                        <optgroup label="{{CatName}}">
+                            {{#each subcategories}} <option value="{{SubCatID}}">{{SubCatName}}</option> {{/each}}
+                        </optgroup>
                         {{/each}}
                     </select>
                     <select class="form-select" id="statusFilterClient" style="width: auto"
@@ -191,14 +197,13 @@
                 <div id="coursesList">
                     <div class="card-grid">
                         {{#each courses}}
-                        <div class="card course-card-item" data-catid="{{CatID}}" data-status="{{CourseStatus}}"> {{!--
-                            Thêm data-* để filter --}}
+                        <div class="card course-card-item" data-subcatid="{{SubCatID}}" data-status="{{CourseStatus}}">
                             <div class="card-header">
                                 <div class="card-avatar">📚</div>
                                 <div class="card-info">
                                     <h3 class="course-name">{{CourseName}}</h3>
-                                    <p>{{CatName}} {{#if InstructorName}} • {{InstructorName}}{{/if}}</p> {{!-- Display
-                                    names --}}
+                                    <p>{{SubCatName}} • {{CatName}} {{#if InstructorName}} • {{InstructorName}}{{/if}}
+                                    </p> {{!-- Hiển thị tên --}}
                                 </div>
                             </div>
                             <div class="card-content">

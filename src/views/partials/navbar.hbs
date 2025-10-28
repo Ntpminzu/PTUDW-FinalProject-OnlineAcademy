@@ -1,119 +1,67 @@
 <nav class="navbar">
-    <div class="logo">Hogwarts Academy</div>
-
-    <ul class="nav-links">
-      <li><a href="/course">Home</a></li>
-      <li class="dropdown">
-        <a href="#">Courses ▾</a>
-        <ul class="dropdown-menu">
-          {{#each global_categories}}
-          <li class="sub-dropdown">
-            <a>{{CatName}}</a>
-            <ul class="sub-menu">
-              {{#each subcategories}}
-              <li><a href="/course/bycat?catid={{CatID}}&subcatid={{SubCatID}}">{{SubCatName}}</a></li>
-              {{/each}}
-            </ul>
-          </li>
-          {{/each}}
-        </ul>
-      </li>
-    </ul>
-
-    <form class="d-flex" role="search" action="/course/search" method="get">
-      <input class="form-control" type="text" placeholder="Search courses or categories..." aria-label="Search" name="q"
-        required>
-      <button class="btn magic-btn" type="submit">
-        <i class="bi bi-search"></i>
-        Search
-      </button>
-    </form>
-    {{#if isAuthenticated}}
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Welcome, <b>{{authUser.UserName}}</b>
-      </a>
-      <ul class="dropdown-menu dropdown-menu-end">
-
-        {{! --- THAY THẾ CODE CŨ BẰNG CODE MỚI NÀY --- }}
-        {{#if (eq authUser.UserPermission "1")}}
-        {{! 1 = Instructor -> Gửi đến trang Sửa Profile Giảng viên }}
-        <li>
-          <a class="dropdown-item" href="/management/profile">
-            <i class="bi bi-person-circle"></i>
-            My Profile
-          </a>
+  <div class="logo">Hogwarts Academy</div>
+  <ul class="nav-links">
+    <li><a href="/course">Home</a></li>
+    <li class="dropdown">
+      <a href="#">Courses ▾</a>
+      <ul class="dropdown-menu">
+        {{#each global_categories}} {{!-- Dùng biến global_categories từ res.locals --}}
+        <li class="sub-dropdown">
+          <a>{{CatName}}</a> {{!-- Chỉ hiển thị tên Cat cha --}}
+          {{#if subcategories.length}}
+          <ul class="sub-menu">
+            {{#each subcategories}}
+            {{!-- Link đến /bycat với catid và subcatid --}}
+            <li><a href="/course/bycat?catid={{../CatID}}&subcatid={{SubCatID}}">{{SubCatName}}</a></li>
+            {{/each}}
+          </ul>
+          {{/if}}
         </li>
-        <li>
-          <a class="dropdown-item" href="/management/course">
-            <i class="bi bi-journal-bookmark"></i>
-            My Course list
-          </a>
-        </li>
-        {{else if (eq authUser.UserPermission "2")}}
-        {{! 2 = Student -> Gửi đến trang Profile Sinh viên }}
-        <li>
-          <a class="dropdown-item" href="/account/profile">
-            <i class="bi bi-person-circle"></i>
-            Profile
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="/course/courselist">
-            <i class="bi bi-journal-bookmark"></i>
-            My Course list
-          </a>
-        </li>
-        {{else if (eq authUser.UserPermission "0")}}
-        {{! 0 = Admin -> Gửi đến trang Profile (chỉ xem) }}
-        <li>
-          <a class="dropdown-item" href="/account/profile">
-            <i class="bi bi-person-circle"></i>
-            Admin Profile
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="/management/course">
-            <i class="bi bi-journal-bookmark"></i>
-            My Course list
-          </a>
-        </li>
-        {{/if}}
-        {{! --- KẾT THÚC THAY THẾ --- }}
-        <li>
-          <a class="dropdown-item" href="/account/wishlist">
-            <i class="bi bi-journal-text"></i>
-            wishlist
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="/account/history">
-            <i class="bi bi-collection-play"></i>
-            History
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="/account/change-password">
-            <i class="bi bi-key"></i>
-            Change Password
-          </a>
-        </li>
-        <li>
-          <hr class="dropdown-divider">
-        </li>
-        <li>
-          <a class="dropdown-item" href="javascript:document.querySelector('#frmSignout').submit();">
-            <i class="bi bi-box-arrow-right"></i>
-            Sign Out
-          </a>
-        </li>
+        {{/each}}
       </ul>
-
     </li>
-    <form id="frmSignout" action="/account/signout" method="post"></form>
-    {{else}}
-    <div class="auth-buttons">
-      <a href="/account/signin"> <button class="magic-btn">Sign In</button></a>
-    </div>
+    {{!-- Thêm link Admin Panel nếu là Admin --}}
+    {{#if (eq authUser.UserPermission "0")}}
+    <li><a href="/admin/user/list" style="color: #FFD700; font-weight: bold;">Admin Panel</a></li>
     {{/if}}
-  </nav>
+    {{!-- Thêm link My Courses nếu là Instructor --}}
+    {{#if (eq authUser.UserPermission "1")}}
+    <li><a href="/management/course" style="color: #FFD700; font-weight: bold;">My Courses</a></li>
+    {{/if}}
+  </ul>
+
+  <form class="d-flex" role="search" action="/course/search" method="get">...</form>
+
+  {{!-- User Menu --}}
+  {{#if isAuthenticated}}
+  <li class="nav-item dropdown" style="list-style: none;">
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+      Welcome, <b>{{authUser.UserName}}</b>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end">
+      {{#if (eq authUser.UserPermission "1")}} {{!-- Instructor --}}
+      <li><a class="dropdown-item" href="/management/profile">My Profile</a></li>
+      {{else}} {{!-- Student ('2') & Admin ('0') --}}
+      <li><a class="dropdown-item" href="/account/profile">Profile</a></li>
+      {{/if}}
+
+      {{#if (eq authUser.UserPermission "2")}} {{!-- Student --}}
+      <li><a class="dropdown-item" href="/course/courselist">My Learning</a></li>
+      {{/if}}
+      {{!-- Các link chung --}}
+      <li><a class="dropdown-item" href="/account/wishlist">Wishlist</a></li>
+      <li><a class="dropdown-item" href="/account/change-password">Change Password</a></li>
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+      <li><a class="dropdown-item" href="javascript:document.querySelector('#frmSignout').submit();">Sign Out</a></li>
+    </ul>
+  </li>
+  <form id="frmSignout" action="/account/signout" method="post" style="display: none;"></form>
+  {{else}}
+  <div class="auth-buttons">
+    <a href="/account/signin"> <button class="magic-btn">Sign In</button></a>
+    <a href="/account/signup"> <button class="magic-btn">Sign Up</button></a>
+  </div>
+  {{/if}}
+</nav>

@@ -5,7 +5,7 @@
 <main class="main-content">
     <div class="container">
         <section class="section active">
-            <h2 class="section-title">✏️ Chỉnh sửa khóa học</h2>
+            <h2 class="section-title">✏️ Course Edited</h2>
 
             {{#if errorUpdate}}
             <div class="alert alert-danger" role="alert"
@@ -40,11 +40,16 @@
 
                     <div class="form-row full">
                         <div class="form-group">
-                            <label class="form-label" for="CatID">Category *</label>
-                            <select class="form-select" id="CatID" name="CatID" required>
-                                {{#each ../categories}} {{!-- Lấy categories từ context cha --}}
-                                <option value="{{CatID}}" {{#if (eq ../course.CatID CatID)}}selected{{/if}}>{{CatName}}
-                                </option>
+                            <label class="form-label" for="SubCatID">Subcategory *</label>
+                            <select class="form-select" id="SubCatID" name="SubCatID" required>
+                                {{#each ../categories}} {{!-- Lấy từ context cha --}}
+                                <optgroup label="{{CatName}}">
+                                    {{#each subcategories}}
+                                    {{!-- So sánh với course.SubCatID --}}
+                                    <option value="{{SubCatID}}" {{#ifCond ../../course.SubCatID '==='
+                                        SubCatID}}selected{{/ifCond}}>{{SubCatName}}</option>
+                                    {{/each}}
+                                </optgroup>
                                 {{/each}}
                             </select>
                         </div>
@@ -67,10 +72,13 @@
                         <div class="form-group">
                             <label class="form-label" for="CourseStatus">Status *</label>
                             <select class="form-select" id="CourseStatus" name="CourseStatus" required>
-                                <option value="draft" {{#if (eq CourseStatus "complete" )}}selected{{/if}}>Complete
+                                <option value="complete" {{#ifCond CourseStatus '===' 'complete' }}selected{{/ifCond}}>
+                                    Complete
                                 </option>
-                                <option value="published" {{#if (eq CourseStatus "not complete" )}}selected{{/if}}>Not
-                                    Complete</option>
+                                <option value="not complete" {{#ifCond CourseStatus '===' 'not complete'
+                                    }}selected{{/ifCond}}>
+                                    Not Complete
+                                </option>
                             </select>
                         </div>
                     </div>

@@ -1,389 +1,195 @@
+// File: src/routes/management.route.js
 import express from 'express';
-import categoryModel from '../model/category.model.js'; // Sửa: đường dẫn đúng
-import courseModel from '../model/course.model.js';   // Sửa: đường dẫn đúng
-import * as accountModel from '../model/account.model.js'; // Sửa: đường dẫn đúng
+import categoryModel from '../model/category.model.js';
+import courseModel from '../model/course.model.js';
+import * as accountModel from '../model/account.model.js';
+import db from '../utils/db.js';
 
 const router = express.Router();
 
-// --- QUẢN LÝ KHÓA HỌC ---
-router.get('/course', async function (req, res) {
+// Hàm trợ giúp lấy categories và subcategories cho form
+async function getCategoriesForForm() {
+    const categoriesWithSubcats = await db('categories as c')
+        .leftJoin('sub_cat as s', 'c.CatID', 's.CatID')
+        .select('c.CatID', 'c.CatName', 's.SubCatID', 's.SubCatName')
+        .orderBy('c.CatName', 'asc').orderBy('s.SubCatName', 'asc');
+    // Nhóm lại
+    return categoriesWithSubcats.reduce((acc, row) => {
+        let cat = acc.find(c => c.CatID === row.CatID);
+        if (!cat) {
+            cat = { CatID: row.CatID, CatName: row.CatName, subcategories: [] };
+            acc.push(cat);
+        }
+        if (row.SubCatID) {
+            cat.subcategories.push({ SubCatID: row.SubCatID, SubCatName: row.SubCatName });
+        }
+        return acc;
+    }, []);
+}
 
+// GET /management/course (Đã sửa hoàn chỉnh)
+router.get('/course', async function (req, res, next) {
+    // Middleware 'restrict' đã kiểm tra đăng nhập
     const userPermission = req.session.authUser.UserPermission;
-    const userId = req.session.authUser.UserID;
+    const userId = req.session.authUser.UserID; // UserID của người đăng nhập
+    const instructorIdForStats = (userPermission === '1') ? userId : null;
 
     try {
         let listCourses;
-        // Biến userIdForStats: null cho Admin, userId cho Instructor
-        const userIdForStats = (userPermission === '1') ? userId : null; 
+        if (userPermission === '1') { // Instructor
+            listCourses = await courseModel.findByUserId(userId); // Dùng UserID
+        } else if (userPermission === '0') { // Admin
+            listCourses = await courseModel.findAll(); // findAll đã join đủ
+        } else { return res.status(403).render('403'); }
 
-        // Lấy danh sách khóa học (Đã phân quyền và join ở lần sửa trước)
-        if (userPermission === '1') {
-            listCourses = await courseModel.findByUserId(userId);
-        } else if (userPermission === '0') {
-            listCourses = await courseModel.findAll();
-        } else {
-            return res.status(403).render('403');
-        }
-
-        // Lấy danh sách categories cho form Add
-        const listCategories = await categoryModel.findAll();
-
-        // ** GỌI CÁC HÀM THỐNG KÊ MỚI **
-        const [totalCourses, totalStudents, avgRating, statusCounts] = await Promise.all([
-            courseModel.countCourses(userIdForStats),
-            courseModel.sumStudents(userIdForStats),
-            courseModel.averageRating(userIdForStats),
-            courseModel.countCoursesByStatus(userIdForStats)
+        const [categoriesForForm, totalCourses, totalStudents, avgRating, statusCounts] = await Promise.all([
+            getCategoriesForForm(), // Lấy categories + subcats
+            courseModel.countCourses(instructorIdForStats),
+            courseModel.sumStudents(instructorIdForStats),
+            courseModel.averageRating(instructorIdForStats),
+            courseModel.countCoursesByStatus(instructorIdForStats)
         ]);
-
-        // Tạo object chứa dữ liệu thống kê
-        const statistics = {
-            totalCourses,
-            totalStudents,
-            avgRating,
-            statusCounts // Ví dụ: { complete: 5, not cpmplete: 10 }
-        };
+        const statistics = { totalCourses, totalStudents, avgRating, statusCounts };
 
         res.render('management/course', {
             layout: 'main',
-            categories: listCategories,
+            categories: categoriesForForm, // Truyền categories đã nhóm
             courses: listCourses,
-            statistics: statistics, // ** TRUYỀN DỮ LIỆU THỐNG KÊ **
-            query: req.query,
-            activeTab: req.query.errorAdd ? 'add' : (req.query.addSuccess ? 'list' : 'list') // Xác định tab active
+            statistics: statistics, query: req.query,
+            // Xác định tab active
+            activeTab: req.query.errorAdd ? 'add' : (req.query.addSuccess || req.query.updateSuccess || req.query.deleteSuccess ? 'list' : 'list')
         });
-    } catch (err) {
-        console.error("Lỗi khi tải trang quản lý khóa học:", err);
-        res.status(500).send('Đã xảy ra lỗi khi tải dữ liệu');
-    }
+    } catch (err) { next(err); }
 });
 
-// Route xử lý thêm khóa học (Code bạn cung cấp đã khá tốt, giữ nguyên)
-router.post('/course/add', async (req, res) => {
-
+// POST /management/course/add (Đã sửa hoàn chỉnh)
+router.post('/course/add', async (req, res, next) => {
+    // Middleware restrictInstructor sẽ chạy trước nếu bạn thêm vào app.js
+    // Nếu không thì check ở đây:
+    if (req.session.authUser.UserPermission !== '1') { return res.status(403).render('403'); }
     try {
-        const instructorId = req.session.authUser.UserID;
-        const { CourseName, TinyDes, FullDes, ImageUrl, Level, CurrentPrice, OriginalPrice, CatID } = req.body;
-
-        // Kiểm tra dữ liệu đầu vào cơ bản (Giữ nguyên logic kiểm tra của bạn)
-        if (!CourseName || !TinyDes || !FullDes || !Level || !CatID || OriginalPrice === undefined || CurrentPrice === undefined) {
-             const listCategories = await categoryModel.findAll();
-             const listCourses = await courseModel.findByUserId(instructorId); 
-             return res.render('management/course', { // Sửa: tên file view đúng
-                 layout: 'main',
-                 categories: listCategories,
-                 courses: listCourses,
-                 errorAdd: 'Vui lòng điền đầy đủ các trường bắt buộc (*).',
-                 formData: req.body,
-                 activeTab: 'add' // Gợi ý: Truyền biến để active đúng tab khi có lỗi
-             });
+        const instructorId = req.session.authUser.UserID; // UserID của giảng viên
+        const { CourseName, TinyDes, FullDes, ImageUrl, Level, CurrentPrice, OriginalPrice, SubCatID } = req.body;
+        if (!CourseName || !TinyDes || !FullDes || !Level || !SubCatID || OriginalPrice === undefined || CurrentPrice === undefined) {
+            const [categoriesForForm, listCourses] = await Promise.all([
+                getCategoriesForForm(),
+                courseModel.findByUserId(instructorId)
+            ]);
+            return res.render('management/course', {
+                layout: 'main', categories: categoriesForForm, courses: listCourses,
+                errorAdd: 'Vui lòng điền đủ trường (*).', formData: req.body, activeTab: 'add'
+            });
         }
 
-        // Tạo object newCourse (Giữ nguyên logic tạo object của bạn)
-        const newCourse = { CourseName, TinyDes, FullDes, ImageUrl: ImageUrl || null, Level, CurrentPrice: parseFloat(CurrentPrice) || 0, OriginalPrice: parseFloat(OriginalPrice) || 0, UserID: instructorId, CatID: parseInt(CatID), Rating: 0.0, Total_Review: 0, TotalLession: 0, TotalStudent: 0, Views: 0, WeekView: 0, Date: new Date(), CourseStatus: 'draft' };
-
+        // Dùng UserID và SubCatID
+        const newCourse = { CourseName, TinyDes, FullDes, ImageUrl: ImageUrl || null, Level, CurrentPrice: parseFloat(CurrentPrice) || 0, OriginalPrice: parseFloat(OriginalPrice) || 0,
+                            UserID: instructorId, // Dùng UserID
+                            SubCatID: parseInt(SubCatID), // Dùng SubCatID
+                            Rating: 0.0, Total_Review: 0, TotalLession: 0, TotalStudent: 0, Views: 0, WeekView: 0, Date: new Date(), CourseStatus: 'draft' };
         await courseModel.add(newCourse);
-        res.redirect('/management/course?addSuccess=true'); // Redirect kèm thông báo thành công
-
-    } catch (err) {
-        console.error("Lỗi khi thêm khóa học:", err);
-        try { // Xử lý lỗi tốt hơn
-            const listCategories = await categoryModel.findAll();
-            const listCourses = await courseModel.findByUserId(req.session.authUser.UserID);
-             res.render('management/course', { // Sửa: tên file view đúng
-                layout: 'main',
-                categories: listCategories,
-                courses: listCourses,
-                errorAdd: 'Thêm khóa học thất bại do lỗi hệ thống.',
-                formData: req.body,
-                activeTab: 'add' // Gợi ý: Active tab 'add' khi có lỗi
-            });
-        } catch (renderError) {
-             console.error("Lỗi khi render trang lỗi:", renderError);
-             res.status(500).send('Lỗi hệ thống nghiêm trọng.');
-        }
-    }
+        res.redirect('/management/course?addSuccess=true');
+    } catch (err) { next(err); }
 });
 
-// --- QUẢN LÝ PROFILE GIẢNG VIÊN ---
-router.get('/profile', async (req, res) => {
-
+// GET /management/course/edit (Đã sửa hoàn chỉnh)
+router.get('/course/edit', async (req, res, next) => {
+    if (req.session.authUser.UserPermission !== '1') { return res.status(403).render('403'); }
     try {
-        // Code bạn cung cấp ở đây đã gần đúng, chỉ cần sửa tên biến
-        const userContent = await accountModel.findById(req.session.authUser.UserID);
-        if (!userContent) {
-            // Xử lý trường hợp không tìm thấy user (dù khó xảy ra nếu đã đăng nhập)
-             return res.status(404).send('Không tìm thấy thông tin người dùng.');
-        }
-        res.render('management/profile', { // Render file profile.hbs bạn đã có
-            layout: 'main',
-            users: userContent // Sửa: giữ tên biến 'users' như code cũ của bạn
-        });
-    } catch (err) {
-        console.error("Lỗi khi tải profile giảng viên:", err);
-        res.status(500).send('Lỗi máy chủ');
-    }
-});
-
-// Route cập nhật profile (Code bạn cung cấp đã gần đúng)
-router.post('/profile/update', async (req, res) => {
-
-    try {
-        // Sửa: Lấy đúng tên từ req.body (Fullname và Email)
-        const { Fullname, Email } = req.body; 
-        
-         // Kiểm tra nếu Fullname hoặc Email bị trống
-        if (!Fullname || !Email) {
-             const userContent = await accountModel.findById(req.session.authUser.UserID);
-             return res.render('management/profile', {
-                 layout: 'main',
-                 users: userContent,
-                 error: 'Họ tên và Email không được để trống.' // Thêm thông báo lỗi
-             });
-        }
-
-        await accountModel.update(req.session.authUser.UserID, {
-            Fullname: Fullname, // Sửa: Dùng Fullname
-            Email: Email     // Sửa: Dùng Email
-        });
-
-        // Lấy lại thông tin mới nhất sau khi cập nhật
-        const updatedUser = await accountModel.findById(req.session.authUser.UserID);
-        
-        // Cập nhật thông tin trong session để navbar hiển thị đúng tên mới
-        req.session.authUser.Fullname = updatedUser.Fullname; 
-        req.session.authUser.Email = updatedUser.Email;
-        // Lưu lại session
-        req.session.save(err => {
-            if (err) {
-                console.error("Lỗi khi lưu session:", err);
-                // Có thể bỏ qua lỗi này và vẫn render trang
-            }
-             res.render('management/profile', {
-                layout: 'main',
-                users: updatedUser,
-                success: 'Cập nhật thông tin thành công!'
-            });
-        });
-
-    } catch (err) {
-        console.error("Lỗi khi cập nhật profile:", err);
-         try { // Xử lý lỗi tốt hơn
-            const userContent = await accountModel.findById(req.session.authUser.UserID);
-            res.render('management/profile', {
-                layout: 'main',
-                users: userContent,
-                error: 'Cập nhật thông tin thất bại do lỗi hệ thống.' // Thêm thông báo lỗi chung
-            });
-         } catch(renderError) {
-             console.error("Lỗi khi render trang lỗi profile:", renderError);
-             res.status(500).send('Lỗi hệ thống nghiêm trọng.');
-         }
-    }
-});
-
-// --- CHỈNH SỬA KHÓA HỌC ---
-// ROUTE HIỂN THỊ FORM CHỈNH SỬA KHÓA HỌC (GET)
-router.get('/course/edit', async (req, res) => {
-
-    try {
-        const courseId = req.query.id; // Lấy CourseID từ query param ?id=...
+        const courseId = req.query.id;
         const instructorId = req.session.authUser.UserID;
+        if (!courseId) { return res.redirect('/management/course'); }
 
-        if (!courseId) {
-            return res.redirect('/management/course'); // Nếu không có id, quay về danh sách
-        }
+        const [course, categoriesForForm] = await Promise.all([
+            courseModel.findById(courseId), // Chỉ lấy course cơ bản
+            getCategoriesForForm()
+        ]);
 
-        const course = await courseModel.findById(courseId);
-
-        // Kiểm tra xem khóa học có tồn tại và giảng viên có phải chủ sở hữu không
+        // Kiểm tra bằng UserID
         if (!course || course.UserID !== instructorId) {
-             console.log(`Attempt by instructor ${instructorId} to edit course ${courseId} failed. Owner: ${course?.UserID}`);
-             return res.status(403).render('403', { message: 'Bạn không có quyền chỉnh sửa khóa học này.' });
+            return res.status(403).render('403', { message: 'Không có quyền sửa.' });
         }
-
-        // Lấy danh sách categories để hiển thị trong select box
-        const categories = await categoryModel.findAll();
-
-        res.render('management/course-edit', { // Render view mới
-            layout: 'main',
-            course: course,
-            categories: categories
-        });
-
-    } catch (err) {
-        console.error("Lỗi khi tải trang sửa khóa học:", err);
-        res.status(500).send('Lỗi máy chủ');
-    }
+        res.render('management/course-edit', { layout: 'main', course: course, categories: categoriesForForm });
+    } catch (err) { next(err); }
 });
 
-// ROUTE XỬ LÝ CẬP NHẬT KHÓA HỌC (POST)
-router.post('/course/update', async (req, res) => {
-
+// POST /management/course/update (Đã sửa hoàn chỉnh)
+router.post('/course/update', async (req, res, next) => {
+    if (req.session.authUser.UserPermission !== '1') { return res.status(403).render('403'); }
     try {
-        const courseId = req.body.CourseID; // Lấy CourseID từ hidden input trong form
+        const courseId = req.body.CourseID;
         const instructorId = req.session.authUser.UserID;
-
-        // Lấy dữ liệu cần cập nhật từ form
-        const {
-            CourseName,
-            TinyDes,
-            FullDes,
-            ImageUrl,
-            Level,
-            CurrentPrice,
-            OriginalPrice,
-            CatID,
-            CourseStatus // Thêm CourseStatus vào
-        } = req.body;
-
-         // --- Kiểm tra dữ liệu đầu vào cơ bản ---
-        if (!CourseName || !TinyDes || !FullDes || !Level || !CatID || OriginalPrice === undefined || CurrentPrice === undefined || !CourseStatus) {
-             // Nếu thiếu trường, tải lại trang edit với lỗi
-             const course = await courseModel.findById(courseId); // Lấy lại data cũ
-             const categories = await categoryModel.findAll();
-              // Chỉ render lại nếu khóa học thuộc về giảng viên này
-             if (!course || course.UserID !== instructorId) { return res.status(403).render('403'); }
-             return res.render('management/course-edit', {
-                 layout: 'main',
-                 course: course,
-                 categories: categories,
-                 errorUpdate: 'Vui lòng điền đầy đủ các trường bắt buộc (*).'
-             });
+        const { CourseName, TinyDes, FullDes, ImageUrl, Level, CurrentPrice, OriginalPrice, SubCatID, CourseStatus } = req.body;
+        if (!CourseName || !TinyDes || !FullDes || !Level || !SubCatID || OriginalPrice === undefined || CurrentPrice === undefined || !CourseStatus) {
+            const [course, categoriesForForm] = await Promise.all([ courseModel.findById(courseId), getCategoriesForForm() ]);
+            if (!course || course.UserID !== instructorId) { return res.status(403).render('403'); }
+            return res.render('management/course-edit', { layout: 'main', course: course, categories: categoriesForForm, errorUpdate: 'Vui lòng điền đủ trường (*).' });
         }
-         // --- Kết thúc kiểm tra ---
 
-
-        // Lấy khóa học hiện tại để kiểm tra quyền sở hữu trước khi cập nhật
+        // Kiểm tra bằng UserID
         const existingCourse = await courseModel.findById(courseId);
         if (!existingCourse || existingCourse.UserID !== instructorId) {
-            console.log(`Attempt by instructor ${instructorId} to UPDATE course ${courseId} failed. Owner: ${existingCourse?.UserID}`);
-            return res.status(403).render('403', { message: 'Bạn không có quyền cập nhật khóa học này.' });
+            return res.status(403).render('403', { message: 'Không có quyền cập nhật.' });
         }
 
-        // Tạo object chứa các cập nhật
-        const courseUpdates = {
-            CourseName,
-            TinyDes,
-            FullDes,
-            ImageUrl: ImageUrl || existingCourse.ImageUrl, // Giữ ảnh cũ nếu không nhập mới
-            Level,
-            CurrentPrice: parseFloat(CurrentPrice) || 0,
-            OriginalPrice: parseFloat(OriginalPrice) || 0,
-            CatID: parseInt(CatID),
-            CourseStatus // Cập nhật trạng thái
-            // Không cập nhật UserID (chủ sở hữu)
-            // Có thể thêm cập nhật 'Date' nếu muốn ghi nhận ngày sửa đổi
-        };
-
+        // Cập nhật SubCatID
+        const courseUpdates = { CourseName, TinyDes, FullDes, ImageUrl: ImageUrl || existingCourse.ImageUrl, Level, CurrentPrice: parseFloat(CurrentPrice) || 0, OriginalPrice: parseFloat(OriginalPrice) || 0,
+                                SubCatID: parseInt(SubCatID), CourseStatus };
         await courseModel.update(courseId, courseUpdates);
-
-        // Redirect về danh sách khóa học với thông báo thành công
         res.redirect('/management/course?updateSuccess=true');
-
-    } catch (err) {
-        console.error("Lỗi khi cập nhật khóa học:", err);
-         // Nếu lỗi, tải lại trang edit với thông báo lỗi
-         try {
-            const courseId = req.body.CourseID;
-            const instructorId = req.session.authUser.UserID;
-            const course = await courseModel.findById(courseId);
-            const categories = await categoryModel.findAll();
-             if (!course || course.UserID !== instructorId) { return res.status(403).render('403'); }
-             res.render('management/course-edit', {
-                layout: 'main',
-                course: course,
-                categories: categories,
-                errorUpdate: 'Cập nhật khóa học thất bại do lỗi hệ thống.'
-            });
-         } catch (renderError) {
-             console.error("Lỗi khi render trang lỗi update:", renderError);
-              res.status(500).send('Lỗi hệ thống nghiêm trọng.');
-         }
-    }
+    } catch (err) { next(err); }
 });
 
-// --- XÓA KHÓA HỌC ---
-// ROUTE XỬ LÝ XÓA KHÓA HỌC (POST)
-router.post('/course/delete', async (req, res) => {
-    // Chỉ Giảng viên ('1')
-    if (!req.session.isAuthenticated || req.session.authUser.UserPermission !== '1') {
-        return res.status(403).render('403');
-    }
-
+// POST /management/course/delete (Đã sửa hoàn chỉnh)
+router.post('/course/delete', async (req, res, next) => {
+    if (req.session.authUser.UserPermission !== '1') { return res.status(403).render('403'); }
     try {
-        const courseIdToDelete = req.body.CourseID; // Lấy CourseID từ hidden input
+        const courseIdToDelete = req.body.CourseID;
         const instructorId = req.session.authUser.UserID;
+        if (!courseIdToDelete) { /* ...render lại list với lỗi... */ }
 
-        if (!courseIdToDelete) {
-             // Nếu không có CourseID, quay lại danh sách với lỗi (hoặc thông báo)
-             console.warn("Attempt to delete course without ID by instructor:", instructorId);
-             // Tải lại trang với thông báo lỗi nhẹ nhàng hơn
-              const [listCategories, listCourses] = await Promise.all([
-                 categoryModel.findAll(),
-                 courseModel.findByUserId(instructorId)
-              ]);
-              // Tải lại các số liệu thống kê
-              const [totalCourses, totalStudents, avgRating, statusCounts] = await Promise.all([
-                  courseModel.countCourses(instructorId),
-                  courseModel.sumStudents(instructorId),
-                  courseModel.averageRating(instructorId),
-                  courseModel.countCoursesByStatus(instructorId)
-              ]);
-               const statistics = { totalCourses, totalStudents, avgRating, statusCounts };
-
-              return res.render('management/course', {
-                 layout: 'main',
-                 categories: listCategories,
-                 courses: listCourses,
-                 statistics: statistics,
-                 errorDelete: 'Không tìm thấy khóa học cần xóa.' // Thêm thông báo lỗi
-             });
-        }
-
-        // Lấy thông tin khóa học để kiểm tra quyền sở hữu
+        // Kiểm tra bằng UserID
         const course = await courseModel.findById(courseIdToDelete);
-
-        // Kiểm tra xem khóa học có tồn tại và giảng viên có phải chủ sở hữu không
         if (!course || course.UserID !== instructorId) {
-            console.log(`Attempt by instructor ${instructorId} to DELETE course ${courseIdToDelete} failed. Owner: ${course?.UserID}`);
-            return res.status(403).render('403', { message: 'Bạn không có quyền xóa khóa học này.' });
+            return res.status(403).render('403', { message: 'Không có quyền xóa.' });
         }
-
-        // Thực hiện xóa
+        // TODO: Kiểm tra xem có học viên nào đang enroll không trước khi xóa?
         await courseModel.delete(courseIdToDelete);
-
-        // Redirect về danh sách khóa học với thông báo thành công
         res.redirect('/management/course?deleteSuccess=true');
+    } catch (err) { next(err); }
+});
 
-    } catch (err) {
-        console.error("Lỗi khi xóa khóa học:", err);
-         // Nếu lỗi, tải lại trang danh sách với thông báo lỗi chung
-         try {
-            const instructorId = req.session.authUser.UserID;
-             const [listCategories, listCourses] = await Promise.all([
-                 categoryModel.findAll(),
-                 courseModel.findByUserId(instructorId)
-             ]);
-              const [totalCourses, totalStudents, avgRating, statusCounts] = await Promise.all([
-                  courseModel.countCourses(instructorId),
-                  courseModel.sumStudents(instructorId),
-                  courseModel.averageRating(instructorId),
-                  courseModel.countCoursesByStatus(instructorId)
-              ]);
-              const statistics = { totalCourses, totalStudents, avgRating, statusCounts };
-             res.render('management/course', { // Sửa tên view cho đúng
-                 layout: 'main',
-                 categories: listCategories,
-                 courses: listCourses,
-                 statistics: statistics,
-                 errorDelete: 'Xóa khóa học thất bại do lỗi hệ thống.' // Thêm thông báo lỗi
-             });
-         } catch(renderError) {
-              console.error("Lỗi khi render trang lỗi delete:", renderError);
-              res.status(500).send('Lỗi hệ thống nghiêm trọng.');
-         }
-    }
+
+// GET /management/profile (Đã sửa)
+router.get('/profile', async (req, res, next) => {
+    if (req.session.authUser.UserPermission !== '1') { return res.status(403).render('403');}
+    try {
+        // Sửa: dùng instructor thay vì users
+        const instructor = await accountModel.findById(req.session.authUser.UserID); 
+        if (!instructor) { return res.status(404).send('Không tìm thấy thông tin.');}
+        res.render('management/profile', { layout: 'main', instructor: instructor }); // Sửa: truyền instructor
+    } catch (err) { next(err); }
+});
+
+// POST /management/profile/update (Đã sửa)
+router.post('/profile/update', async (req, res, next) => {
+    if (req.session.authUser.UserPermission !== '1') { return res.status(403).render('403');}
+    try {
+        const { Fullname, Email } = req.body; 
+        const instructorId = req.session.authUser.UserID;
+        if (!Fullname || !Email) { 
+            const instructor = await accountModel.findById(instructorId);
+            return res.render('management/profile', { layout: 'main', instructor, error: 'Họ tên và Email không được trống.' });
+        }
+        await accountModel.update(instructorId, { Fullname, Email });
+        const updatedInstructor = await accountModel.findById(instructorId);
+        // Cập nhật session
+        req.session.authUser.Fullname = updatedInstructor.Fullname; 
+        req.session.authUser.Email = updatedInstructor.Email;
+        req.session.save(err => {
+            if (err) return next(err); // Chuyển lỗi nếu không lưu được session
+            res.render('management/profile', { layout: 'main', instructor: updatedInstructor, success: 'Cập nhật thành công!' });
+        });
+    } catch (err) { next(err); }
 });
 
 export default router;

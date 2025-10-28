@@ -6,116 +6,123 @@ import db from '../utils/db.js';
 
 const router = express.Router();
 
-router.get('/',async function (req, res) {
-    const topCourses = await courseModel.findTop10CoursesViews();
-    const top4Week = await courseModel.findTop4WeekViews();
-    const top10Week = await categoryModel.findTopSubCategories();
-    const top10Newest = await courseModel.findTop10Newest();
-    res.render('course/home',{
-        topCourses,
-        top4Week,
-        top10Week,
-        top10Newest
-    });
-});
-
-router.get('/detail', function (req, res) {
-    res.render('course/detail');
-});
-
-router.get('/bycat', async function (req, res) {
+// Trang chủ (GET /) - Đã sửa
+router.get('/', async function (req, res, next) {
   try {
-    const catId = req.query.catid;
-    const subcatId = req.query.subcatid;
-    console.log('catId:', catId);
-    console.log('subcatId:', subcatId);
-
-    // 🔒 Nếu không có subcatid thì quay về trang course chính
-    if (!subcatId) return res.redirect('/course');
-
-    const page = req.query.page ? parseInt(req.query.page) : 1;
-    const limit = 4;
-    const offset = (page - 1) * limit;
-
-    // ✅ Lấy category cha
-    const category = await categoryModel.findByID(catId);
-
-    // ✅ Lấy thông tin subcategory
-    const sub_cat = await db('sub_cat').where('SubCatID', subcatId).first();
-
-    // ✅ Lấy danh sách course thuộc subcategory
-    const courses = await courseModel.findByCategoryPaging(subcatId, limit, offset);
-
-    // ✅ Đếm tổng số course để phân trang
-    const totalRow = await courseModel.countByCategory(subcatId);
-    const totalPages = Math.ceil(totalRow.total / limit);
-
-    // ✅ Render ra view
-    res.render('course/bycat', {
-      layout: 'main',
-      category,              // Category cha
-      sub_cat,               // Subcategory con
-      courses,               // Danh sách khóa học
-      currentPage: page,
-      totalPages,
-      categoryId: catId,     // ✅ Giữ đúng: categoryId là ID cha
-      subcatId,              // ✅ Giữ đúng: subcatId để link phân trang hoạt động
+    const [topCourses, top4Week, top10WeekSubCat, top10Newest] = await Promise.all([
+      courseModel.findTop10CoursesViews(),
+      courseModel.findTop4WeekViews(),
+      categoryModel.findTopSubCategories(10), // Dùng hàm subcategory mới
+      courseModel.findTop10Newest()
+    ]);
+    res.render('course/home', {
+      layout: 'main', topCourses, top4Week,
+      top10Week: top10WeekSubCat, // Sửa tên biến
+      top10Newest
     });
-  } catch (err) {
-    console.error('Lỗi khi load trang bycat:', err);
-    res.status(500).render('500', { layout: 'main', message: 'Đã xảy ra lỗi khi tải trang.' });
-  }
+  } catch (err) { next(err); }
+});
+
+// Trang chi tiết (GET /detail) - Cần hoàn thiện
+router.get('/detail', async function (req, res, next) {
+  try {
+      const courseId = req.query.id;
+      if (!courseId) return res.redirect('/course');
+
+      // Dùng hàm mới để lấy đủ chi tiết
+      const course = await courseModel.findByIdWithDetails(courseId);
+      if (!course) return res.status(404).render('404');
+
+      // TODO: Lấy thêm lessons, feedbacks, related courses nếu cần
+
+      res.render('course/detail', {
+          layout: 'main',
+          course // Truyền dữ liệu khóa học vào view
+          // , instructor: { Fullname: course.InstructorName, Email: course.InstructorEmail }, ...
+      });
+    } catch(err) { next(err); }
+});
+
+// Trang theo SubCategory (GET /bycat) - Đã sửa hoàn chỉnh
+router.get('/bycat', async function (req, res, next) {
+  try {
+      const catId = req.query.catid;
+      const subcatId = req.query.subcatid;
+      if (!subcatId) return res.redirect('/course');
+
+      const page = req.query.page ? parseInt(req.query.page) : 1;
+      const limit = 4;
+      const offset = (page - 1) * limit;
+
+      const [category, sub_cat, courses, totalRow] = await Promise.all([
+          categoryModel.findByID(catId),
+          db('sub_cat').where('SubCatID', subcatId).first(),
+          courseModel.findByCategoryPaging(subcatId, limit, offset), // Dùng subcatId
+          courseModel.countByCategory(subcatId) // Dùng subcatId
+      ]);
+
+      if (!category || !sub_cat || String(sub_cat.CatID) !== String(category.CatID)) {
+            return res.status(404).render('404');
+      }
+      const totalPages = Math.ceil((totalRow?.total || 0) / limit);
+
+      res.render('course/bycat', {
+          layout: 'main', category, sub_cat, courses,
+          currentPage: page, totalPages,
+          categoryId: catId, subcatId: subcatId, // Truyền lại ID
+          hasCourses: courses.length > 0
+      });
+  } catch (err) { next(err); }
 });
 
 router.get('/enroll', function (req, res) {
     res.render('course/enroll');
 });
 
-router.get('/courselist', async function (req, res) {
-    const UserId = req.session.authUser?.UserID;
-    const courses = await courseModel.finduserenrollcourses(UserId);
-    res.render('course/courselist', {
-        layout: 'main',
-        courses,
-    });
-} );
+router.get('/courselist', async function (req, res, next) {
+   if (!req.session.isAuthenticated) return res.redirect('/account/signin');
+    try {
+        const UserId = req.session.authUser?.UserID;
+        const courses = await courseModel.finduserenrollcourses(UserId); // Đã join đủ
+        res.render('course/courselist', { layout: 'main', courses, hasCourses: courses.length > 0 });
+     } catch(err) { next(err); }
+});
 
-router.get('/search', async (req, res) => {
-  const keyword = req.query.q?.trim().toLowerCase();
-  if (!keyword) return res.redirect('/course');
+// Trang tìm kiếm (GET /search) - Đã sửa
+router.get('/search', async (req, res, next) => {
+  try {
+      const keyword = req.query.q?.trim().toLowerCase();
+      if (!keyword) return res.redirect('/course');
+      const results = await courseModel.findByKeyword(keyword); // Đã join đủ
 
-  const results = await courseModel.findByKeyword(keyword);
-
-  if (!results || results.length === 0) {
-    return res.render('course/searchResults', {
-      layout: 'main',
-      keyword: req.query.q,
-      results: [],
-      notFound: true,
-    });
-  }
-
-  res.render('course/searchResults', {
-    layout: 'main',
-    keyword: req.query.q,
-    results,
-    notFound: false,
-  });
+      res.render('course/searchResults', {
+          layout: 'main', keyword: req.query.q, results,
+          notFound: !results || results.length === 0
+      });
+    } catch(err) { next(err); }
 });
 
 router.get('/course-remake', function (req, res) {
     res.render('course/course-remake');
 });
 
-router.post("/add-to-watchlist", async (req, res) => {
-  if (!req.session.isAuthenticated)
-    return res.redirect("/account/signin");
-
-  const userId = req.session.authUser.UserID;
-  const { courseId } = req.body;
-
-  await accountModel.addToWatchlist(userId, courseId);
-  res.redirect(`/course/detail?id=${courseId}`);
+// Thêm vào Wishlist (POST /add-to-watchlist) - Đã sửa
+router.post("/add-to-watchlist", async (req, res, next) => {
+   if (!req.session.isAuthenticated) return res.redirect("/account/signin");
+    try {
+        const userId = req.session.authUser.UserID;
+        const { courseId } = req.body;
+         if (!courseId) { throw new Error('Missing courseId'); } // Thêm kiểm tra
+        await accountModel.addToWatchlist(userId, courseId);
+        const referringUrl = req.header('Referer') || `/course/detail?id=${courseId}`;
+        res.redirect(referringUrl + '?msg=added_watchlist');
+     } catch(err) {
+         if (err.code === '23505') { // Lỗi trùng lặp
+              const referringUrl = req.header('Referer') || `/course/detail?id=${req.body.courseId}`;
+              return res.redirect(referringUrl + '?msg=already_in_watchlist');
+         }
+         next(err); // Chuyển lỗi khác
+     }
 });
 
 export default router;

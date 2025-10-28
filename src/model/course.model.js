@@ -83,6 +83,18 @@ export default {
       .join('categories as ca', 's.CatID', '=', 'ca.CatID')
       .select('c.*', 'u.Fullname as InstructorName', 'ca.CatName', 's.SubCatName')
       .orderBy('c.WeekView', 'desc')
+      .select(
+      'c.CourseID',
+      'c.CourseName',
+      'c.ImageUrl',
+      'c.Rating',
+      'c.Total_Review',
+      'c.CurrentPrice',
+      'c.OriginalPrice',
+      'c.WeekView',
+      'u.Fullname as InstructorName',
+      'ca.CatName as CategoryName'
+      )
       .limit(4);
   },
 
@@ -286,51 +298,53 @@ export default {
       )
       .orderBy('created_at', 'asc');
   },
-  async findRelatedCourses(courseId, subCatId) {
-    const sameSubCat = await db('courses as c')
-      .join('users as u', 'c.UserID', '=', 'u.UserID')
-      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
-      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-      .where('c.SubCatID', subCatId)
-      .andWhereNot('c.CourseID', courseId)
-      .select(
-        'c.CourseID',
-        'c.CourseName',
-        'c.ImageUrl',
-        'c.Rating',
-        'c.Total_Review',
-        'c.CurrentPrice',
-        'c.OriginalPrice',
-        'u.Fullname as InstructorName',
-        'ca.CatName as CategoryName'
-      )
-      .orderBy('c.Views', 'desc')
-      .limit(5);
+  async findRelatedCourses(courseId, catId) {
+  const sameCat = await db('courses as c')
+    .join('users as u', 'c.UserID', '=', 'u.UserID')
+    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+    .where('ca.CatID', catId)
+    .andWhereNot('c.CourseID', courseId)
+    .select(
+      'c.CourseID',
+      'c.CourseName',
+      'c.ImageUrl',
+      'c.Rating',
+      'c.Total_Review',
+      'c.CurrentPrice',
+      'c.OriginalPrice',
+      'u.Fullname as InstructorName',
+      'ca.CatName as CategoryName'
+    )
+    .orderBy('c.Views', 'desc')
+    .limit(5);
 
-    if (sameSubCat.length >= 5) return sameSubCat;
+  if (sameCat.length >= 5) return sameCat;
 
-    const remaining = 5 - sameSubCat.length;
-    const extra = await db('courses as c')
-      .join('users as u', 'c.UserID', '=', 'u.UserID')
-      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
-      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-      .whereNot('c.CourseID', courseId)
-      .select(
-        'c.CourseID',
-        'c.CourseName',
-        'c.ImageUrl',
-        'c.Rating',
-        'c.Total_Review',
-        'c.CurrentPrice',
-        'c.OriginalPrice',
-        'u.Fullname as InstructorName',
-        'ca.CatName as CategoryName'
-      )
-      .orderByRaw('RANDOM()')
-      .limit(remaining);
+  const remaining = 5 - sameCat.length;
 
-    return [...sameSubCat, ...extra];
+  const extra = await db('courses as c')
+    .join('users as u', 'c.UserID', '=', 'u.UserID')
+    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+    .whereNot('c.CourseID', courseId)
+    .select(
+      'c.CourseID',
+      'c.CourseName',
+      'c.ImageUrl',
+      'c.Rating',
+      'c.Total_Review',
+      'c.CurrentPrice',
+      'c.OriginalPrice',
+      'u.Fullname as InstructorName',
+      'ca.CatName as CategoryName'
+    )
+    .orderByRaw('RANDOM()')
+    .limit(remaining);
+
+  return [...sameCat, ...extra];
   },
+
 
 
 };

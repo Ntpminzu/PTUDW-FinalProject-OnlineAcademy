@@ -25,7 +25,7 @@
     {{!-- Link Admin/Instructor (Nằm trong ul.nav-links) --}}
     {{#if isAuthenticated}} {{!-- Mở if Auth --}}
     {{#ifCond authUser.UserPermission '===' '0'}} {{!-- Mở ifCond Admin --}}
-    <li><a href="/admin/user/list" style="color: #FFD700; font-weight: bold;">Admin Panel</a></li>
+    <li><a href="/Admin/AdminPage" style="color: #FFD700; font-weight: bold;">Admin Panel</a></li>
     {{/ifCond}} {{!-- Đóng ifCond Admin --}}
     {{#ifCond authUser.UserPermission '===' '1'}} {{!-- Mở ifCond Instructor --}}
     <li><a href="/management/course" style="color: #FFD700; font-weight: bold;">My Courses</a></li>

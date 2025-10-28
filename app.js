@@ -121,7 +121,6 @@ app.use(session({
             cat.subcategories = subcatResults[i] || [];
         });
         app.locals.global_categories = categories; // Lưu vào app.locals
-        console.log('✅ Đã tải global categories và subcategories thành công!');
     } catch (err) {
         console.error('❌ Không thể tải global data:', err);
     }

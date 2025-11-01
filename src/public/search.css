@@ -115,3 +115,107 @@ body {
   justify-content: center;
   row-gap: 25px;
 }
+
+/* ===== FILTER & SORT BAR ===== */
+#filterForm {
+  background-color: #139a44;
+  border-radius: 12px;
+  padding: 12px 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+#filterForm label {
+  font-weight: 600;
+  color: #333;
+  font-size: 15px;
+}
+
+#filterForm select {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+#filterForm select:hover {
+  border-color: #034228;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
+#filterForm .btn-filter {
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+#filterForm .btn-filter:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  #filterForm {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 10px;
+  }
+
+  #filterForm .sort {
+    justify-content: space-between;
+  }
+
+  #filterForm select {
+    width: 100%;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 30px 0;
+}
+
+.pagination a {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid #054d22;
+  border-radius: 6px;
+  color: #ececec;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.pagination a:hover {
+  background-color: #9abb2a;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.pagination a.active {
+  background-color: #dce711d2;
+  color: white;
+  cursor: default;
+  box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+}
+
+.pagination a:active {
+  transform: scale(0.96);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .pagination a {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+}

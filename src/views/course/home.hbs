@@ -63,6 +63,7 @@
             <h3>Course Details</h3>
             <p>{{{TinyDes}}}</p>
             <div class="rating">
+              {{{renderStars Rating}}}
               ⭐ {{Rating}} <span>({{TotalStudent}} students)</span>
             </div>
             <div class="price">
@@ -105,9 +106,7 @@
           <h3>{{this.CourseName}}</h3>
           <p class="instructor">{{this.InstructorName}}</p>
           <div class="course-rating">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i>
-            <i class="fas fa-star"></i><i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
+            {{{renderStars this.Rating}}}
             <span>{{this.Rating}} ⭐ ({{this.Total_Review}})</span>
           </div>
           <div class="course-price">
@@ -131,13 +130,11 @@
       <a href="/course/detail?id={{CourseID}}">
         <img src="{{ImageUrl}}" alt="{{CourseName}}">
         <div class="course-info">
-          <p class="category">{{CategoryName}}</p>
+          <p class="category">{{this.CatName}}</p>
           <h3>{{CourseName}}</h3>
           <p class="instructor">{{InstructorName}}</p>
           <div class="course-rating">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i>
-            <i class="fas fa-star"></i><i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
+            {{{renderStars Rating}}}
             <span>{{Rating}} ({{TotalStudent}})</span>
           </div>
           <div class="course-price">

@@ -2,24 +2,62 @@
 <link rel="stylesheet" href="/courselist.css">
 {{/section}}
 
-<div class="container mt-4">
-  <h2>Your Course List</h2>
-  {{#if courses.length}}
-    {{#each courses}}
-      <div class="course-card">
-        <img src="{{ImageUrl}}" alt="{{CourseName}}">
-        <div class="course-info">
-          <p class="category">{{CatName}}</p>
-          <h3>{{CourseName}}</h3>
-          <a href="/course/detail?id={{CourseID}}">
-            <button class="btn btn-primary mt-3">Continue Learning</button>
-          </a>
+<div class="container mt-4 course-page">
+  <h2 class="wishlist-title">Your Courses</h2>
+
+  <div class="row">
+    {{#if courses.length}}
+      {{#each courses}}
+      <div class="col-md-4 mb-4">
+        <div class="wishlist-card">
+          <img src="{{ImageUrl}}" alt="{{CourseName}}">
+
+          <div class="wishlist-details">
+            <p class="category">Category: {{CatName}}</p>
+            <h3>{{CourseName}}</h3>
+
+            {{!-- 🧩 Hiển thị trạng thái khóa học --}}
+            {{#if IsCompleted}}
+              <p class="status completed">✅ Completed</p>
+            {{else}}
+              <p class="status in-progress">⏳ In Progress</p>
+            {{/if}}
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <a href="/course/detail?id={{CourseID}}" class="btn btn-primary">
+                {{#if IsCompleted}}Review{{else}}Continue{{/if}} Learning
+              </a>
+
+              <form action="/account/courses/remove" method="post">
+                <input type="hidden" name="courseId" value="{{CourseID}}">
+               
+              </form>
+            </div>
+          </div>
         </div>
       </div>
+      {{/each}}
+    {{else}}
+      <p class="empty-text">You are not enrolled in any courses yet 😊</p>
+    {{/if}}
+  </div>
+
+  {{!-- 🔸 Phân trang --}}
+  {{#if totalPages}}
+  <div class="pagination">
+    {{#if (gt currentPage 1)}}
+      <a href="/account/courselist?page={{subtract currentPage 1}}">Previous</a>
+    {{/if}}
+
+    {{#each (range 1 totalPages)}}
+      <a href="/account/courselist?page={{this}}" class="{{#if (eq this ../currentPage)}}active{{/if}}">
+        {{this}}
+      </a>
     {{/each}}
-  {{else}}
-    <p style="color: #FFD700; text-align: center; font-weight: bold; font-size: 1.1rem;">
-      You are not enrolled in any courses yet.
-    </p>
+
+    {{#if (lt currentPage totalPages)}}
+      <a href="/account/courselist?page={{plus currentPage 1}}">Next</a>
+    {{/if}}
+  </div>
   {{/if}}
 </div>

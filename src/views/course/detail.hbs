@@ -27,35 +27,34 @@
               <span>{{course.TotalStudent}} students enrolled</span>
             </div>
           </div>
+
+          <!-- ✅ Button Container -->
           <div class="button-container">
             {{#if isInWishlist}}
             <form action="/account/wishlist/remove" method="post">
               <input type="hidden" name="courseId" value="{{course.CourseID}}">
-              <button type="submit" class="start-btn wishlist-btn" style="text-decoration: none;">
+              <button type="submit" class="magic-btn wishlist">
                 <i class="bi bi-heart-fill"></i> Remove from Wishlist
               </button>
             </form>
             {{else}}
             <form action="/account/add-to-watchlist" method="post">
               <input type="hidden" name="courseId" value="{{course.CourseID}}">
-              <button type="submit" class="start-btn wishlist-btn" style="text-decoration: none;">
+              <button type="submit" class="magic-btn wishlist">
                 <i class="bi bi-heart"></i> Add to Wishlist
               </button>
             </form>
             {{/if}}
 
-
             {{#unless isBought}}
             <form action="/account/buy-now" method="post">
               <input type="hidden" name="courseId" value="{{course.CourseID}}">
-              <button type="submit" class="start-btn cart-btn" style="text-decoration: none;">
+              <button type="submit" class="magic-btn start">
                 <i class="bi bi-cart"></i> Buy Now
               </button>
             </form>
             {{/unless}}
-
           </div>
-
         </div>
       </section>
 
@@ -82,42 +81,39 @@
             <p class="card-text">Last Updated: {{course.Date}}</p>
 
             {{#if isBought}}
-            <a href="/course/enroll?id={{course.CourseID}}" class="enroll-btn"><i class="bi bi-journal-plus"></i> Enroll
-              Now</a>
+            <a href="/course/enroll?id={{course.CourseID}}" class="magic-btn enroll">
+              <i class="bi bi-journal-plus"></i> Enroll Now
+            </a>
             {{/if}}
-
           </div>
+
           <div class="card-footer text-muted text-center">
             Hogwarts Academy © 2025
           </div>
         </div>
+
+        <!-- Course Outline -->
         <div class="course-outline">
           <h3>Course Outline</h3>
           <ul class="outline-list">
             {{#each lessons}}
             <li>
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
-                alt="">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s" alt="">
               <span>{{this.LessonName}}</span>
               <p>{{{this.TinyDes}}}</p>
-              <button class="preview-btn" onclick="togglePreview('lesson-{{this.LessonID}}')">Preview</button>
+              <button class="magic-btn secondary" onclick="togglePreview('lesson-{{this.LessonID}}')">Preview</button>
               <div id="lesson-{{this.LessonID}}" class="preview-content" style="display: none; text-align: center;">
                 <h5>Content:</h5>
                 <p>{{{this.FullDes}}}</p>
-                <!-- Add video -->
                 <div style="margin: 0 auto; display: block; max-width: 600px;">
                   <iframe width="100%" height="340" src="{{this.VideoUrl}}" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                  </iframe>
+                    allowfullscreen></iframe>
                 </div>
               </div>
             </li>
             {{/each}}
-
-
           </ul>
-
         </div>
       </section>
 
@@ -127,18 +123,16 @@
         <div class="related-courses-list">
           {{#each relatedCourses}}
           <div class="course-card">
-            <img src="{{this.ImageUrl}} " alt="Course Thumbnail" class="course-thumbnail">
+            <img src="{{this.ImageUrl}}" alt="Course Thumbnail" class="course-thumbnail">
             <div class="course-info">
-              <h4>{{this.CourseName}} </h4>
-              <p class="course-instructor">By {{this.InstructorName}} </p>
+              <h4>{{this.CourseName}}</h4>
+              <p class="course-instructor">By {{this.InstructorName}}</p>
               <div class="course-stats">
-                <span class="course-rating">{{this.Rating}} <i class="bi bi-star-fill"></i> ({{this.Total_Review}}
-                  reviews)</span>
+                <span class="course-rating">{{this.Rating}} <i class="bi bi-star-fill"></i> ({{this.Total_Review}} reviews)</span>
                 <span class="course-enrollment">{{this.TotalStudent}} students</span>
               </div>
-              <p class="course-price">{{this.CurrentPrice}} <span class="original-price">{{this.OriginalPrice}}</span>
-              </p>
-              <a href="/course/detail?id={{this.CourseID}}" class="course-btn">View Course</a>
+              <p class="course-price">{{this.CurrentPrice}} <span class="original-price">{{this.OriginalPrice}}</span></p>
+              <a href="/course/detail?id={{this.CourseID}}" class="magic-btn course">View Course</a>
             </div>
           </div>
           {{/each}}
@@ -154,13 +148,10 @@
             <div class="feedback-header">
               <span class="feedback-user">{{this.Fullname}}</span>
             </div>
-            <p class="feedback-content">
-              {{this.Feedback}}
-            </p>
+            <p class="feedback-content">{{this.Feedback}}</p>
             <span class="feedback-date">{{this.created_at}}</span>
           </div>
           {{/each}}
-
         </div>
       </section>
 
@@ -174,24 +165,20 @@
             <label for="commentContent" class="form-label">Comment</label>
             <textarea class="form-control" id="commentContent" name="feedback" rows="3"></textarea>
           </div>
-          <button type="submit" class="btn btn-primary btn-sm">
-            Submit
-          </button>
+          <button type="submit" class="magic-btn secondary btn-sm">Submit</button>
         </form>
       </section>
       {{/if}}
     </main>
   </div>
 </div>
+
 <script>
   function togglePreview(lessonId) {
-    var previewContent = document.getElementById(lessonId);
-
-    if (previewContent.style.display === "none" || previewContent.style.display === "") {
-      previewContent.style.display = "block";
-    } else {
-      previewContent.style.display = "none";
-    }
+    const previewContent = document.getElementById(lessonId);
+    previewContent.style.display =
+      previewContent.style.display === "none" || previewContent.style.display === ""
+        ? "block"
+        : "none";
   }
-
 </script>

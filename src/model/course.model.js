@@ -320,7 +320,7 @@ export default {
       )
       .orderBy('created_at', 'asc');
   },
-  async findRelatedCourses(courseId, catId) {
+async findRelatedCourses(courseId, catId) {
   const sameCat = await db('courses as c')
     .join('users as u', 'c.UserID', '=', 'u.UserID')
     .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
@@ -333,6 +333,7 @@ export default {
       'c.ImageUrl',
       'c.Rating',
       'c.Total_Review',
+      'c.TotalStudent',  
       'c.CurrentPrice',
       'c.OriginalPrice',
       'u.Fullname as InstructorName',
@@ -356,6 +357,7 @@ export default {
       'c.ImageUrl',
       'c.Rating',
       'c.Total_Review',
+      'c.TotalStudent',   
       'c.CurrentPrice',
       'c.OriginalPrice',
       'u.Fullname as InstructorName',
@@ -365,7 +367,7 @@ export default {
     .limit(remaining);
 
   return [...sameCat, ...extra];
-  },
+}
 
 
 

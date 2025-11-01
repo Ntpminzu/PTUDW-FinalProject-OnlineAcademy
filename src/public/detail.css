@@ -375,24 +375,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px; /* thêm khoảng cách nhỏ giữa 2 phần */
   font-size: 14px;
   color: #ccc;
   margin-bottom: 10px;
+  white-space: nowrap; /* ❗ngăn xuống dòng */
 }
 
 .CourseDetail .course-rating {
   color: #ffcc00;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 3px; /* icon và số không dính liền */
 }
 
 .CourseDetail .course-rating i {
-  margin-left: 3px;
   font-size: 12px;
 }
 
 .CourseDetail .course-enrollment {
   font-size: 13px;
   color: #aaa;
+  flex-shrink: 0; /* giữ nguyên, không bị co nếu thẻ quá hẹp */
 }
 
 .CourseDetail .course-price {

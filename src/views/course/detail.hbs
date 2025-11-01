@@ -13,9 +13,9 @@
           <div class="course-stats">
             <div class="rating-info">
               <span class="average-rating">{{course.Rating}}</span>
-               <div class="rating-stars">
-        {{{renderStars course.Rating}}}
-      </div>
+              <div class="rating-stars">
+                {{{renderStars course.Rating}}}
+              </div>
               <span class="review-count">({{course.Total_Review}} reviews)</span>
             </div>
             <div class="enrollment-info">
@@ -88,40 +88,37 @@
           </div>
         </div>
 
-       <!-- Course Outline -->
-<div class="course-outline">
-  <h3>Course Outline</h3>
-  <ul class="outline-list">
-    {{#each lessons}}
-    <li>
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s" alt="">
-      <span>{{this.LessonName}}</span>
-      <p>{{{this.TinyDes}}}</p>
+        <!-- Course Outline -->
+        <div class="course-outline">
+          <h3>Course Outline</h3>
+          <ul class="outline-list">
+            {{#each lessons}}
+            <li>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s"
+                alt="">
+              <span>{{this.LessonName}}</span>
+              <p>{{{this.TinyDes}}}</p>
 
-      {{!-- Chỉ hiển thị preview cho bài đầu tiên --}}
-      {{#if @first}}
-      <button class="magic-btn secondary" onclick="togglePreview('lesson-{{this.LessonID}}')">Preview</button>
-      <div id="lesson-{{this.LessonID}}" class="preview-content" style="display: none; text-align: center;">
-        <h5>Content:</h5>
-        <p>{{{this.FullDes}}}</p>
-        <div style="margin: 0 auto; display: block; max-width: 600px;">
-          <iframe
-            width="100%"
-            height="340"
-            src="{{this.VideoUrl}}"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
+              {{!-- Chỉ hiển thị preview cho bài đầu tiên --}}
+              {{#if @first}}
+              <button class="magic-btn secondary" onclick="togglePreview('lesson-{{this.LessonID}}')">Preview</button>
+              <div id="lesson-{{this.LessonID}}" class="preview-content" style="display: none; text-align: center;">
+                <h5>Content:</h5>
+                <p>{{{this.FullDes}}}</p>
+                <div style="margin: 0 auto; display: block; max-width: 600px;">
+                  <iframe width="100%" height="340" src="{{this.VideoUrl}}" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                  </iframe>
+                </div>
+              </div>
+              {{else}}
+              <button class="magic-btn secondary" disabled>Preview Locked</button>
+              {{/if}}
+            </li>
+            {{/each}}
+          </ul>
         </div>
-      </div>
-      {{else}}
-      <button class="magic-btn secondary" disabled>Preview Locked</button>
-      {{/if}}
-    </li>
-    {{/each}}
-  </ul>
-</div>
       </section>
 
       <!-- Related Courses -->
@@ -135,10 +132,12 @@
               <h4>{{this.CourseName}}</h4>
               <p class="course-instructor">By {{this.InstructorName}}</p>
               <div class="course-stats">
-                <span class="course-rating">{{this.Rating}} <i class="bi bi-star-fill"></i> ({{this.Total_Review}} reviews)</span>
+                <span class="course-rating">{{this.Rating}} <i class="bi bi-star-fill"></i> ({{this.Total_Review}}
+                  reviews)</span>
                 <span class="course-enrollment">{{this.TotalStudent}} students</span>
               </div>
-              <p class="course-price">{{this.CurrentPrice}} <span class="original-price">{{this.OriginalPrice}}</span></p>
+              <p class="course-price">{{this.CurrentPrice}} <span class="original-price">{{this.OriginalPrice}}</span>
+              </p>
               <a href="/course/detail?id={{this.CourseID}}" class="magic-btn course">View Course</a>
             </div>
           </div>

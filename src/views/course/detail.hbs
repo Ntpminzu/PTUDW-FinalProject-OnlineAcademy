@@ -13,13 +13,9 @@
           <div class="course-stats">
             <div class="rating-info">
               <span class="average-rating">{{course.Rating}}</span>
-              <div class="rating-stars">
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-half"></i>
-              </div>
+               <div class="rating-stars">
+        {{{renderStars course.Rating}}}
+      </div>
               <span class="review-count">({{course.Total_Review}} reviews)</span>
             </div>
             <div class="enrollment-info">
@@ -92,29 +88,40 @@
           </div>
         </div>
 
-        <!-- Course Outline -->
-        <div class="course-outline">
-          <h3>Course Outline</h3>
-          <ul class="outline-list">
-            {{#each lessons}}
-            <li>
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s" alt="">
-              <span>{{this.LessonName}}</span>
-              <p>{{{this.TinyDes}}}</p>
-              <button class="magic-btn secondary" onclick="togglePreview('lesson-{{this.LessonID}}')">Preview</button>
-              <div id="lesson-{{this.LessonID}}" class="preview-content" style="display: none; text-align: center;">
-                <h5>Content:</h5>
-                <p>{{{this.FullDes}}}</p>
-                <div style="margin: 0 auto; display: block; max-width: 600px;">
-                  <iframe width="100%" height="340" src="{{this.VideoUrl}}" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                </div>
-              </div>
-            </li>
-            {{/each}}
-          </ul>
+       <!-- Course Outline -->
+<div class="course-outline">
+  <h3>Course Outline</h3>
+  <ul class="outline-list">
+    {{#each lessons}}
+    <li>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbnh=CCRDClx9UsQYMycysG6spxwOulfpKODkx2_ZA&s" alt="">
+      <span>{{this.LessonName}}</span>
+      <p>{{{this.TinyDes}}}</p>
+
+      {{!-- Chỉ hiển thị preview cho bài đầu tiên --}}
+      {{#if @first}}
+      <button class="magic-btn secondary" onclick="togglePreview('lesson-{{this.LessonID}}')">Preview</button>
+      <div id="lesson-{{this.LessonID}}" class="preview-content" style="display: none; text-align: center;">
+        <h5>Content:</h5>
+        <p>{{{this.FullDes}}}</p>
+        <div style="margin: 0 auto; display: block; max-width: 600px;">
+          <iframe
+            width="100%"
+            height="340"
+            src="{{this.VideoUrl}}"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
         </div>
+      </div>
+      {{else}}
+      <button class="magic-btn secondary" disabled>Preview Locked</button>
+      {{/if}}
+    </li>
+    {{/each}}
+  </ul>
+</div>
       </section>
 
       <!-- Related Courses -->

@@ -1,32 +1,54 @@
 {{#section "styles" append=true}}
+<link rel="stylesheet" href="/wishlist.css">
 {{/section}}
 
-<div class="container mt-4">
-  <h2 style="color: gold; text-align: center; font-weight: bold; font-size: 1.5rem; ">Your Wishlist</h2>
+<div class="container mt-4 wishlist-page">
+  <h2 class="wishlist-title">Your Wishlist</h2>
+
   <div class="row">
     {{#if empty}}
-    <p class="text-muted" style="color: beige; text-align: center; font-weight: bold; font-size: 1.0rem;">Bạn chưa lưu
-      khóa học nào 😊</p>
+      <p class="empty-text">Bạn chưa lưu khóa học nào 😊</p>
     {{else}}
-    {{#each items}}
-    <div class="col-md-4">
-      <div class="card">
-        <img src="{{ImageUrl}}" class="card-img-top" alt="Course Image">
-        <div class="card-body">
-          <h5 class="card-title">{{CourseName}}</h5>
-          <p class="card-text">Professor: {{InstructorName}}</p>
-          <p class="card-text">{{{TinyDes}}}</p>
-          <a href="/course/detail?id={{CourseID}}" class="btn btn-primary">View Details</a>
-          <form action="/account/wishlist/remove" method="post" class="float-end ms-2">
-            <input type="hidden" name="courseId" value="{{CourseID}}">
-            <button class="btn btn-danger">
-              <i class="bi bi-x-circle"></i> Remove
-            </button>
-          </form>
+      {{#each items}}
+      <div class="col-md-4 mb-4">
+        <div class="wishlist-card">
+          <img src="{{ImageUrl}}" alt="Course Image">
+
+          <div class="wishlist-details">
+            <p class="category">Category: {{CategoryName}}</p>
+            <h3>{{CourseName}}</h3>
+            <p class="instructor">Professor: {{InstructorName}}</p>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <a href="/course/detail?id={{CourseID}}" class="btn btn-primary">View Details</a>
+              <form action="/account/wishlist/remove" method="post">
+                <input type="hidden" name="courseId" value="{{CourseID}}">
+                <button type="submit" class="btn btn-danger">
+                  <i class="bi bi-x-circle"></i> Remove
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    {{/each}}
+      {{/each}}
     {{/if}}
   </div>
+
+  {{#if totalPages}}
+  <div class="pagination">
+    {{#if (gt currentPage 1)}}
+      <a href="/account/wishlist?page={{subtract currentPage 1}}">Previous</a>
+    {{/if}}
+
+    {{#each (range 1 totalPages)}}
+      <a href="/account/wishlist?page={{this}}" class="{{#if (eq this ../currentPage)}}active{{/if}}">
+        {{this}}
+      </a>
+    {{/each}}
+
+    {{#if (lt currentPage totalPages)}}
+      <a href="/account/wishlist?page={{plus currentPage 1}}">Next</a>
+    {{/if}}
+  </div>
+  {{/if}}
 </div>

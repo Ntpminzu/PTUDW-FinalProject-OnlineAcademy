@@ -116,46 +116,55 @@ body {
   row-gap: 25px;
 }
 
-/* ===== FILTER & SORT BAR ===== */
+/* ===== FILTER & SORT BAR — SLYTHERIN THEME ===== */
 #filterForm {
-  background-color: #139a44;
+  background: linear-gradient(145deg, #0b2e13, #1a472a); /* nền xanh lục đậm pha gradient */
   border-radius: 12px;
-  padding: 12px 20px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 14px 22px;
+  border: 1px solid #2e8b57; /* viền xanh bạc */
+  box-shadow: 0 0 12px rgba(0, 255, 128, 0.15);
 }
 
+/* Label */
 #filterForm label {
   font-weight: 600;
-  color: #333;
+  color: #C0C0C0; /* bạc sáng */
   font-size: 15px;
+  letter-spacing: 0.5px;
 }
 
+/* Select box */
 #filterForm select {
   border-radius: 8px;
-  border: 1px solid #ccc;
-  padding: 5px 10px;
+  border: 1px solid #5a7c6f;
+  padding: 6px 12px;
   font-size: 14px;
-  transition: all 0.2s ease;
-  background-color: white;
+  transition: all 0.3s ease;
+  background-color: #1f3d2b; /* nền xanh tối */
+  color: #e0e0e0; /* chữ sáng */
 }
 
 #filterForm select:hover {
-  border-color: #034228;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+  border-color: #00ff99;
+  box-shadow: 0 0 6px rgba(0, 255, 170, 0.5);
 }
 
+/* Filter button */
 #filterForm .btn-filter {
-  background-color: #007bff;
-  border: none;
+  background: linear-gradient(135deg, #2e8b57, #1a472a);
+  border: 1px solid #00ff99;
   border-radius: 8px;
-  padding: 6px 14px;
-  color: white;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  padding: 6px 16px;
+  color: #e0e0e0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
 }
 
 #filterForm .btn-filter:hover {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, #00a36c, #006b4b);
+  box-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+  transform: translateY(-1px);
 }
 
 /* Responsive */
@@ -174,6 +183,8 @@ body {
     width: 100%;
   }
 }
+
+/* ===== PAGINATION — SLYTHERIN THEME ===== */
 
 .pagination {
   display: flex;

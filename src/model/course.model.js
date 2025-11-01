@@ -160,17 +160,25 @@ export default {
                 [term, term, term, term, term, term])
       .select('c.*', 'u.Fullname as InstructorName', 'ca.CatName', 's.SubCatName');
   },
-  // finduserenrollcourses 
-  async finduserenrollcourses(UserId) {
-      return db('enrollments as e')
-        .join('courses as c', 'e.CourseID', 'c.CourseID')
-        .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
-        .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-        .select('c.*', 'ca.CatName', 's.SubCatName', 'e.enrolled_at')
-        .where('e.UserID', UserId)
-        .orderBy('e.enrolled_at', 'desc');
-  },
-  // 🧮 Đếm tổng số khóa học mà user đã ghi danh
+// 🧭 Lấy toàn bộ khóa học user đã ghi danh (kèm trạng thái học)
+async findUserEnrollCourses(UserId) {
+  return db('enrollments as e')
+    .join('courses as c', 'e.CourseID', 'c.CourseID')
+    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+    .select(
+      'c.*',
+      'ca.CatName',
+      's.SubCatName',
+      'e.enrolled_at',
+      db.raw('"e"."LearnStatus" as "LearnStatus"'),
+      db.raw(`CASE WHEN "e"."LearnStatus" = 'DONE' THEN true ELSE false END as "IsCompleted"`)
+    )
+    .where('e.UserID', UserId)
+    .orderBy('e.enrolled_at', 'desc');
+},
+
+ // 🧮 Đếm tổng số khóa học mà user đã ghi danh
     async countUserEnrollCourses(UserId) {
       const result = await db('enrollments')
         .where('UserID', UserId)
@@ -179,19 +187,25 @@ export default {
       return parseInt(result.total, 10) || 0;
     },
 
-// 📄 Lấy danh sách khóa học theo phân trang (limit + offset)
-  async findUserEnrollCoursesPaging(UserId, limit, offset) {
-    return db('enrollments as e')
-      .join('courses as c', 'e.CourseID', 'c.CourseID')
-      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
-      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-      .select('c.*', 'ca.CatName', 's.SubCatName', 'e.enrolled_at')
-      .where('e.UserID', UserId)
-      .orderBy('e.enrolled_at', 'desc')
-      .limit(limit)
-      .offset(offset);
-  },
-
+// 📄 Lấy danh sách khóa học user đã ghi danh (phân trang + trạng thái học)
+async findUserEnrollCoursesPaging(UserId, limit, offset) {
+  return db('enrollments as e')
+    .join('courses as c', 'e.CourseID', 'c.CourseID')
+    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+    .select(
+      'c.*',
+      'ca.CatName',
+      's.SubCatName',
+      'e.enrolled_at',
+      db.raw('"e"."LearnStatus" as "LearnStatus"'),
+      db.raw(`CASE WHEN "e"."LearnStatus" = 'DONE' THEN true ELSE false END as "IsCompleted"`)
+    )
+    .where('e.UserID', UserId)
+    .orderBy('e.enrolled_at', 'desc')
+    .limit(limit)
+    .offset(offset);
+},
 
   //--- CÁC HÀM THỐNG KÊ CHO QUẢN LÝ GIẢNG VIÊN ---//
   // Hàm trợ giúp để tạo điều kiện WHERE
@@ -264,18 +278,23 @@ export default {
   //--- HẾT CÁC HÀM THỐNG KÊ CHO QUẢN LÝ GIẢNG VIÊN ---//
 
   // Các hàm khác
-  findById(courseId) {
-    return db('courses')
-      .leftJoin('users', 'courses.UserID', '=', 'users.UserID')
-      .leftJoin('categories', 'courses.SubCatID', '=', 'categories.CatID')
-      .where('courses.CourseID', courseId)
-      .select(
-        'courses.*',
-        'users.Fullname as InstructorName',
-        'categories.CatName as CategoryName'
-      )
-      .first();
-  },
+ findById(courseId) {
+  if (!courseId || courseId.trim() === '') {
+    console.warn('[findById] ⚠️ CourseID is missing or empty');
+    return null; // hoặc throw new Error('Invalid CourseID');
+  }
+
+  return db('courses')
+    .leftJoin('users', 'courses.UserID', '=', 'users.UserID')
+    .leftJoin('categories', 'courses.SubCatID', '=', 'categories.CatID')
+    .where('courses.CourseID', courseId)
+    .select(
+      'courses.*',
+      'users.Fullname as InstructorName',
+      'categories.CatName as CategoryName'
+    )
+    .first();
+},
   checkIfInWishlist(userId, courseId) {
     return db('watch_list')
       .where('UserID', userId)

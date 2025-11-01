@@ -29,7 +29,7 @@
     <ul class="list-group" id="videoList">
       {{#each lessons}}
       <li class="list-group-item video-item" data-video="{{this.VideoUrl}}" data-lesson-id="{{this.LessonID}}"
-        data-course-id="{{course.CourseID}}">
+        data-course-id="{{../course.CourseID}}">
         <i class="bi bi-play-circle"></i>
         {{this.LessonName}}
         {{#if this.isCompleted}}
@@ -39,7 +39,6 @@
       {{/each}}
     </ul>
   </div>
-
 
   <!-- Video Player -->
   <div class="video-player mt-4">
@@ -55,42 +54,68 @@
 <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+    // ================== 🧭 CẤU HÌNH PLAYER ==================
     const player = new Plyr("#videoPlayer", {
-      controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+      controls: [
+        'play-large', 'play', 'progress', 'current-time',
+        'mute', 'volume', 'settings', 'fullscreen'
+      ],
       youtube: { rel: 0, modestbranding: 1 }
     });
 
+    // ================== 🧩 BIẾN TOÀN CỤC ==================
     const startCourseBtn = document.getElementById("startCourseBtn");
     const videoItems = document.querySelectorAll(".video-item");
     const videoTitle = document.getElementById("videoTitle");
-    const courseKey = "ExampleCourse_progress";
-    let learnedVideos = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+    const courseId = videoItems[0]?.getAttribute("data-course-id");
+    const courseKey = `course_${courseId}_progress`;
+
+    let learnedLessons = JSON.parse(localStorage.getItem(courseKey)) || [];
     let currentIndex = 0;
 
+    // ================== 🎬 HÀM HỖ TRỢ ==================
+    // Trích ID YouTube từ URL
     function extractYouTubeID(url) {
       const match = url.match(/(?:youtube\.com\/embed\/|youtu\.be\/)([^&#]*)/);
       return match ? match[1] : null;
     }
 
+    // Phát video theo index
     function playVideoAtIndex(index) {
       if (index < 0 || index >= videoItems.length) return;
       videoItems.forEach(v => v.classList.remove("active"));
+
       const item = videoItems[index];
       item.classList.add("active");
+
       const videoUrl = item.getAttribute("data-video");
       const title = item.textContent.trim();
+      const videoId = extractYouTubeID(videoUrl);
+
       videoTitle.textContent = title;
-      const id = extractYouTubeID(videoUrl);
-      console.log(id);
+      currentIndex = index;
 
       player.source = {
         type: "video",
-        sources: [{ src: id, provider: "youtube" }]
+        sources: [{ src: videoId, provider: "youtube" }]
       };
       player.play();
-      currentIndex = index;
     }
 
+    // Ghi log tiến trình ra console
+    function logProgress(lessonId, total, done) {
+      console.group("🎓 COURSE PROGRESS LOG");
+      console.log("✅ Lesson done:", lessonId);
+      console.log("📚 Course ID:", courseId);
+      console.log("📖 Total lessons:", total);
+      console.log("📈 Completed:", done);
+      console.log("💾 LocalStorage key:", courseKey);
+      console.log("🧩 Learned lessons:", learnedLessons);
+      console.groupEnd();
+    }
+
+    // ================== ▶️ SỰ KIỆN GIAO DIỆN ==================
     startCourseBtn.addEventListener("click", e => {
       e.preventDefault();
       playVideoAtIndex(0);
@@ -100,51 +125,71 @@
       item.addEventListener("click", () => playVideoAtIndex(index));
     });
 
-    player.on("ended", () => {
+    // ================== 🎥 SỰ KIỆN KHI VIDEO KẾT THÚC ==================
+    player.on("ended", async () => {
       const currentItem = videoItems[currentIndex];
-      const currentUrl = currentItem.getAttribute("data-video");
       const lessonId = currentItem.getAttribute("data-lesson-id");
-      const courseId = currentItem.getAttribute("data-course-id");
-      console.log('lessonId: ' + lessonId)
-      console.log('courseId: ' + courseId)
 
-      if (!learnedVideos.includes(currentUrl)) {
-        learnedVideos.push(currentUrl);
-        localStorage.setItem(courseKey, JSON.stringify(learnedVideos));
+      console.group("📘 VIDEO ENDED EVENT");
+      console.log("Lesson ID:", lessonId);
+      console.log("Course ID:", courseId);
+      console.groupEnd();
+
+      // ✅ Cập nhật tiến trình theo LessonID
+      if (!learnedLessons.includes(lessonId)) {
+        learnedLessons.push(lessonId);
+        localStorage.setItem(courseKey, JSON.stringify(learnedLessons));
       }
 
-      fetch('/account/finish-lesson', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          lessonId: lessonId,
-          courseId: courseId
-        })
-      })
-        .then(response => {
-          if (!response.ok) {
-            console.error('Failed to finish lesson');
-            window.location.reload();
-            return;
-          }
-          console.log('Lesson finished successfully');
-          window.location.reload();
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          window.location.reload();
+      const totalLessons = videoItems.length;
+      const completedLessons = learnedLessons.length;
 
+      logProgress(lessonId, totalLessons, completedLessons);
+
+      try {
+        // Gửi API hoàn thành bài học
+        const resLesson = await fetch('/account/finish-lesson', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lessonId, courseId })
         });
 
-      if (currentIndex + 1 < videoItems.length) {
-        playVideoAtIndex(currentIndex + 1);
-      } else {
-        console.log("🎉 All videos completed!");
+        if (!resLesson.ok) throw new Error("❌ Failed to finish lesson");
+        console.log("✅ Lesson finished successfully");
+
+        // 🏁 Nếu học hết → đánh dấu DONE
+        if (completedLessons >= totalLessons) {
+          console.log("🎓 All lessons completed — marking course DONE");
+
+          const resCourse = await fetch('/account/finish-course', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ courseId })
+          });
+
+          if (resCourse.ok) {
+            console.log("✅ Course marked as DONE");
+            alert("🎉 Congratulations! You’ve completed this course!");
+          } else {
+            console.error("❌ Failed to mark course DONE");
+          }
+        }
+
+        // ▶️ Phát tiếp bài kế
+        if (currentIndex + 1 < videoItems.length) {
+          playVideoAtIndex(currentIndex + 1);
+        } else {
+          console.log("🎉 All videos completed!");
+        }
+
+        // 🔄 Reload để hiển thị icon check
+        setTimeout(() => window.location.reload(), 1500);
+
+      } catch (err) {
+        console.error("⚠️ Error:", err);
+        setTimeout(() => window.location.reload(), 1500);
       }
     });
-
   });
-
 </script>
+

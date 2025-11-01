@@ -170,6 +170,28 @@ export default {
         .where('e.UserID', UserId)
         .orderBy('e.enrolled_at', 'desc');
   },
+  // 🧮 Đếm tổng số khóa học mà user đã ghi danh
+    async countUserEnrollCourses(UserId) {
+      const result = await db('enrollments')
+        .where('UserID', UserId)
+        .count('CourseID as total')
+        .first();
+      return parseInt(result.total, 10) || 0;
+    },
+
+// 📄 Lấy danh sách khóa học theo phân trang (limit + offset)
+  async findUserEnrollCoursesPaging(UserId, limit, offset) {
+    return db('enrollments as e')
+      .join('courses as c', 'e.CourseID', 'c.CourseID')
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .select('c.*', 'ca.CatName', 's.SubCatName', 'e.enrolled_at')
+      .where('e.UserID', UserId)
+      .orderBy('e.enrolled_at', 'desc')
+      .limit(limit)
+      .offset(offset);
+  },
+
 
   //--- CÁC HÀM THỐNG KÊ CHO QUẢN LÝ GIẢNG VIÊN ---//
   // Hàm trợ giúp để tạo điều kiện WHERE

@@ -210,17 +210,35 @@ router.post('/change-password', async function (req, res) {
 
 
 
-router.get('/wishlist',async (req, res) => {
-  if (!req.session.isAuthenticated) return res.redirect("/account/signin");
+router.get('/wishlist', async (req, res, next) => {
+  if (!req.session.isAuthenticated) return res.redirect('/account/signin');
 
-  const userId = req.session.authUser.UserID;
-  const items = await accountModel.getByUser(userId);
+  try {
+    const userId = req.session.authUser.UserID;
 
-  res.render("account/wishlist", {
-    items,
-    empty: items.length === 0
-  });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 3; // Số khóa học mỗi trang
+    const offset = (page - 1) * limit;
+
+    // Đếm tổng số wishlist của user
+    const totalItems = await accountModel.countWishlistItems(userId);
+    const totalPages = Math.ceil(totalItems / limit);
+
+    // Lấy danh sách wishlist theo trang
+    const items = await accountModel.getWishlistPaging(userId, limit, offset);
+
+    res.render('account/wishlist', {
+      layout: 'main',
+      items,
+      empty: items.length === 0,
+      totalPages,
+      currentPage: page
+    });
+  } catch (err) {
+    next(err);
+  }
 });
+
 
 router.post("/wishlist/remove", async (req, res) => {
   const userId = req.session.authUser.UserID;

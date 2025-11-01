@@ -122,13 +122,35 @@ router.get('/enroll', async function (req, res) {
 });
 
 router.get('/courselist', async function (req, res, next) {
-   if (!req.session.isAuthenticated) return res.redirect('/account/signin');
-    try {
-        const UserId = req.session.authUser?.UserID;
-        const courses = await courseModel.finduserenrollcourses(UserId); // Đã join đủ
-        res.render('course/courselist', { layout: 'main', courses, hasCourses: courses.length > 0 });
-     } catch(err) { next(err); }
+  if (!req.session.isAuthenticated) return res.redirect('/account/signin');
+
+  try {
+    const UserId = req.session.authUser?.UserID;
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 3; // số khóa học mỗi trang
+    const offset = (page - 1) * limit;
+
+    // Đếm tổng số khóa học đã enroll
+    const totalCourses = await courseModel.countUserEnrollCourses(UserId);
+    const totalPages = Math.ceil(totalCourses / limit);
+
+    // Lấy danh sách theo phân trang
+    const courses = await courseModel.findUserEnrollCoursesPaging(UserId, limit, offset);
+
+    res.render('course/courselist', {
+      layout: 'main',
+      courses,
+      hasCourses: courses.length > 0,
+      totalPages,
+      currentPage: page,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
+
+
 
 // Trang tìm kiếm (GET /search) - Đã sửa
 router.get('/search', async (req, res, next) => {

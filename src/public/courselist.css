@@ -1,5 +1,20 @@
-h2 {
-    text-align: center;
-    margin-top: 20px;
-    color: gold;
+@import url('/wishlist.css');
+
+/* ================== COURSE STATUS ================== */
+.status {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 8px 0;
+  text-align: left;
+  letter-spacing: 0.5px;
+}
+
+.status.completed {
+  color: #00ff88;
+  text-shadow: 0 0 6px rgba(0, 255, 136, 0.6);
+}
+
+.status.in-progress {
+  color: #ffaa00;
+  text-shadow: 0 0 6px rgba(255, 200, 0, 0.4);
 }

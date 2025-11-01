@@ -1,3 +1,4 @@
+import e from 'express';
 import db from '../utils/db.js'
 
 export function findById(userId) {
@@ -119,4 +120,23 @@ export function findEnrolledStudentsByCourseId(courseId) {
       'e.enrolled_at' // Ngày đăng ký
     )
     .orderBy('e.enrolled_at', 'desc'); // Sắp xếp theo ngày đăng ký mới nhất
+}
+
+export async function countWishlistItems(UserID) {
+  const result = await db('watch_list')
+    .where('UserID', UserID)
+    .count('CourseID as total')
+    .first();
+  return parseInt(result.total, 10) || 0;
+}
+export function getWishlistPaging(UserID, limit, offset) {
+  return db('watch_list as w')
+    .join('courses as c', 'w.CourseID', 'c.CourseID') // ✅ chỉ join 1 lần
+    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+    .select('c.*', 'ca.CatName', 's.SubCatName', 'w.added_at')
+    .where('w.UserID', UserID)
+    .orderBy('w.added_at', 'desc')
+    .limit(limit)
+    .offset(offset);
 }

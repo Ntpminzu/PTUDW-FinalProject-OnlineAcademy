@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Rubik+Mono+One&family=Rye&family=Quintessential&display=swap');
 /*============================== Detail Course Page Styles (Scroll Fixed + Improved Related Courses) ==============================*/
 .CourseDetail {
   background-color: #0f0f0f;
@@ -99,30 +100,8 @@
   gap: 12px;
 }
 
-.CourseDetail .enroll-btn {
-  background-color: #2563eb;
-  color: #fff;
-  border: none;
-  padding: 14px 40px;
-  font-weight: 600;
-  font-size: 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
 
-.CourseDetail .enroll-btn:hover {
-  background-color: #1e4ed8;
-  box-shadow: 0 0 10px rgba(37, 99, 235, 0.6);
-}
 
-.CourseDetail .hero-title {
-  font-size: 28px;
-  font-weight: 700;
-  margin: 0;
-  color: #fff;
-}
 
 .CourseDetail .course-price {
   font-size: 20px;
@@ -145,37 +124,8 @@
   margin-left: 8px;
 }
 
-.CourseDetail .secondary-btn {
-  background-color: #444;
-  color: #fff;
-  border: none;
-  padding: 10px 28px;
-  font-weight: 600;
-  font-size: 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background 0.3s ease;
-}
 
-.CourseDetail .secondary-btn:hover {
-  background-color: #555;
-}
 
-.CourseDetail .wishlist-btn {
-  background-color: transparent;
-  color: #fff;
-  border: 1px solid #fff;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease, border-color 0.3s ease;
-}
-
-.CourseDetail .wishlist-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: #ccc;
-}
 
 .CourseDetail .wishlist-btn i {
   font-size: 16px;
@@ -213,8 +163,9 @@
 }
 
 .CourseDetail .course-details-card .card-title {
-  font-size: 22px;
+  font-size: 32px;
   font-weight: 700;
+  
   color: #fff;
   margin-bottom: 15px;
 }
@@ -235,25 +186,7 @@
   color: #fff;
 }
 
-.CourseDetail .course-details-card .enroll-btn {
-  background: linear-gradient(90deg, #2563eb, #22c55e);
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-weight: 600;
-  font-size: 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: opacity 0.3s ease;
-}
 
-.CourseDetail .course-details-card .enroll-btn:hover {
-  opacity: 0.85;
-}
 
 .CourseDetail .course-details-card .card-footer {
   background-color: #222;
@@ -269,7 +202,7 @@
 }
 
 .CourseDetail .course-outline h3 {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 600;
   margin-bottom: 15px;
 }
@@ -301,7 +234,7 @@
 }
 
 .CourseDetail .outline-list span {
-  font-size: 16px;
+  font-size: 24px;
   font-weight: 600;
   color: #fff;
 }
@@ -312,21 +245,7 @@
   margin: 0;
 }
 
-.CourseDetail .preview-btn {
-  display: inline-block;
-  background-color: #22c55e;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 600;
-  transition: background 0.3s;
-}
 
-.CourseDetail .preview-btn:hover {
-  background-color: #16a34a;
-}
 
 /*============================== Related Courses (Horizontal Scroll like Netflix) ==============================*/
 .CourseDetail .related-courses {
@@ -340,6 +259,7 @@
 .CourseDetail .related-courses h2 {
   font-size: 26px;
   font-weight: 700;
+  text-transform: uppercase !important;
   margin-bottom: 35px;
   color: #fff;
   text-align: center;
@@ -351,7 +271,7 @@
   display: block;
   width: 80px;
   height: 3px;
-  background: linear-gradient(to right, #2563eb, #22c55e);
+  background: linear-gradient(to right, #2ecc71, #00ffcc, #27ae60, #2ecc71);
   margin: 10px auto 0;
   border-radius: 3px;
 }
@@ -455,24 +375,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px; /* thêm khoảng cách nhỏ giữa 2 phần */
   font-size: 14px;
   color: #ccc;
   margin-bottom: 10px;
+  white-space: nowrap; /* ❗ngăn xuống dòng */
 }
 
 .CourseDetail .course-rating {
   color: #ffcc00;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 3px; /* icon và số không dính liền */
 }
 
 .CourseDetail .course-rating i {
-  margin-left: 3px;
   font-size: 12px;
 }
 
 .CourseDetail .course-enrollment {
   font-size: 13px;
   color: #aaa;
+  flex-shrink: 0; /* giữ nguyên, không bị co nếu thẻ quá hẹp */
 }
 
 .CourseDetail .course-price {
@@ -489,22 +414,6 @@
   margin-left: 8px;
 }
 
-.CourseDetail .course-btn {
-  display: block;
-  text-align: center;
-  background: linear-gradient(90deg, #2563eb, #22c55e);
-  color: #fff;
-  padding: 10px 0;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: opacity 0.3s ease;
-}
-
-.CourseDetail .course-btn:hover {
-  opacity: 0.85;
-}
 
 /*============================== Feedback & Comment ==============================*/
 .CourseDetail .feedback-section {
@@ -520,7 +429,8 @@
    border-top: 1px solid #222;
 }
 .comment-form-section h2 {
-   font-size: 1.8rem;
+  text-transform: uppercase !important;
+   font-size: 26px;
   color: white;
   text-align: center;
   margin-bottom: 30px;
@@ -531,7 +441,7 @@
   display: block;
   width: 80px;
   height: 3px;
-  background: linear-gradient(to right, #2563eb, #22c55e);
+   background: linear-gradient(to right, #2ecc71, #00ffcc, #27ae60, #2ecc71);;
   margin: 10px auto 0;
   border-radius: 3px;
 }
@@ -636,27 +546,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.preview-btn {
-  background-color: #28a745;
-  color: black;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-top: 10px;
-}
-
-.preview-btn:hover {
-  background-color: #218838;
-}
-
-.preview-btn:hover {
-  background-color: #218838;
-}
-
-.preview-btn:hover {
-  background-color: #218838;
-}
 
 .button-container {
   display: flex;
@@ -669,60 +558,15 @@
   /* Align items vertically in the center */
 }
 
-.start-btn {
-  display: inline-flex;
-  /* Ensure the link is treated as a flex container */
-  align-items: center;
-  /* Vertically center the icon and text */
-  padding: 10px 20px;
-  /* Add some padding for a larger clickable area */
-  font-size: 16px;
-  /* Font size for text */
-  text-transform: uppercase;
-  /* Optional: Capitalize text */
-  border-radius: 5px;
-  /* Rounded corners for buttons */
-  text-decoration: none;
-  /* Remove underline from links */
-  background-color: #007bff;
-  /* Button background color */
-  color: white;
-  /* Text color */
-  transition: background-color 0.3s;
-  /* Smooth transition for hover */
-}
 
-.start-btn:hover {
-  background-color: #0056b3;
-  /* Darken button on hover */
-}
+
+
 
 .wishlist-btn i,
 .cart-btn i {
   margin-right: 8px;
   /* Add space between the icon and text */
 }
-
-.wishlist-btn {
-  background-color: #ff8c00;
-  /* Orange background for wishlist */
-}
-
-.wishlist-btn:hover {
-  background-color: #e07b00;
-  /* Darker orange on hover */
-}
-
-.cart-btn {
-  background-color: #28a745;
-  /* Green background for cart */
-}
-
-.cart-btn:hover {
-  background-color: #218838;
-  /* Darker green on hover */
-}
-
 
 /* FEEDBACK */
 /* General styles for the section */
@@ -737,7 +581,8 @@
 }
 /* Heading style */
 .feedback-section h2 {
-  font-size: 1.8rem;
+  font-size: 26px;
+  text-transform: uppercase !important;
   color: white;
   text-align: center;
   margin-bottom: 30px;
@@ -748,7 +593,7 @@
   display: block;
   width: 80px;
   height: 3px;
-  background: linear-gradient(to right, #2563eb, #22c55e);
+  background: linear-gradient(to right, #2ecc71, #00ffcc, #27ae60, #2ecc71);;
   margin: 10px auto 0;
   border-radius: 3px;
 }
@@ -797,4 +642,113 @@
   margin-top: 10px;
   text-align: right;
   font-style: italic;
+}
+/*============================== Magic Button (Universal Style) ==============================*/
+.magic-btn {
+  position: relative;
+  display: inline-block;
+  padding: 10px 26px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Rubik', sans-serif;
+  color: #000;
+  background: linear-gradient(45deg, #39ff14, #32cd32);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  text-decoration: none;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.magic-btn:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 20px rgba(0, 255, 128, 0.8);
+}
+
+/* ✨ Shimmer (ánh sáng chạy qua) */
+.magic-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  animation: shimmer 1.6s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -75%;
+  }
+  50% {
+    left: 125%;
+  }
+  100% {
+    left: 125%;
+  }
+}
+/*============================== Magic Button Variants (Preserve Original Sizes) ==============================*/
+
+/* --- Enroll Button (big, primary) --- */
+.magic-btn.enroll {
+  padding: 14px 40px;
+  font-size: 16px;
+  width: 100%;
+  border-radius: 8px;
+  color: #000000;
+}
+
+/* --- Secondary Button (gray small) --- */
+.magic-btn.secondary {
+  
+  color: #000000;
+  padding: 10px 28px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+/* --- Wishlist Button (outlined small) --- */
+.magic-btn.wishlist {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.magic-btn.wishlist:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ccc;
+}
+
+/* --- Course Button (in cards) --- */
+.magic-btn.course {
+  display: block;
+  color: #000000;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 15px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+/* --- Start Button (hero or learning start) --- */
+.magic-btn.start {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  text-transform: uppercase;
 }

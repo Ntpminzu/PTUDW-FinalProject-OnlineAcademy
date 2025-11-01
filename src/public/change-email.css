@@ -1,0 +1,140 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #031a09;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.change-container {
+  background: #082a0f;
+  width: 480px;
+  padding: 40px 50px;
+  border-radius: 18px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.change-header {
+  background: #154b1e;
+  padding: 12px 0;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  color: #ffeb3b;
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 8px rgba(255, 235, 59, 0.3);
+}
+
+.msg {
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.msg.error {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff6b6b;
+}
+
+.msg.success {
+  background: rgba(0, 255, 127, 0.15);
+  color: #8ef77d;
+}
+
+.input-group {
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-weight: 600;
+  color: #c7f9cc;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  background: #fff;
+  color: #000;
+}
+
+.btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn {
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: 0.25s;
+}
+
+.btn.cancel {
+  background: #1f1f1f;
+  color: #ccc;
+}
+
+.btn.cancel:hover {
+  background: #333;
+  color: #fff;
+}
+
+.btn.primary {
+  background: #007bff;
+  color: #fff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.6);
+  animation: glowPulse 1.8s infinite alternate;
+}
+
+@keyframes glowPulse {
+  from { box-shadow: 0 0 6px rgba(0, 123, 255, 0.6); }
+  to { box-shadow: 0 0 16px rgba(0, 123, 255, 0.9); }
+}
+
+.btn.primary:hover {
+  background: #1d8eff;
+}
+
+.note {
+  margin-top: 15px;
+  color: #d4f1d0;
+  font-size: 0.95rem;
+}
+
+footer {
+  margin-top: 25px;
+  font-size: 0.9rem;
+  color: #ccc;
+  font-style: italic;
+}

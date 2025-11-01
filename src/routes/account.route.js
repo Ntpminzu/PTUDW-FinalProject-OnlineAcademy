@@ -147,17 +147,16 @@ router.get('/profile',async (req, res) => {
 });
 
 router.post("/profile", async (req, res) => {
-  if (!req.session.auth) return res.redirect("/login");
-
+  if (!req.session.isAuthenticated) return res.redirect("/account/signin");
   const userId = req.session.authUser.UserID;
-  const { Fullname, Email, Permission } = req.body;
+  const { Fullname } = req.body;
 
-  await accountModel.update(userId, {
-    Fullname, Email, Permission
-  });
+  await accountModel.update(userId, { Fullname });
+  req.session.authUser.Fullname = Fullname; // cập nhật trong session
 
-  res.redirect("/profile");
+  res.redirect("/account/profile");
 });
+
 
 router.post('/signout', (req, res) => {
   req.session.isAuthenticated = false;
@@ -275,6 +274,59 @@ router.post("/finish-lesson", async (req, res) => {
   await accountModel.finishLesson(userId, lessonId);
   res.redirect(`/course/enroll?id=` + courseId);
 });
+
+router.get('/change-email', (req, res) => {
+  if (!req.session.isAuthenticated) return res.redirect('/account/signin');
+  res.render('account/change-email', { showOtp: false });
+});
+
+router.post('/change-email', async (req, res) => {
+  const { newEmail } = req.body;
+  if (!req.session.isAuthenticated)
+    return res.redirect('/account/signin');
+
+  if (!newEmail)
+    return res.render('account/change-email', { error: 'Vui lòng nhập email mới.', showOtp: false });
+
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  req.session.changeEmailOtp = otp;
+  req.session.changeEmailNew = newEmail;
+  req.session.changeEmailAt = Date.now();
+
+  await sendOTP(newEmail, otp);
+  console.log(`📩 OTP gửi đến ${newEmail}: ${otp}`);
+
+  res.render('account/change-email', { showOtp: true, newEmail });
+});
+
+router.post('/verify-change-email', async (req, res) => {
+  if (!req.session.isAuthenticated) return res.redirect('/account/signin');
+
+  const { otp } = req.body;
+  const userId = req.session.authUser.UserID;
+  const storedOtp = req.session.changeEmailOtp;
+  const otpAt = req.session.changeEmailAt;
+  const newEmail = req.session.changeEmailNew;
+
+  if (!storedOtp || !newEmail)
+    return res.render('account/change-email', { error: 'Không tìm thấy phiên xác thực.', showOtp: false });
+
+  if (Date.now() - otpAt > 5 * 60 * 1000)
+    return res.render('account/change-email', { error: 'OTP đã hết hạn.', showOtp: false });
+
+  if (String(otp) !== String(storedOtp))
+    return res.render('account/change-email', { error: 'OTP không đúng.', showOtp: true, newEmail });
+
+  await accountModel.update(userId, { Email: newEmail });
+  req.session.authUser.Email = newEmail;
+
+  req.session.changeEmailOtp = null;
+  req.session.changeEmailNew = null;
+  req.session.changeEmailAt = null;
+
+  res.render('account/change-email', { success: '✅ Đổi email thành công!', showOtp: false });
+});
+
 
 export default router;
 

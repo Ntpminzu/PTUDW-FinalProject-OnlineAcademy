@@ -313,18 +313,23 @@ export default {
   //--- HẾT CÁC HÀM THỐNG KÊ CHO QUẢN LÝ GIẢNG VIÊN ---//
 
   // Các hàm khác
-  findById(courseId) {
-    return db('courses')
-      .leftJoin('users', 'courses.UserID', '=', 'users.UserID')
-      .leftJoin('categories', 'courses.SubCatID', '=', 'categories.CatID')
-      .where('courses.CourseID', courseId)
-      .select(
-        'courses.*',
-        'users.Fullname as InstructorName',
-        'categories.CatName as CategoryName'
-      )
-      .first();
-  },
+ findById(courseId) {
+  if (!courseId || courseId.trim() === '') {
+    console.warn('[findById] ⚠️ CourseID is missing or empty');
+    return null; // hoặc throw new Error('Invalid CourseID');
+  }
+
+  return db('courses')
+    .leftJoin('users', 'courses.UserID', '=', 'users.UserID')
+    .leftJoin('categories', 'courses.SubCatID', '=', 'categories.CatID')
+    .where('courses.CourseID', courseId)
+    .select(
+      'courses.*',
+      'users.Fullname as InstructorName',
+      'categories.CatName as CategoryName'
+    )
+    .first();
+},
   checkIfInWishlist(userId, courseId) {
     return db('watch_list')
       .where('UserID', userId)

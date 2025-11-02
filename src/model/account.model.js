@@ -140,3 +140,47 @@ export function getWishlistPaging(UserID, limit, offset) {
     .limit(limit)
     .offset(offset);
 }
+// ✅ Đánh dấu khóa học đã DONE
+export async function finishCourse(userId, courseId) {
+  const existing = await db('enrollments')
+    .where('UserID', userId)
+    .andWhere('CourseID', courseId)
+    .first();
+
+  if (existing) {
+    // Nếu user đã đăng ký, chỉ cần update trạng thái
+    return db('enrollments')
+      .where('UserID', userId)
+      .andWhere('CourseID', courseId)
+      .update({
+        LearnStatus: 'DONE',
+      });
+  } else {
+    // Nếu user chưa có record trong enrollments, insert mới
+    return db('enrollments').insert({
+      UserID: userId,
+      CourseID: courseId,
+      LearnStatus: 'DONE',
+      enrolled_at: db.fn.now(),
+    });
+  }
+}
+// ✅ Lấy danh sách khóa học đã hoàn thành (LearnStatus = 'DONE')
+export function getCompletedCoursesByUserId(userId) {
+  return db('enrollments as e')
+    .join('courses as c', 'e.CourseID', '=', 'c.CourseID')
+    .join('users as u', 'c.UserID', '=', 'u.UserID') // giảng viên
+    .where('e.UserID', userId)
+    .andWhere('e.LearnStatus', 'DONE')
+    .select(
+      'c.CourseID',
+      'c.CourseName',
+      'c.ImageUrl',
+      'c.CurrentPrice',
+      'c.Rating',
+      'u.Fullname as InstructorName',
+      'e.enrolled_at',
+      'e.completed_at'
+    )
+    .orderBy('e.completed_at', 'desc');
+}

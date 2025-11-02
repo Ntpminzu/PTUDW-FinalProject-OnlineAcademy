@@ -21,7 +21,7 @@
                     action="/management/course/{{course.CourseID}}/lessons/{{#if isEditing}}{{lesson.LessonID}}/update{{else}}add{{/if}}"
                     method="POST">
 
-                    <div class="form-row">
+                    <div class="form-row full">
                         <div class="form-group">
                             <label class="form-label" for="LessonName">Lesson name *</label>
                             {{!-- Lấy giá trị từ lesson nếu đang sửa, hoặc từ formData nếu có lỗi --}}
@@ -30,10 +30,14 @@
                                 required />
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="VideoUrl">Video URL *</label>
-                            <input type="url" class="form-input" id="VideoUrl" name="VideoUrl"
+                            <label class="form-label" for="VideoUrlInput">Video URL *</label>
+                            {{!-- THÊM ID VÀO INPUT --}}
+                            <input type="url" class="form-input" id="VideoUrlInput" name="VideoUrl"
                                 value="{{#if lesson}}{{lesson.VideoUrl}}{{else}}{{formData.VideoUrl}}{{/if}}"
                                 placeholder="https://..." required />
+
+                            {{!-- THÊM DIV CHO UPPY --}}
+                            <div id="uppy-video" style="margin-top: 15px;"></div>
                         </div>
                     </div>
 

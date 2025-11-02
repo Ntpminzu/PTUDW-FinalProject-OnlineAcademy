@@ -18,6 +18,8 @@
   <!-- TinyMCE -->
   <script src="https://cdn.tiny.cloud/1/kars04ab2ueugpophlra5df3y4wx19okwc1dey6chtnkdw36/tinymce/7/tinymce.min.js"
     referrerpolicy="origin" crossorigin="anonymous"></script>
+  <!-- Uppy -->
+  <link href="https://releases.transloadit.com/uppy/v5.1.8/uppy.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -30,7 +32,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
-  {{! ----- THAY THẾ TOÀN BỘ KHỐI SCRIPT Ở CUỐI FILE main.hbs BẰNG CODE NÀY ----- }}
+
+  <script src="https://releases.transloadit.com/uppy/v3.23.0/uppy.min.js"></script>
   <script>
     // Biến toàn cục để theo dõi khởi tạo TinyMCE cho tab "Add"
     let isTinyMCEInitialized = false;
@@ -143,6 +146,69 @@
           }
         }
       }
+
+      // Hàm trợ giúp khởi tạo Uppy
+      function initUppy(containerId, inputId, allowedFileTypes, note) {
+        const uppyContainer = document.getElementById(containerId);
+        const targetInput = document.getElementById(inputId);
+
+        // Chỉ khởi tạo nếu cả 2 phần tử tồn tại trên trang
+        if (uppyContainer && targetInput && typeof Uppy !== 'undefined') {
+          // Lấy Uppy từ window (vì dùng UMD build)
+          const { Uppy, Dashboard, XHRUpload } = window.Uppy;
+
+          const uppy = new Uppy({
+            autoProceed: true, // Tự động upload
+            restrictions: {
+              maxNumberOfFiles: 1,
+              allowedFileTypes: allowedFileTypes // ['image/*'] hoặc ['video/*']
+            }
+          });
+
+          uppy.use(Dashboard, {
+            target: uppyContainer,
+            inline: true,
+            height: 250,
+            width: '100%',
+            note: note,
+            proudlyDisplayPoweredByUppy: false,
+            showProgressDetails: true
+          });
+
+          uppy.use(XHRUpload, {
+            endpoint: '/management/upload', // Route backend chúng ta đã tạo
+            fieldName: 'file', // Phải khớp với upload.single('file')
+            // headers: { 'X-CSRF-Token': '...' } // Thêm nếu cần CSRF
+          });
+
+          // Khi upload thành công
+          uppy.on('upload-success', (file, response) => {
+            if (response.body.uploadURL) {
+              // Gán đường dẫn URL trả về từ server vào input
+              targetInput.value = response.body.uploadURL;
+              console.log('Upload thành công:', response.body.uploadURL);
+            }
+          });
+
+          uppy.on('complete', (result) => {
+            console.log('Upload complete! Files:', result.successful);
+          });
+
+          uppy.on('error', (error) => {
+            console.error('Lỗi Uppy:', error);
+          });
+        }
+      }
+
+      // Khởi tạo Uppy cho Image (trên trang Add Course)
+      initUppy('uppy-image-add', 'ImageUrlInput_Add', ['image/*'], 'Chỉ upload 1 ảnh (JPG, PNG, WEBP...)');
+
+      // Khởi tạo Uppy cho Image (trên trang Edit Course)
+      initUppy('uppy-image-edit', 'ImageUrlInput_Edit', ['image/*'], 'Chỉ upload 1 ảnh (JPG, PNG, WEBP...)');
+
+      // Khởi tạo Uppy cho Video (trên trang Lesson Form)
+      initUppy('uppy-video', 'VideoUrlInput', ['video/*', 'audio/*'], 'Upload 1 file video (MP4, WEBM...) hoặc audio (MP3...)');
+
     });
   </script>
 </body>

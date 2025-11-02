@@ -292,6 +292,54 @@ router.post("/finish-lesson", async (req, res) => {
   await accountModel.finishLesson(userId, lessonId);
   res.redirect(`/course/enroll?id=` + courseId);
 });
+// ======================= [POST] /account/finish-course =======================
+router.post("/finish-course", async (req, res) => {
+  try {
+    const { courseId } = req.body;
+    const userId = req.session?.authUser?.UserID;
+
+    console.log("[finish-course] courseId =", courseId, "| userId =", userId);
+
+    if (!userId) {
+      console.warn("[finish-course] ❌ userId missing");
+      return res.status(401).json({ error: "Unauthorized: user not logged in" });
+    }
+
+    if (!courseId || String(courseId).trim() === "") {
+      console.warn("[finish-course] ⚠️ courseId is missing or empty");
+      return res.status(400).json({ error: "Missing courseId" });
+    }
+
+    await accountModel.finishCourse(userId, courseId);
+
+    console.log(`[finish-course] ✅ User ${userId} finished course ${courseId}`);
+    return res.status(200).json({ message: "Course marked as DONE successfully" });
+  } catch (error) {
+    console.error("Error finishing course:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+// ======================= [GET] /account/completed-courses =======================
+router.get("/completed-courses", async (req, res) => {
+  try {
+    const userId = req.session?.authUser?.UserID;
+
+    if (!userId) {
+      console.warn("[completed-courses] ❌ userId missing");
+      return res.status(401).json({ error: "Unauthorized: user not logged in" });
+    }
+
+    const courses = await accountModel.getCompletedCoursesByUserId(userId);
+
+    console.log(`[completed-courses] ✅ Found ${courses.length} courses for user ${userId}`);
+    return res.status(200).json(courses);
+  } catch (error) {
+    console.error("Error fetching completed courses:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 router.get('/change-email', (req, res) => {
   if (!req.session.isAuthenticated) return res.redirect('/account/signin');

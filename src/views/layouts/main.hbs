@@ -147,6 +147,17 @@
         }
       }
 
+      document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', () => {
+          // Kiểm tra xem tinymce đã được tải và khởi tạo chưa
+          if (typeof tinymce !== 'undefined') {
+            // Bắt buộc tinymce lưu tất cả dữ liệu
+            // từ trình soạn thảo về lại các <textarea> ẩn
+            tinymce.triggerSave();
+          }
+        });
+      });
+
       // Hàm trợ giúp khởi tạo Uppy
       function initUppy(containerId, inputId, allowedFileTypes, note) {
         const uppyContainer = document.getElementById(containerId);

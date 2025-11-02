@@ -19,7 +19,7 @@
                 {{!-- Form POST đến route add hoặc update --}}
                 <form
                     action="/management/course/{{course.CourseID}}/lessons/{{#if isEditing}}{{lesson.LessonID}}/update{{else}}add{{/if}}"
-                    method="POST">
+                    method="POST" novalidate>
 
                     <div class="form-row full">
                         <div class="form-group">

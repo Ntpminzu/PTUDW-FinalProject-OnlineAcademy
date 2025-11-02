@@ -16,7 +16,7 @@
 
             <div class="form-container" style="max-width: 900px; margin: 0 auto;">
                 {{#with course}} {{!-- Sử dụng dữ liệu 'course' được truyền từ route GET --}}
-                <form action="/management/course/update" method="POST">
+                <form action="/management/course/update" method="POST" novalidate>
                     {{!-- Hidden input để gửi CourseID khi submit --}}
                     <input type="hidden" name="CourseID" value="{{CourseID}}" />
 

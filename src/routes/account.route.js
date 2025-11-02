@@ -85,11 +85,24 @@ router.post('/signin', async (req, res) => {
     const user = await accountModel.findByUsername(username);
 
     if (!user)
-      return res.render('account/signin', { error: 'Sai tên đăng nhập hoặc mật khẩu.', showOtp: false });
+      return res.render('account/signin', {
+        error: 'Sai tên đăng nhập hoặc mật khẩu.',
+        showOtp: false
+      });
+
+    if (user.Lock === true || user.Lock === 1) {
+      return res.render('Admin/user/AddLock', {
+        layout: false, 
+        user
+      });
+    }
 
     const match = bcrypt.compareSync(password, user.Password);
     if (!match)
-      return res.render('account/signin', { error: 'Sai tên đăng nhập hoặc mật khẩu.', showOtp: false });
+      return res.render('account/signin', {
+        error: 'Sai tên đăng nhập hoặc mật khẩu.',
+        showOtp: false
+      });
 
     const otp = Math.floor(100000 + Math.random() * 900000);
     req.session.signinUser = user;
@@ -99,12 +112,20 @@ router.post('/signin', async (req, res) => {
     await sendOTP(user.Email, otp);
     console.log(`📩 Signin OTP sent to ${user.Email}: ${otp}`);
 
-    res.render('account/signin', { showOtp: true, email: user.Email, username });
+    res.render('account/signin', {
+      showOtp: true,
+      email: user.Email,
+      username
+    });
   } catch (error) {
     console.error(error);
-    res.render('account/signin', { error: 'Server error.', showOtp: false });
+    res.render('account/signin', {
+      error: 'Server error.',
+      showOtp: false
+    });
   }
 });
+
 
 router.post('/verify-signin-otp', async (req, res) => {
   try {

@@ -15,7 +15,6 @@
   <div class="msg success">{{success}}</div>
   {{/if}}
 
-  {{#unless showOtp}}
   <form action="/account/change-email" method="post">
     <div class="input-group">
       <label for="newEmail">New Email</label>
@@ -23,24 +22,9 @@
     </div>
     <div class="btn-row">
       <a href="/account/profile" class="btn cancel">← Cancel</a>
-      <button type="submit" class="btn primary">📨 Send Verification Code</button>
+      <button type="submit" class="btn primary">💾 Save Changes</button>
     </div>
   </form>
-  {{/unless}}
-
-  {{#if showOtp}}
-  <form action="/account/verify-change-email" method="post">
-    <div class="input-group">
-      <label for="otp">OTP Code</label>
-      <input type="text" id="otp" name="otp" placeholder="Enter 6-digit code" required>
-    </div>
-    <div class="btn-row">
-      <a href="/account/profile" class="btn cancel">← Cancel</a>
-      <button type="submit" class="btn primary">✔ Confirm Email</button>
-    </div>
-  </form>
-  <p class="note">📩 OTP sent to: <b>{{newEmail}}</b></p>
-  {{/if}}
 
   <footer>Hogwarts Academy • 2025</footer>
 </div>

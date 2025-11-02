@@ -2,17 +2,48 @@
 <link rel="stylesheet" href="/Adminn.css">
 {{/section}}
 
-<form class="adminpage" >
+<form class="adminpage">
     <div class="adminpage">
         <h3>Admin</h3>
         <div class="form-actions">
             <button type="button" class="btn" onclick="window.location.href='/admin/user/list'">
-                <i class="bi bi-x-circle"></i> User Manage
+                <i class="bi bi-people-fill"></i> User Manage
+            </button>
+            <button type="button" class="btn" onclick="window.location.href='/admin/category/list'">
+                <i class="bi bi-tag-fill"></i> Category Manage
+            </button>
+            <br>
+            <button type="button" class="minibtn" id="btnInstructor">
+                Instructor Manage
             </button>
 
-            <button type="button" class="btn" onclick="window.location.href='/admin/category/list'">
-                <i class="bi bi-check-circle"></i> Category Manage
+            <button type="button" class="minibtn" onclick="window.location.href='/admin/subcat/byCat?id=all'">
+                Sub Category Manage
             </button>
+            <br>
+            <button type="button" class="minibtn" id="btnStudent">
+                Student Manage
+            </button>
+            <button type="button" class="minibtn"
+                onclick="window.location.href='/admin/course/byCat?id=all&bySubCat=all'">
+                Course Manage
+            </button>
+            <script>
+                const roleBtns = {
+                    btnInstructor: "1", // Instructor
+                    btnStudent: "2"     // Student
+                };
+
+                Object.entries(roleBtns).forEach(([id, role]) => {
+                    const btn = document.getElementById(id);
+                    if (btn) {
+                        btn.addEventListener("click", () => {
+                            localStorage.setItem("presetRole", role);
+                            window.location.href = "/admin/user/list";
+                        });
+                    }
+                });
+            </script>
         </div>
 
     </div>

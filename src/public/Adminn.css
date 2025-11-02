@@ -5,6 +5,9 @@ body {
     color: #AAAAAA;
     font-family: 'Quintessential', cursive;
 }
+p {
+    font-size:30px;
+}
 
 .user-container {
     background-color: #001403;
@@ -47,7 +50,6 @@ body {
 
 .search-box {
 
-    display: flex;
     align-items: center;
     background: #fff;
     border: 1px solid #ccc;
@@ -286,40 +288,43 @@ button.actions:hover {
 }
 
 .dropdown {
-  position: relative; /* 👈 cần dòng này để menu định vị đúng chỗ */
-  display: inline-block;
+    position: relative;
+    /* 👈 cần dòng này để menu định vị đúng chỗ */
+    display: inline-block;
 }
 
 .dropdown-menu {
-  display: none;
-  position: absolute;
-  top: 100%; /* 👈 cho nó bung ngay dưới nút */
-  left: 0;
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  list-style: none;
-  padding: 6px 0;
-  margin-top: 5px;
-  z-index: 9999; /* 👈 tăng z-index để nổi lên trên */
-  width: 150px;
+    display: none;
+    position: absolute;
+    top: 100%;
+    /* 👈 cho nó bung ngay dưới nút */
+    left: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgb(255, 255, 255);
+    list-style: none;
+    padding: 6px 0;
+    margin-top: 5px;
+    z-index: 9999;
+    /* 👈 tăng z-index để nổi lên trên */
+    width: 150px;
 }
 
 .dropdown-menu.show {
-  display: block;
+    display: block;
 }
 
 .dropdown-menu li {
-  padding: 8px 14px;
-  cursor: pointer;
-  color: #222;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+    padding: 8px 14px;
+    cursor: pointer;
+    color: #ffffff;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
 }
 
 .dropdown-menu li:hover {
-  background-color: #e3f2fd;
+    background-color: #e3f2fd;
 }
 
 /* ==================== EDIT USER FORM ==================== */
@@ -513,53 +518,54 @@ button.actions:hover {
     /* không cho resize */
 
 }
+
 /* ------------------- PAGINATION STYLE ------------------- */
 .pagination {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 20px;
-  list-style: none !important;
-  padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+    list-style: none !important;
+    padding: 0;
 }
 
 .pagination .page-item {
-  transition: all 0.25s ease;
+    transition: all 0.25s ease;
 }
 
 .pagination .page-link {
-  border: none;
-  border-radius: 10px;
-  padding: 8px 14px;
-  background-color: #f3f4f6;
-  color: #333;
-  font-weight: 500;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    background-color: #f3f4f6;
+    color: #333;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .pagination .page-link:hover {
-  background-color: #007bff;
-  color: #fff;
-  transform: translateY(-1px);
+    background-color: #007bff;
+    color: #fff;
+    transform: translateY(-1px);
 }
 
 .pagination .page-item.active .page-link {
-  background-color: #0d6efd;
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background-color: #0d6efd;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .pagination .page-item.disabled .page-link {
-  background-color: #e9ecef;
-  color: #999;
-  cursor: not-allowed;
-  box-shadow: none;
+    background-color: #e9ecef;
+    color: #999;
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 .pagination .page-link:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(13,110,253,0.25);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
 }
 
 /*=====================Page====================*/
@@ -571,11 +577,14 @@ button.actions:hover {
     color: #AAAAAA;
     padding: 40px;
     max-width: 1500px;
+    text-align: center;
+
     margin: 40px auto;
     font-family: 'Quintessential', cursive;
     font-size: 30px;
     animation: fadeIn 0.6s ease-in-out;
 }
+
 .adminpage h3 {
     font-family: 'Rubik Mono One', sans-serif;
     color: #FFF35B;
@@ -584,10 +593,20 @@ button.actions:hover {
     text-align: center;
     letter-spacing: 1px;
 }
+
 .adminpage .btn {
     background-color: #FFF35B;
     border: 1px solid #1A472A;
     color: #000;
+}
+
+.adminpage .minibtn {
+    background-color: #FFF35B;
+    border: 1px solid #1A472A;
+    color: #000;
+    width: 300px;
+    font-size: 15;
+    margin-right: 50px; margin-left: 50px
 }
 
 .adminpage .btn:hover {
@@ -597,8 +616,8 @@ button.actions:hover {
 }
 
 .adminpage button:focus {
-  outline: none;
-  box-shadow: 0 0 10px rgba(255, 243, 91, 0.6);
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 243, 91, 0.6);
 }
 
 
@@ -612,4 +631,5 @@ button.actions:hover {
     padding: 10px 18px;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-bottom: 10px;
 }

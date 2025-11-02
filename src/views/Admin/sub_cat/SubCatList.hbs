@@ -17,7 +17,10 @@
 {{/section}}
 
 <div class="user-container">
-    <h2>Sub Category in > {{CatName}}</h2>
+    <a href={{back}}>
+        <button class="btn-add"><i class="bi bi-arrow-left-circle"></i></button>
+    </a>
+    <h2>Sub Category Manage </h2>
 
     <div class="toolbar">
         <div class="filters">
@@ -25,6 +28,23 @@
                 <i class="bi bi-search"></i>
                 <input type="text" placeholder="Search">
             </div>
+            <div class="dropdown">
+                <button class="btn-filter" id="roleDropdownBtn">
+                    <i class="bi bi-tag-fill"></i> {{CatName}}
+                    <i class="bi bi-caret-down-fill"></i>
+                </button>
+                <ul class="dropdown-menu" id="roleDropdownMenu">
+                    <li>
+                        <a href="/admin/subcat/byCat?id=all">All</a>
+                    </li>
+                    {{#each cats}}
+                    <li>
+                        <a href="/admin/subcat/byCat?id={{this.CatID}}">{{this.CatName}}</a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+
         </div>
         <a href="/admin/subcat/add/byCat?id={{CatID}}">
             <button class="btn-add"><i class="bi bi-plus-circle"></i> Add Sub-Category</button>
@@ -72,6 +92,10 @@
                             <button type="submit" class="actions" onclick="return confirm('Delete {{SubCatName}}?')">
                                 <i class="bi bi-trash" data-tooltip="Delete"></i>
                             </button>
+                            <a href="/admin/course/byCat?id={{CatID}}&bySubCat={{SubCatID}}" class="actions">
+                                <i class="bi bi-eye" data-tooltip="View Detail"></i>
+                            </a>
+
                         </form>
                     </td>
                 </tr>

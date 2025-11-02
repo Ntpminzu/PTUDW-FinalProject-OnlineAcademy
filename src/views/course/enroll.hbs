@@ -4,7 +4,6 @@
 {{/section}}
 
 <div class="course-page container mt-4">
-  <!-- Course Header -->
   <div class="card course-header">
     <h5 class="card-header">
       <i class="bi bi-book-half"></i> Course Details
@@ -25,7 +24,7 @@
     <h5>Course Modules</h5>
     <ul class="list-group" id="videoList">
       {{#each lessons}}
-      <li class="list-group-item video-item" data-video="{{this.VideoUrl}}" data-lesson-id="{{this.LessonID}}"
+      <li class="list-group-item video-item" data-video="/LessonVid/{{this.VideoUrl}}" data-lesson-id="{{this.LessonID}}"
         data-course-id="{{../course.CourseID}}">
         <i class="bi bi-play-circle"></i>
         {{this.LessonName}}
@@ -37,12 +36,13 @@
     </ul>
   </div>
 
- <div class="video-player mt-4" id="videoSection" style="visibility: hidden; height: 0;">
-  <h5>Now Playing: <span id="videoTitle"></span></h5>
-  <div id="playerContainer">
-    <div class="plyr__video-embed" id="videoPlayer">
-           <iframe src="https://www.youtube.com/embed/mZI-pAdglyM" allowfullscreen allow="autoplay"></iframe>
-    </div>
+  <!-- Video Player -->
+  <div class="video-player mt-4" id="videoSection" style="visibility: hidden; height: 0;">
+    <h5>Now Playing: <span id="videoTitle"></span></h5>
+    <video id="videoPlayer" class="plyr" playsinline controls>
+      <source src="" type="video/mp4" />
+      Your browser does not support HTML5 video.
+    </video>
   </div>
 </div>
 
@@ -54,8 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
     controls: [
       'play-large', 'play', 'progress', 'current-time',
       'mute', 'volume', 'settings', 'fullscreen'
-    ],
-    youtube: { rel: 0, modestbranding: 1 }
+    ]
   });
 
   // ================== 🧩 BIẾN TOÀN CỤC ==================
@@ -63,56 +62,37 @@ document.addEventListener("DOMContentLoaded", function () {
   const videoTitle = document.getElementById("videoTitle");
   const videoSection = document.getElementById("videoSection");
 
-// Ẩn player khi mới load
-videoSection.style.visibility = "hidden";
-videoSection.style.height = "0";
-videoSection.style.overflow = "hidden";
+  // Ẩn player khi mới load
+  videoSection.style.visibility = "hidden";
+  videoSection.style.height = "0";
+  videoSection.style.overflow = "hidden";
 
   const courseId = videoItems[0]?.getAttribute("data-course-id");
   const courseKey = `course_${courseId}_progress`;
   let learnedLessons = JSON.parse(localStorage.getItem(courseKey)) || [];
   let currentIndex = -1;
 
-  // ================== 🔍 HÀM HỖ TRỢ ==================
-    function extractYouTubeID(url) {
-      const match = url.match(/(?:youtube\.com\/embed\/|youtu\.be\/)([^&#]*)/);
-      return match ? match[1] : null;
-    }
-
   // ================== ▶️ HÀM PHÁT VIDEO ==================
   function playVideoAtIndex(index) {
     if (index < 0 || index >= videoItems.length) return;
-
-    // Xóa trạng thái active cũ
     videoItems.forEach(v => v.classList.remove("active"));
-
-    // Kích hoạt bài học được chọn
     const item = videoItems[index];
     item.classList.add("active");
 
-    // Lấy thông tin video
     const videoUrl = item.getAttribute("data-video");
-    const videoId = extractYouTubeID(videoUrl);
     const title = item.textContent.trim();
-
-    if (!videoId) {
-      console.error("❌ Không tìm thấy YouTube ID hợp lệ từ URL:", videoUrl);
-      return;
-    }
 
     // Cập nhật tiêu đề và hiển thị player
     videoTitle.textContent = title;
-    videoSection.style.display = "block";
+    videoSection.style.visibility = "visible";
+    videoSection.style.height = "auto";
 
-    // Cập nhật nguồn video trong player
-    player.source = {
-      type: "video",
-      sources: [{ src: videoId, provider: "youtube" }]
-    };
- videoSection.style.visibility = "visible";
-  videoSection.style.height = "auto";
-    // Phát video
+    // Cập nhật nguồn video
+    const source = document.querySelector("#videoPlayer source");
+    source.src = videoUrl;
+    player.media.load();
     player.play();
+
     currentIndex = index;
   }
 
@@ -128,19 +108,18 @@ videoSection.style.overflow = "hidden";
     console.groupEnd();
   }
 
-  // ================== 🖱️ SỰ KIỆN NGƯỜI DÙNG ==================
+  // ================== 🖱️ SỰ KIỆN CLICK ==================
   videoItems.forEach((item, index) => {
     item.addEventListener("click", () => playVideoAtIndex(index));
   });
 
-  // ================== 🎥 SỰ KIỆN KHI VIDEO KẾT THÚC ==================
+  // ================== 🎥 KHI VIDEO KẾT THÚC ==================
   player.on("ended", async () => {
     if (currentIndex === -1) return;
 
     const currentItem = videoItems[currentIndex];
     const lessonId = currentItem.getAttribute("data-lesson-id");
 
-    // Cập nhật tiến trình học
     if (!learnedLessons.includes(lessonId)) {
       learnedLessons.push(lessonId);
       localStorage.setItem(courseKey, JSON.stringify(learnedLessons));
@@ -151,7 +130,6 @@ videoSection.style.overflow = "hidden";
     logProgress(lessonId, totalLessons, completedLessons);
 
     try {
-      // Gọi API đánh dấu hoàn thành bài học
       const resLesson = await fetch('/account/finish-lesson', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -161,19 +139,15 @@ videoSection.style.overflow = "hidden";
       if (!resLesson.ok) throw new Error("❌ Failed to finish lesson");
       console.log("✅ Lesson finished successfully");
 
-      // Nếu hoàn thành toàn bộ khóa học
       if (completedLessons >= totalLessons) {
         const resCourse = await fetch('/account/finish-course', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ courseId })
         });
-        if (resCourse.ok) {
-          alert("🎉 Congratulations! You’ve completed this course!");
-        }
+        if (resCourse.ok) alert("🎉 Congratulations! You’ve completed this course!");
       }
 
-      // Không tự động phát bài tiếp theo
       setTimeout(() => window.location.reload(), 1500);
     } catch (err) {
       console.error("⚠️ Error:", err);

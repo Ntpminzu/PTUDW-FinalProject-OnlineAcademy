@@ -8,6 +8,17 @@
     const rows = document.querySelectorAll(".user-table tbody tr");
 
     let currentRole = "all";
+    const presetRole = localStorage.getItem("presetRole");
+    if (presetRole) {
+      currentRole = presetRole;
+      localStorage.removeItem("presetRole"); // dọn dẹp sau khi dùng
+      const selectedItem = menu.querySelector(`li[data-role="${presetRole}"]`);
+      if (selectedItem) {
+        const selectedRoleName = selectedItem.textContent.trim();
+        btn.innerHTML = `<i class="bi bi-person-badge"></i> ${selectedRoleName} <i class="bi bi-caret-down-fill"></i>`;
+        applyFilters();
+      }
+    }
 
     if (!btn || !menu || !searchInput) return;
 
@@ -128,6 +139,23 @@
             </div>
           </td>
           <td>
+            {{#if Lock}}
+            <form action="/admin/user/lock" method="POST" style="display:inline;">
+              <input type="hidden" name="UserID" value="{{UserID}}">
+              <input type="hidden" name="Lock" value="false">
+              <button type="submit" class="actions">
+                <i class="bi bi-unlock" data-tooltip="Unlock"></i>
+              </button>
+            </form>
+            {{else}}
+            <form action="/admin/user/lock" method="POST" style="display:inline;">
+              <input type="hidden" name="UserID" value="{{UserID}}">
+              <input type="hidden" name="Lock" value="true">
+              <button type="submit" class="actions">
+                <i class="bi bi-lock" data-tooltip="Lock"></i>
+              </button>
+            </form>
+            {{/if}}
             <a href="/admin/user/edit?id={{UserID}}" class="actions">
               <i class="bi bi-pencil" data-tooltip="Edit & View"></i>
             </a>
@@ -139,6 +167,8 @@
               </button>
             </form>
 
+
+            </a>
           </td>
         </tr>
         {{/each}}

@@ -89,9 +89,13 @@
                         </div>
                         <div class="form-row full">
                             <div class="form-group">
-                                <label class="form-label" for="ImageUrl">Image URL (Optional)</label>
-                                <input type="url" class="form-input" id="ImageUrl" name="ImageUrl"
-                                    value="{{formData.ImageUrl}}" placeholder="https://..." />
+                                <label class="form-label" for="ImageUrlInput_Add">Image URL *</label>
+                                {{!-- THÊM ID VÀO INPUT --}}
+                                <input type="url" class="form-input" id="ImageUrlInput_Add" name="ImageUrl"
+                                    value="{{formData.ImageUrl}}" placeholder="https://..." required />
+
+                                {{!-- THÊM DIV CHO UPPY --}}
+                                <div id="uppy-image-add" style="margin-top: 15px;"></div>
                             </div>
                         </div>
                         <div class="form-row full">
@@ -172,7 +176,7 @@
                 {{#if query.addSuccess}}
                 <div class="alert alert-success" role="alert"
                     style="background-color: #27ae60; color: white; border: none; margin: 0 auto 20px auto; max-width: 900px; text-align: center; font-weight: bold;">
-                    Thêm khóa học mới thành công!</div>
+                    New course added successfully!</div>
                 {{/if}}
                 <div class="search-filter-bar">
                     <input type="text" id="courseSearchInputClient" class="search-input" placeholder="🔍 Filter list..."
@@ -195,14 +199,16 @@
                 </div>
 
                 <div id="coursesList">
-                    <div class="card-grid">
+                    <div class="course-grid">
+                        {{#if courses.length}}
                         {{#each courses}}
                         <div class="card course-card-item" data-subcatid="{{SubCatID}}" data-status="{{CourseStatus}}">
                             <div class="card-header">
                                 <div class="card-avatar">📚</div>
                                 <div class="card-info">
                                     <h3 class="course-name">{{CourseName}}</h3>
-                                    <p>{{SubCatName}} • {{CatName}} {{#if InstructorName}} • {{InstructorName}}{{/if}}
+                                    <p>{{SubCatName}} • {{CatName}} {{#if InstructorName}} •
+                                        {{InstructorName}}{{/if}}
                                     </p> {{!-- Hiển thị tên --}}
                                 </div>
                             </div>
@@ -241,108 +247,45 @@
                             {{/if}}
                         </div>
                         {{/each}}
+                        {{/if}}
                     </div>
+                    {{! ----- BẮT ĐẦU KHỐI PHÂN TRANG ----- }}
+                    {{#if pagination.hasPagination}}
+                    <div class="pagination"
+                        style="justify-content: center; display: flex; gap: 10px; margin-top: 30px;">
+
+                        {{! Nút Previous }}
+                        {{#if (gt currentPage 1)}}
+                        <a href="/management/course?page={{subtract currentPage 1}}" class="btn btn-secondary">&laquo;
+                            Previous</a>
+                        {{else}}
+                        {{!-- Vô hiệu hóa nút nếu ở trang 1 --}}
+                        <a href="#" class="btn btn-secondary" style="pointer-events: none; opacity: 0.6;">&laquo;
+                            Previous</a>
+                        {{/if}}
+
+                        {{! Các nút số trang (Dùng helper 'range' từ app.js) }}
+                        {{#each (range 1 totalPages)}}
+                        <a href="/management/course?page={{this}}"
+                            class="btn {{#if (eq this ../currentPage)}}btn-primary{{else}}btn-secondary{{/if}}">
+                            {{this}}
+                        </a>
+                        {{/each}}
+
+                        {{! Nút Next }}
+                        {{#if (lt currentPage totalPages)}}
+                        <a href="/management/course?page={{plus currentPage 1}}" class="btn btn-secondary">Next
+                            &raquo;</a>
+                        {{else}}
+                        {{!-- Vô hiệu hóa nút nếu ở trang cuối --}}
+                        <a href="#" class="btn btn-secondary" style="pointer-events: none; opacity: 0.6;">Next
+                            &raquo;</a>
+                        {{/if}}
+                    </div>
+                    {{/if}}
+                    {{! ----- KẾT THÚC KHỐI PHÂN TRANG ----- }}
                 </div>
             </div>
         </section>
     </div>
 </main>
-
-{{! ----- SCRIPT CHUYỂN TAB VÀ FILTER CLIENT-SIDE ----- }}
-<script>
-    function switchCourseTab(tabName) {
-        document.querySelectorAll("#coursesSection .tab-btn").forEach(btn => btn.classList.remove("active"));
-        document.querySelectorAll("#coursesSection .tab-content").forEach(content => content.classList.remove("active"));
-
-        const activeButton = document.querySelector(`#coursesSection .tab-btn[data-tab='${tabName}']`);
-        if (activeButton) activeButton.classList.add("active");
-
-        const activeContent = document.getElementById("course" + tabName.charAt(0).toUpperCase() + tabName.slice(1) + "Tab");
-        if (activeContent) activeContent.classList.add("active");
-    }
-
-    // Filter client-side cho danh sách khóa học
-    function filterCourseListClientSide() {
-        const searchTerm = document.getElementById('courseSearchInputClient').value.toLowerCase();
-        // Sửa: Lấy đúng giá trị SubCatID từ select box
-        const subCategoryFilter = document.getElementById('categoryFilterClient').value;
-        const statusFilter = document.getElementById('statusFilterClient').value;
-        const courseCards = document.querySelectorAll('.course-card-item');
-
-        courseCards.forEach(card => {
-            const courseName = card.querySelector('.course-name')?.textContent.toLowerCase() || '';
-            // Sửa: Lấy đúng data attribute data-subcatid
-            const subCatId = card.getAttribute('data-subcatid');
-            const status = card.getAttribute('data-status');
-
-            const matchesSearch = !searchTerm || courseName.includes(searchTerm); // Sửa: Cho phép search trống
-            // Sửa: So sánh subCatId với subCategoryFilter
-            const matchesSubCategory = !subCategoryFilter || subCatId === subCategoryFilter;
-            const matchesStatus = !statusFilter || status === statusFilter;
-
-            // Hiển thị hoặc ẩn card dựa trên kết quả lọc
-            if (matchesSearch && matchesSubCategory && matchesStatus) {
-                card.style.display = '';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    // Mặc định hiển thị tab 'list' và xử lý redirect
-    document.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-
-        // Sửa: Lấy giá trị boolean trực tiếp từ Handlebars
-        const _errorAddStr = "{{#if errorAdd}}true{{else}}false{{/if}}"; // Render thành chuỗi "true" hoặc "false"
-        const errorAdd = (_errorAddStr === 'true'); // Chuyển chuỗi thành boolean true/false
-        const addSuccess = urlParams.has('addSuccess');
-        const updateSuccess = urlParams.has('updateSuccess');
-        const deleteSuccess = urlParams.has('deleteSuccess');
-
-        // Sửa: Lấy giá trị chuỗi, đảm bảo trong dấu nháy kép
-        const requestedTab = "{{activeTab}}"; // Lấy giá trị chuỗi
-
-        let activeDefaultTab = 'list'; // Mặc định là list
-
-        // Kiểm tra requestedTab trước
-        if (requestedTab === 'add') {
-            activeDefaultTab = 'add';
-        } else if (errorAdd) { // Nếu có lỗi add thì mới chuyển sang add
-            activeDefaultTab = 'add';
-        }
-        // Các trường hợp success sẽ mặc định về 'list'
-
-        switchCourseTab(activeDefaultTab); // Active tab mặc định hoặc tab add nếu có lỗi
-
-        // Hiển thị thông báo thành công (chung cho Add, Update, Delete)
-        let successMessage = '';
-        if (addSuccess) successMessage = 'New course added successfully!';
-        else if (updateSuccess) successMessage = 'Course update successful!';
-        else if (deleteSuccess) successMessage = 'Course deleted successfully!';
-
-        if (successMessage) {
-            const listTab = document.getElementById('courseListTab');
-            if (listTab) {
-                const successMsg = document.createElement('div');
-                successMsg.className = 'alert alert-success';
-                successMsg.setAttribute('role', 'alert');
-                successMsg.style = "background-color: #27ae60; color: white; border: none; margin: 0 auto 20px auto; max-width: 900px; text-align: center; font-weight: bold;";
-                successMsg.textContent = successMessage;
-                // Chèn vào đầu tab list
-                listTab.insertBefore(successMsg, listTab.querySelector('.search-filter-bar'));
-                setTimeout(() => successMsg.remove(), 4000);
-            }
-        }
-
-        // Khởi tạo TinyMCE cho textarea trong tab "Add Course"
-        if (document.getElementById('courseAddTab')) { // Chỉ khởi tạo nếu tab tồn tại
-            tinymce.init({
-                selector: '#courseAddTab textarea.wysiwyg-editor', // Chọn textarea có class wysiwyg-editor trong tab add
-                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker',
-                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-                height: 300 // Chiều cao của editor
-            });
-        }
-    });
-</script>

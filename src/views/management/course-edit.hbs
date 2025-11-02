@@ -85,9 +85,13 @@
 
                     <div class="form-row full">
                         <div class="form-group">
-                            <label class="form-label" for="ImageUrl">Image URL (Optional)</label>
-                            <input type="url" class="form-input" id="ImageUrl" name="ImageUrl" value="{{ImageUrl}}"
-                                placeholder="https://..." />
+                            <label class="form-label" for="ImageUrlInput_Edit">Image URL *</label>
+                            {{!-- THÊM ID VÀO INPUT --}}
+                            <input type="url" class="form-input" id="ImageUrlInput_Edit" name="ImageUrl"
+                                value="{{course.ImageUrl}}" placeholder="https://..." />
+
+                            {{!-- THÊM DIV CHO UPPY --}}
+                            <div id="uppy-image-edit" style="margin-top: 15px;"></div>
                         </div>
                     </div>
 
@@ -121,14 +125,3 @@
         </section>
     </div>
 </main>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        tinymce.init({
-            selector: 'textarea.wysiwyg-editor', // Chọn tất cả textarea có class này trên trang edit
-            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker',
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-            height: 300
-        });
-    });
-</script>

@@ -1,5 +1,6 @@
 import express from 'express';
 import * as adminModel from '../model/admin.model.js';
+import bcrypt from 'bcryptjs';
 
 const router = express.Router();
 
@@ -18,6 +19,18 @@ router.get('/user/add', function (req, res) {
 router.get('/adminpage', function (req, res) {
   res.render('Admin/AdminPage');
 });
+
+
+router.get('/AccLock', function (req, res) {
+  res.render('Admin/user/AddLock');
+});
+router.post('/user/lock', async (req, res) => {
+  const id = req.body.UserID;
+  const lockStatus = req.body.Lock === 'true';
+  await adminModel.patch(id, { Lock: lockStatus });
+  res.redirect('/admin/user/list'); // quay lại trang danh sách user
+});
+
 
 router.get('/user/edit', async function (req, res) {
   const id = req.query.id || 0;
@@ -40,10 +53,12 @@ router.get('/user/edit', function (req, res) {
 });
 
 router.post('/user/add', async function (req, res) {
+  const hash = await bcrypt.hash(req.body.Password, 10);
+
   const user = {
     Fullname: req.body.Fullname,
     UserName: req.body.UserName,
-    Password: req.body.Password,
+    Password: hash,
     Email: req.body.Email,
     UserPermission: req.body.UserPermission
   };
@@ -121,20 +136,39 @@ router.get('/subcat/byCat', async function (req, res) {
   const id = req.query.id || 0;
 
   let CatName = '?';
-  let CatID = "?";
-  const category = await adminModel.findCategoryById(id);
-  if (category) {
-    CatName = category.CatName;
-    CatID = category.CatID;
+  let CatID = '?';
+  const cats = await adminModel.findAllCategories();
+  const referer = req.get('Referer') || '';
+
+  let list = [];
+
+  if (id === 'all') {
+    list = await adminModel.findAllSubCat();
+    CatName = 'All Categories';
+    CatID = 'all';
+  } else {
+    const category = await adminModel.findCategoryById(id);
+    if (category) {
+      CatName = category.CatName;
+      CatID = category.CatID;
+    }
+    list = await adminModel.findSubCatByCat(id);
   }
-  const list = await adminModel.findSubCatByCat(id);
+  let back = '';
+  if (referer.includes('/admin/category/list')) {
+    back = "/admin/category/list";
+  } else
+    back = "/admin/adminpage";
   res.render('Admin/sub_cat/SubCatList', {
+    cats: cats,
     subcats: list,
     empty: list.length === 0,
     CatName: CatName,
+    back: back,
     CatID: CatID
   });
 });
+
 router.get('/subcat/add/byCat', async function (req, res) {
   const id = req.query.id || 0;
   const category = await adminModel.findCategoryById(id);
@@ -185,84 +219,161 @@ router.post('/subcat/del', async function (req, res) {
   await adminModel.delSubCategory(id);
   res.redirect('/admin/subcat/byCat?id=' + catid); // quay lại đúng category
 });
-/*================= SubCategories =================*/
 
-// Danh sách SubCategories
-router.get('/subcategory/list', async function (req, res, next) {
-  try {
-    const list = await db('sub_cat as s')
-                      .join('categories as c', 's.CatID', 'c.CatID')
-                      .select('s.*', 'c.CatName')
-                      .orderBy('c.CatName', 'asc').orderBy('s.SubCatName', 'asc');
-    res.render('Admin/subcategory/SubCatList', { // Tạo view mới
-      layout: 'main', 
-      subcategories: list 
-    });
-  } catch(err) { next(err); }
+/*===================Course==================*/
+router.get('/course/byCat', async function (req, res) {
+  const referer = req.get('Referer') || '';
+  let catID = req.query.id || 'all';
+  let subCatID = req.query.bySubCat || 'all';
+
+  const catList = await adminModel.findAllCategories();
+
+  let back = '';
+
+  if (referer.includes('/admin/course/byCat')) {
+    // Ví dụ: /admin/course/byCat?id=2&bySubCat=all
+    back = "/admin/subcat/byCat?id=all";
+  }
+  else if (referer.includes('/admin/adminpage')) {
+    // Ví dụ: /admin/course/bySubCat?id=5
+    back = "/admin/adminpage";
+  }
+  else {
+    // Mặc định về danh sách toàn bộ
+    back = "/admin/course/byCat?id=all&bySubCat=all";
+  }
+
+
+  // === TÌM CAT TỪ SUBCAT ===
+  if (subCatID !== 'all') {
+    const sub = await adminModel.findSubCategoryById(subCatID);
+    if (sub) {
+      catID = sub.CatID; // Update Cat theo SubCat
+    }
+  }
+
+  // === LẤY DANH SÁCH SUBCATEGORY THEO CAT ===
+  let subCatList = [];
+  if (catID !== 'all') {
+    subCatList = await adminModel.findSubCatByCat(catID);
+  } else {
+    subCatList = await adminModel.findAllSubCat();
+  }
+
+  // === LẤY DANH SÁCH COURSE THEO SUBCAT HOẶC CAT ===
+  let courseList = [];
+  if (subCatID !== 'all') {
+    courseList = await adminModel.findCourseBySubCat(subCatID);
+  } else if (catID !== 'all') {
+    courseList = await adminModel.findCourseByCat(catID);
+  } else {
+    courseList = await adminModel.findAllCourses();
+  }
+
+  // === GÁN USERNAME ===
+  for (const course of courseList) {
+    if (course.UserID) {
+      const user = await adminModel.findById(course.UserID);
+      course.UserName = user ? user.Fullname : "Unknown";
+    } else {
+      course.UserName = "Unknown";
+    }
+  }
+
+  // === TÊN CATEGORY ===
+  let selectedCatName = "All Categories";
+  if (catID !== "all") {
+    const cat = await adminModel.findCategoryById(catID);
+    if (cat) selectedCatName = cat.CatName;
+  }
+
+  // === TÊN SUBCATEGORY ===
+  let selectedSubCatName = "All Subcategories";
+  if (subCatID !== "all") {
+    const sub = await adminModel.findSubCategoryById(subCatID);
+    if (sub) selectedSubCatName = sub.SubCatName;
+  }
+  const ins = await adminModel.allTeachers();
+
+  // === RENDER ===
+  res.render("Admin/course/CourseList", {
+    course: courseList,
+    catList,
+    ins: ins,
+    back: back,
+    subCatList,
+    selectedCat: catID,
+    selectedSubCat: subCatID,
+    selectedCatName,
+    selectedSubCatName,
+    empty: courseList.length === 0,
+  });
 });
 
-// Form thêm SubCategory
-router.get('/subcategory/add', async function (req, res, next) {
-   try {
-       const categories = await categoryModel.findAll(); 
-       res.render('Admin/subcategory/SubCatAdd', { // Tạo view mới
-           layout: 'main',
-           categories: categories
-       });
-   } catch(err) { next(err); }
+
+
+router.get('/course/edit', async function (req, res) {
+  const id = req.query.id || 0;
+  const referer = req.get('Referer') || '';
+  const course = await adminModel.findCourseById(id);
+  const subcategories = await adminModel.findAllSubCat();
+  const subcat = await adminModel.findSubCategoryById(course.SubCatID);
+
+  let view = '';
+
+  if (referer.includes('/admin/course/bysubCat')) {
+    view = 'Admin/course/CourseEdit';
+  } else
+    view = 'Admin/course/CourseEdit';
+  res.render(view, {
+    course: course,
+    subcat: subcat,
+    subcategories: subcategories
+  });
 });
 
-// Xử lý thêm SubCategory
-router.post('/subcategory/add', async function (req, res, next) {
-  try {
-      const { SubCatName, SubCatDes, CatID } = req.body; 
-      if (!SubCatName || !CatID) { /* Validation */ }
-      await db('sub_cat').insert({ SubCatName, SubCatDes, CatID: parseInt(CatID) }); 
-      res.redirect('/admin/subcategory/list'); 
-  } catch(err) { next(err); }
+
+router.post('/course/patch', async function (req, res) {
+  const id = req.body.CourseID;
+
+  const subcat = Array.isArray(req.body.SubCatID)
+    ? req.body.SubCatID[0]
+    : req.body.SubCatID;
+
+  // COURSE DATA
+  const course = {
+    CourseName: req.body.CourseName,
+    TinyDes: req.body.TinyDes,
+    FullDes: req.body.FullDes,
+    ImageUrl: req.body.ImageUrl,
+    Level: req.body.Level,
+    CurrentPrice: req.body.CurrentPrice,
+    OriginalPrice: req.body.OriginalPrice,
+    CourseStatus: req.body.CourseStatus,
+    SubCatID: subcat
+  };
+
+  await adminModel.patchCourse(id, course);
+
+  const sub = await adminModel.findSubCategoryById(subcat);
+  const catID = sub ? sub.CatID : "all";
+
+  res.redirect(`/admin/course/byCat?id=${catID}&bySubCat=${subcat}`);
 });
 
-// Form sửa SubCategory
-router.get('/subcategory/edit', async function (req, res, next) {
-  try {
-      const id = req.query.id; 
-      if (!id) return res.redirect('/admin/subcategory/list');
-      const [subcategory, categories] = await Promise.all([
-           db('sub_cat').where('SubCatID', id).first(),
-           categoryModel.findAll()
-      ]);
-      if (!subcategory) return res.status(404).render('404'); 
-      res.render('Admin/subcategory/SubCatEdit', { // Tạo view mới
-          layout: 'main', subcategory, categories 
-      });
-  } catch(err) { next(err); }
-});
 
-// Xử lý sửa SubCategory
-router.post('/subcategory/patch', async function (req, res, next) {
-  try {
-      const { SubCatID, SubCatName, SubCatDes, CatID } = req.body; 
-       if (!SubCatName || !CatID) { /* Validation */ }
-      await db('sub_cat').where('SubCatID', SubCatID).update({ 
-          SubCatName, SubCatDes, CatID: parseInt(CatID) 
-      }); 
-      res.redirect('/admin/subcategory/list'); 
-  } catch(err) { next(err); }
-});
+router.post('/course/del', async function (req, res) {
+  const id = req.body.CourseID;
+  const subcatid = req.body.SubCatID;
 
-// Xử lý xóa SubCategory
-// router.post('/subcategory/del', async function (req, res, next) {
-//   try {
-//       const id = req.body.SubCatID; 
-//       const courseCount = await db('courses').where('SubCatID', id).count('CourseID as count').first();
-//       if (courseCount && courseCount.count > 0) {
-//             // Không cho xóa, render lại list với lỗi
-//             const list = await db('sub_cat as s').join(...).select(...);
-//             return res.render('Admin/subcategory/SubCatList', { layout: 'main', subcategories: list, errorDelete: `Còn ${courseCount.count} khóa học.` });
-//       }
-//       await db('sub_cat').where('SubCatID', id).del(); 
-//       res.redirect('/admin/subcategory/list');
-//   } catch(err) { next(err); }
-// });
+  console.log('Deleting CourseID =', id, 'SubCatID =', subcatid);
+
+  await adminModel.delCourse(id);
+
+  const sub = await adminModel.findSubCategoryById(subcatid);
+  const catID = sub ? sub.CatID : "all";
+
+  res.redirect(`/admin/course/byCat?id=${catID}&bySubCat=${subcatid}`);
+});
 
 export default router;

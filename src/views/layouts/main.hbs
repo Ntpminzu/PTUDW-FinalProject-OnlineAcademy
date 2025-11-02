@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +17,9 @@
   <link rel="stylesheet" href="/navbar.css">
   <!-- TinyMCE -->
   <script src="https://cdn.tiny.cloud/1/kars04ab2ueugpophlra5df3y4wx19okwc1dey6chtnkdw36/tinymce/7/tinymce.min.js"
-    referrerpolicy="origin"></script>
+    referrerpolicy="origin" crossorigin="anonymous"></script>
+  <!-- Uppy -->
+  <link href="https://releases.transloadit.com/uppy/v5.1.8/uppy.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -27,6 +32,185 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
+
+  <script src="https://releases.transloadit.com/uppy/v3.23.0/uppy.min.js"></script>
+  <script>
+    // Biến toàn cục để theo dõi khởi tạo TinyMCE cho tab "Add"
+    let isTinyMCEInitialized = false;
+
+    // --- HÀM 1: KHỞI TẠO TINYMCE ---
+    // Hàm này sẽ được gọi vào đúng thời điểm
+    function initializeTinyMCE(selector) {
+      if (typeof tinymce !== 'undefined') {
+        tinymce.init({
+          selector: 'textarea, textarea.wysiwyg-editor',
+          plugins: [
+            'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+            'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'ai', 'uploadcare', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown', 'importword', 'exportword', 'exportpdf'
+          ],
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+          tinycomments_mode: 'embedded',
+          tinycomments_author: 'Author name',
+          mergetags_list: [
+            { value: 'First.Name', title: 'First Name' },
+            { value: 'Email', title: 'Email' },
+          ],
+          ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+          uploadcare_public_key: 'b33e273dc78492172054',
+        });
+      } else {
+        console.error("Error: TinyMCE library not loaded yet.");
+      }
+    }
+
+    // --- HÀM 2: CHUYỂN TAB (DÙNG CHUNG) ---
+    function switchCourseTab(tabName) {
+      document.querySelectorAll("#coursesSection .tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll("#coursesSection .tab-content").forEach(content => content.classList.remove("active"));
+
+      const activeButton = document.querySelector(`#coursesSection .tab-btn[data-tab='${tabName}']`);
+      if (activeButton) activeButton.classList.add("active");
+
+      const activeContent = document.getElementById("course" + tabName.charAt(0).toUpperCase() + tabName.slice(1) + "Tab");
+      if (activeContent) activeContent.classList.add("active");
+
+      // Logic khởi tạo TinyMCE cho tab "Add" (khi bấm vào)
+      if (tabName === 'add' && !isTinyMCEInitialized) {
+        initializeTinyMCE('#courseAddTab textarea.wysiwyg-editor');
+        isTinyMCEInitialized = true; // Đánh dấu đã khởi tạo
+      }
+    }
+
+    // --- HÀM 3: FILTER (DÙNG CHUNG) ---
+    function filterCourseListClientSide() {
+      const searchTerm = document.getElementById('courseSearchInputClient')?.value.toLowerCase() || '';
+      const subCategoryFilter = document.getElementById('categoryFilterClient')?.value || '';
+      const statusFilter = document.getElementById('statusFilterClient')?.value || '';
+      const courseCards = document.querySelectorAll('.course-card-item');
+
+      if (courseCards.length === 0) return;
+
+      courseCards.forEach(card => {
+        const courseName = card.querySelector('.course-name')?.textContent.toLowerCase() || '';
+        const subCatId = card.getAttribute('data-subcatid');
+        const status = card.getAttribute('data-status');
+        const matchesSearch = !searchTerm || courseName.includes(searchTerm);
+        const matchesSubCategory = !subCategoryFilter || subCatId === subCategoryFilter;
+        const matchesStatus = !statusFilter || status === statusFilter;
+        card.style.display = (matchesSearch && matchesSubCategory && matchesStatus) ? '' : 'none';
+      });
+    }
+
+    // --- SỰ KIỆN CHÍNH: CHẠY SAU KHI MỌI THỨ (SCRIPT, CSS, ẢNH) ĐÃ TẢI XONG ---
+    window.addEventListener('load', () => {
+
+      // 1. Khởi tạo ngay lập tức cho các editor TĨNH
+      // (Áp dụng cho course-edit.hbs, lesson-form.hbs)
+      initializeTinyMCE('textarea.wysiwyg-editor:not(#courseAddTab textarea.wysiwyg-editor)');
+
+      // 2. Xử lý logic cho trang course.hbs (trang có tab)
+      const listTabButton = document.querySelector("#coursesSection .tab-btn[data-tab='list']");
+      if (listTabButton) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const _errorAddStr = "{{#if errorAdd}}true{{else}}false{{/if}}";
+        const errorAdd = (_errorAddStr === 'true');
+        const addSuccess = urlParams.has('addSuccess');
+        const updateSuccess = urlParams.has('updateSuccess');
+        const deleteSuccess = urlParams.has('deleteSuccess');
+        const requestedTab = "{{activeTab}}";
+
+        let activeDefaultTab = 'list';
+        if (requestedTab === 'add' || errorAdd) {
+          activeDefaultTab = 'add';
+        }
+
+        // Gọi hàm switchTab (sẽ tự động init TinyMCE nếu là tab 'add')
+        switchCourseTab(activeDefaultTab);
+
+        // Hiển thị thông báo thành công (logic này đã đúng)
+        let successMessage = '';
+        if (addSuccess) successMessage = 'Thêm khóa học thành công!';
+        else if (updateSuccess) successMessage = 'Cập nhật khóa học thành công!';
+        else if (deleteSuccess) successMessage = 'Xóa khóa học thành công!';
+
+        if (successMessage) {
+          const listTab = document.getElementById('courseListTab');
+          if (listTab) {
+            const successMsg = document.createElement('div');
+            successMsg.className = 'alert alert-success';
+            successMsg.setAttribute('role', 'alert');
+            successMsg.style = "background-color: #27ae60; color: white; border: none; margin: 0 auto 20px auto; max-width: 900px; text-align: center; font-weight: bold;";
+            successMsg.textContent = successMessage;
+            listTab.insertBefore(successMsg, listTab.querySelector('.search-filter-bar'));
+            setTimeout(() => successMsg.remove(), 4000);
+          }
+        }
+      }
+
+      // Hàm trợ giúp khởi tạo Uppy
+      function initUppy(containerId, inputId, allowedFileTypes, note) {
+        const uppyContainer = document.getElementById(containerId);
+        const targetInput = document.getElementById(inputId);
+
+        // Chỉ khởi tạo nếu cả 2 phần tử tồn tại trên trang
+        if (uppyContainer && targetInput && typeof Uppy !== 'undefined') {
+          // Lấy Uppy từ window (vì dùng UMD build)
+          const { Uppy, Dashboard, XHRUpload } = window.Uppy;
+
+          const uppy = new Uppy({
+            autoProceed: true, // Tự động upload
+            restrictions: {
+              maxNumberOfFiles: 1,
+              allowedFileTypes: allowedFileTypes // ['image/*'] hoặc ['video/*']
+            }
+          });
+
+          uppy.use(Dashboard, {
+            target: uppyContainer,
+            inline: true,
+            height: 250,
+            width: '100%',
+            note: note,
+            proudlyDisplayPoweredByUppy: false,
+            showProgressDetails: true
+          });
+
+          uppy.use(XHRUpload, {
+            endpoint: '/management/upload', // Route backend chúng ta đã tạo
+            fieldName: 'file', // Phải khớp với upload.single('file')
+            // headers: { 'X-CSRF-Token': '...' } // Thêm nếu cần CSRF
+          });
+
+          // Khi upload thành công
+          uppy.on('upload-success', (file, response) => {
+            if (response.body.uploadURL) {
+              // Gán đường dẫn URL trả về từ server vào input
+              targetInput.value = response.body.uploadURL;
+              console.log('Upload thành công:', response.body.uploadURL);
+            }
+          });
+
+          uppy.on('complete', (result) => {
+            console.log('Upload complete! Files:', result.successful);
+          });
+
+          uppy.on('error', (error) => {
+            console.error('Lỗi Uppy:', error);
+          });
+        }
+      }
+
+      // Khởi tạo Uppy cho Image (trên trang Add Course)
+      initUppy('uppy-image-add', 'ImageUrlInput_Add', ['image/*'], 'Chỉ upload 1 ảnh (JPG, PNG, WEBP...)');
+
+      // Khởi tạo Uppy cho Image (trên trang Edit Course)
+      initUppy('uppy-image-edit', 'ImageUrlInput_Edit', ['image/*'], 'Chỉ upload 1 ảnh (JPG, PNG, WEBP...)');
+
+      // Khởi tạo Uppy cho Video (trên trang Lesson Form)
+      initUppy('uppy-video', 'VideoUrlInput', ['video/*', 'audio/*'], 'Upload 1 file video (MP4, WEBM...) hoặc audio (MP3...)');
+
+    });
+  </script>
 </body>
 
 </html>

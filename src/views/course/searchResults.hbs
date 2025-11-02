@@ -1,38 +1,93 @@
-{{#section "styles" append=true}}
-<link rel="stylesheet" href="/search.css">
-{{/section}}
+  {{#section "styles" append=true}}
+  <link rel="stylesheet" href="/search.css">
+  {{/section}}
 
-<div class="search-result-page container mt-4">
-  <h3 class="search-title text-center mb-4" style="text-align: center;">
-    Search results for "{{keyword}}"
-  </h3>
+  <div class="search-result-page container mt-4">
 
-  {{#if notFound}}
-    <div class="alert alert-warning text-center">
-      No courses or categories found for "{{keyword}}"
-    </div>
-  {{else}}
-    <div class="row">
-      {{#each results}}
-      <div class="course-card">
-      <a href="/course/detail?id={{CourseID}}">
-      <img src="{{ImageUrl}}" alt="{{CourseName}}">
-      <div class="course-info">
-        <p class="category">{{CategoryName}}</p>
-        <h3>{{CourseName}}</h3>
-        <p class="instructor">{{InstructorName}}</p>
-        <div class="course-rating">
-          {{{renderStars Rating}}}
-          <span>{{Rating}} ({{TotalStudent}})</span>
-        </div>
-        <div class="course-price">
-          <span class="current">${{CurrentPrice}}</span>
-          <span class="old">${{OriginalPrice}}</span>
-        </div>
+    <h3 class="search-title text-center mb-4">
+      Search results for "{{keyword}}"
+    </h3>
+
+    <!-- ======= FILTER & SORT ======= -->
+    <form id="filterForm" method="GET" action="/course/search" class="d-flex justify-content-between align-items-center mb-4">
+      <input type="hidden" name="keyword" value="{{keyword}}">
+      <input type="hidden" name="page" value="{{currentPage}}">
+      <div class="sort d-flex align-items-center">
+        <label for="sortBy" class="me-2 fw-bold">Sort by:</label>
+        <select name="sortBy" id="sortBy" class="form-select form-select-sm w-auto">
+          <option value="name_asc" {{#ifCond sortBy '==' 'name_asc'}}selected{{/ifCond}}>Name (A→Z)</option>
+          <option value="name_desc" {{#ifCond sortBy '==' 'name_desc'}}selected{{/ifCond}}>Name (Z→A)</option>
+          <option value="price_asc" {{#ifCond sortBy '==' 'price_asc'}}selected{{/ifCond}}>Price (Low→High)</option>
+          <option value="price_desc" {{#ifCond sortBy '==' 'price_desc'}}selected{{/ifCond}}>Price (High→Low)</option>
+          <option value="rating_desc" {{#ifCond sortBy '==' 'rating_desc'}}selected{{/ifCond}}>Rating</option>
+        </select>
       </div>
-      </a>
-    </div>
-      {{/each}}
-    </div>
+    </form>
+
+
+    <!-- ======= RESULTS ======= -->
+    {{#if notFound}}
+      <div class="alert alert-warning text-center">
+        No courses or categories found for "{{keyword}}"
+      </div>
+    {{else}}
+      <div class="row">
+        {{#each results}}
+        <div class="course-card col-md-4 mb-4">
+          <a href="/course/detail?id={{CourseID}}">
+            <img src="{{ImageUrl}}" alt="{{CourseName}}" class="img-fluid rounded">
+            <div class="course-info p-2">
+              <p class="category text-muted small">{{CategoryName}}</p>
+              <h5>{{CourseName}}</h5>
+              <p class="instructor small">{{InstructorName}}</p>
+              <div class="course-rating">
+                {{{renderStars Rating}}}
+                <span>{{Rating}} ({{TotalStudent}})</span>
+              </div>
+              <div class="course-price">
+                <span class="current text-success fw-bold">${{CurrentPrice}}</span>
+                <span class="old text-muted text-decoration-line-through">${{OriginalPrice}}</span>
+              </div>
+            </div>
+          </a>
+        </div>
+        {{/each}}
+      </div>
+
+      <!-- ======= PAGINATION ======= -->
+        {{#if totalPages}}
+        <div class="pagination">
+          {{#if (gt currentPage 1)}}
+            <a href="?keyword={{keyword}}&page={{subtract currentPage 1}}&sortBy={{sortBy}}">Previous</a>
+          {{/if}}
+
+          {{#each (range 1 totalPages)}}
+            <a href="?keyword={{../keyword}}&page={{this}}&sortBy={{../sortBy}}" class="{{#if (eq this ../currentPage)}}active{{/if}}">
+              {{this}}
+            </a>
+          {{/each}}
+          {{#if (lt currentPage totalPages)}}
+            <a href="?keyword={{keyword}}&page={{plus currentPage 1}}&sortBy={{sortBy}}">Next</a>
+          {{/if}}
+        </div>
+        {{/if}}
   {{/if}}
-</div>
+  </div>
+  <script>
+        const sortSelect = document.getElementById('sortBy');
+      const form = document.getElementById('filterForm');
+
+      sortSelect.addEventListener('change', () => {
+        // Lấy page hiện tại trong URL (nếu có)
+        const url = new URL(window.location.href);
+        const currentPage = url.searchParams.get('page') || 1;
+
+        // Cập nhật input hidden 'page' trong form
+        const pageInput = form.querySelector('input[name="page"]');
+        pageInput.value = currentPage;
+
+        // Submit form
+        form.submit();
+      });
+  </script>
+

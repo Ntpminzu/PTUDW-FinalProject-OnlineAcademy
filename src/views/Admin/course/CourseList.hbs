@@ -1,0 +1,233 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/Adminn.css">
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchInput = document.querySelector(".search-box input");
+        const rows = Array.from(document.querySelectorAll(".user-table tbody tr"));
+
+        const instructorText = document.getElementById("selectedInstructor");
+        const instructorItems = document.querySelectorAll(".instructor-item a");
+
+        let chosenInstructor = "all";
+
+        // normalize: trim + toLowerCase
+        const norm = s => (s || "").toString().trim().toLowerCase();
+
+        function getRowInstructor(row) {
+            // 1) ưu tiên data-ins trên <tr>
+            let ins = row.getAttribute("data-ins");
+            if (ins && ins.trim() !== "") return norm(ins);
+
+            // 2) fallback: tìm cell có class "instructor" hoặc cột thứ 2/3
+            const cellByClass = row.querySelector(".instructor");
+            if (cellByClass) return norm(cellByClass.textContent);
+
+            // 3) fallback: lấy text của toàn row (ít chính xác nhưng an toàn)
+            return norm(row.textContent);
+        }
+
+        function applyFilters() {
+            const keyword = norm(searchInput?.value);
+
+            rows.forEach(row => {
+                const rowText = norm(row.textContent);
+                const rowInstructor = getRowInstructor(row);
+
+                const matchKeyword = keyword === "" ? true : rowText.includes(keyword);
+                const matchInstructor = (norm(chosenInstructor) === "all")
+                    ? true
+                    // cho phép match substring (nếu tên trong table khác định dạng nhỏ)
+                    : rowInstructor.includes(norm(chosenInstructor));
+
+                row.style.display = (matchKeyword && matchInstructor) ? "" : "none";
+            });
+        }
+
+        // attach search
+        if (searchInput) searchInput.addEventListener("input", applyFilters);
+
+        // attach instructor dropdown
+        instructorItems.forEach(item => {
+            item.addEventListener("click", (e) => {
+                e.preventDefault();
+                chosenInstructor = item.dataset.ins || item.textContent || "all";
+                instructorText.textContent = (norm(chosenInstructor) === "all") ? "All Instructors" : chosenInstructor;
+                applyFilters();
+            });
+        });
+
+        // run once on load
+        applyFilters();
+    });
+
+</script>
+{{/section}}
+
+<div class="user-container">
+    <a href={{back}}>
+        <button class="btn-add"><i class="bi bi-arrow-left-circle"></i></button>
+    </a>
+    <h2>Course Manage</h2>
+    <div class="toolbar">
+        <div class="filters">
+            <!-- CATEGORY FILTER -->
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search">
+            </div>
+            <div class="dropdown">
+                <button class="btn-filter" id="catDropdownBtn">
+                    <i class="bi bi-tags-fill"></i>
+                     {{#if (eq selectedCat "all")}}
+                    All Categories
+                    {{else}}
+                    {{selectedCatName}}
+                    {{/if}}
+                    <i class="bi bi-caret-down-fill"></i>
+                </button>
+
+                <!-- CATEGORY DROPDOWN -->
+                <ul class="dropdown-menu" id="catDropdownMenu">
+                    <li><a href="/admin/course/byCat?id=all&bySubCat=all">All</a></li>
+
+                    {{#each catList}}
+                    <li>
+                        <a href="/admin/course/byCat?id={{this.CatID}}&bySubCat=all">
+                            {{this.CatName}}
+                        </a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+
+            <!-- SUBCATEGORY FILTER -->
+            <div class="dropdown">
+                <button class="btn-filter" id="subCatDropdownBtn">
+                    <i class="bi bi-tag-fill"></i>
+                    {{#if (eq selectedSubCat "all")}}
+                    All Subcategories
+                    {{else}}
+                    {{selectedSubCatName}}
+                    {{/if}}
+                    <i class="bi bi-caret-down-fill"></i>
+                </button>
+
+                <!-- SUBCATEGORY DROPDOWN -->
+                <ul class="dropdown-menu" id="subCatDropdownMenu">
+                    <li>
+                        <a href="/admin/course/byCat?id={{selectedCat}}&bySubCat=all">All</a>
+                    </li>
+
+                    {{#each subCatList}}
+                    <li>
+                        <a href="/admin/course/byCat?id={{../selectedCat}}&bySubCat={{this.SubCatID}}">
+                            {{this.SubCatName}}
+                        </a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="dropdown instructor-dropdown">
+                <button class="btn-filter" id="instructorDropdownBtn">
+                    <i class="bi bi-person-fill"></i>
+                    <span id="selectedInstructor">All Instructors</span>
+                    <i class="bi bi-caret-down-fill"></i>
+                </button>
+
+                <ul class="dropdown-menu instructor-menu">
+                    <li class="instructor-item">
+                        <a href="#" data-ins="all">All</a>
+                    </li>
+
+                    {{#each ins}}
+                    <li class="instructor-item">
+                        <a href="#" data-ins="{{this.Fullname}}">{{this.Fullname}}</a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    {{#if empty}}
+    <p>Dont have any Sub Category!</p>
+    {{else}}
+    <div class="table-wrapper">
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Tiny Description</th>
+                    <th>Level</th>
+                    <th>Current Price</th>
+                    <th>Original Price</th>
+                    <th>Course Status</th>
+                    <th>Instructor</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each course}}
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <span>{{CourseName}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <span>{{TinyDes}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <span>{{Level}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <span>{{CurrentPrice}}$</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <span>{{OriginalPrice}}$</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            {{#ifCond CourseStatus "==" "Completed"}}
+                            <span class="status student">Completed</span>
+                            {{/ifCond}}
+                            {{#ifCond CourseStatus "==" 'Draft'}}
+                            <span class="status teacher">Draft</span>
+                            {{/ifCond}}
+                            {{#ifCond CourseStatus "==" 'Disable'}}
+                            <span class="status admin">Disable</span>
+                            {{/ifCond}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <span>{{UserName}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="/admin/course/edit?id={{CourseID}}" class="actions">
+                            <i class="bi bi-pencil" data-tooltip="Edit"></i>
+                        </a>
+                        <form action="/admin/course/del" method="POST" style="display:inline;">
+                            <input type="hidden" name="CourseID" value="{{CourseID}}">
+                            <input type="hidden" name="SubCatID" value="{{SubCatID}}">
+                            <button type="submit" class="actions" onclick="return confirm('Delete {{CourseName}}?')">
+                                <i class="bi bi-trash" data-tooltip="Delete"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    {{/if}}
+</div>

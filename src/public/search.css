@@ -115,3 +115,118 @@ body {
   justify-content: center;
   row-gap: 25px;
 }
+
+/* ===== FILTER & SORT BAR — SLYTHERIN THEME ===== */
+#filterForm {
+  background: linear-gradient(145deg, #0b2e13, #1a472a); /* nền xanh lục đậm pha gradient */
+  border-radius: 12px;
+  padding: 14px 22px;
+  border: 1px solid #2e8b57; /* viền xanh bạc */
+  box-shadow: 0 0 12px rgba(0, 255, 128, 0.15);
+}
+
+/* Label */
+#filterForm label {
+  font-weight: 600;
+  color: #C0C0C0; /* bạc sáng */
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+/* Select box */
+#filterForm select {
+  border-radius: 8px;
+  border: 1px solid #5a7c6f;
+  padding: 6px 12px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background-color: #1f3d2b; /* nền xanh tối */
+  color: #e0e0e0; /* chữ sáng */
+}
+
+#filterForm select:hover {
+  border-color: #00ff99;
+  box-shadow: 0 0 6px rgba(0, 255, 170, 0.5);
+}
+
+/* Filter button */
+#filterForm .btn-filter {
+  background: linear-gradient(135deg, #2e8b57, #1a472a);
+  border: 1px solid #00ff99;
+  border-radius: 8px;
+  padding: 6px 16px;
+  color: #e0e0e0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+#filterForm .btn-filter:hover {
+  background: linear-gradient(135deg, #00a36c, #006b4b);
+  box-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  #filterForm {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 10px;
+  }
+
+  #filterForm .sort {
+    justify-content: space-between;
+  }
+
+  #filterForm select {
+    width: 100%;
+  }
+}
+
+/* ===== PAGINATION — SLYTHERIN THEME ===== */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 30px 0;
+}
+
+.pagination a {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid #054d22;
+  border-radius: 6px;
+  color: #ececec;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.pagination a:hover {
+  background-color: #9abb2a;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.pagination a.active {
+  background-color: #dce711d2;
+  color: white;
+  cursor: default;
+  box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+}
+
+.pagination a:active {
+  transform: scale(0.96);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .pagination a {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+}

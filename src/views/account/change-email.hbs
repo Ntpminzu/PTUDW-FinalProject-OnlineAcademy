@@ -1,0 +1,46 @@
+{{#section "styles" append=true}}
+<link rel="stylesheet" href="/change-email.css">
+{{/section}}
+
+<div class="change-container">
+  <div class="change-header">
+    📧 CHANGE EMAIL
+  </div>
+
+  {{#if error}}
+  <div class="msg error">{{error}}</div>
+  {{/if}}
+
+  {{#if success}}
+  <div class="msg success">{{success}}</div>
+  {{/if}}
+
+  {{#unless showOtp}}
+  <form action="/account/change-email" method="post">
+    <div class="input-group">
+      <label for="newEmail">New Email</label>
+      <input type="email" id="newEmail" name="newEmail" placeholder="Enter your new email" required>
+    </div>
+    <div class="btn-row">
+      <a href="/account/profile" class="btn cancel">← Cancel</a>
+      <button type="submit" class="btn primary">📨 Send Verification Code</button>
+    </div>
+  </form>
+  {{/unless}}
+
+  {{#if showOtp}}
+  <form action="/account/verify-change-email" method="post">
+    <div class="input-group">
+      <label for="otp">OTP Code</label>
+      <input type="text" id="otp" name="otp" placeholder="Enter 6-digit code" required>
+    </div>
+    <div class="btn-row">
+      <a href="/account/profile" class="btn cancel">← Cancel</a>
+      <button type="submit" class="btn primary">✔ Confirm Email</button>
+    </div>
+  </form>
+  <p class="note">📩 OTP sent to: <b>{{newEmail}}</b></p>
+  {{/if}}
+
+  <footer>Hogwarts Academy • 2025</footer>
+</div>

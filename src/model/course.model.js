@@ -150,16 +150,65 @@ export default {
   },
 
   // SỬA: 'courses.UserID'
-  findByKeyword(keyword) {
+  async findByKeyword(keyword, sortBy = 'name_asc', limit = 6, offset = 0) {
     const term = `%${keyword.toLowerCase()}%`;
-    return db('courses as c')
-      .join('users as u', 'c.UserID', '=', 'u.UserID') // UserID
+
+    // Base query
+    const baseQuery = db('courses as c')
+      .join('users as u', 'c.UserID', '=', 'u.UserID')
       .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
       .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-      .whereRaw(`LOWER(c."CourseName") LIKE ? OR LOWER(c."TinyDes") LIKE ? OR LOWER(c."FullDes") LIKE ? OR LOWER(ca."CatName") LIKE ? OR LOWER(s."SubCatName") LIKE ? OR LOWER(u."Fullname") LIKE ?`,
-        [term, term, term, term, term, term])
-      .select('c.*', 'u.Fullname as InstructorName', 'ca.CatName', 's.SubCatName');
-  },
+      .whereRaw(`
+        LOWER(c."CourseName") LIKE ? OR
+        LOWER(c."TinyDes") LIKE ? OR
+        LOWER(c."FullDes") LIKE ? OR
+        LOWER(ca."CatName") LIKE ? OR
+        LOWER(s."SubCatName") LIKE ? OR
+        LOWER(u."Fullname") LIKE ?
+      `, [term, term, term, term, term, term])
+      .select(
+        'c.CourseID',
+        'c.CourseName',
+        'c.ImageUrl',
+        'c.Rating',
+        'c.TotalStudent',
+        'c.CurrentPrice',
+        'c.OriginalPrice',
+        'u.Fullname as InstructorName',
+        'ca.CatName as CategoryName'
+      );
+
+    // ✅ Thêm sắp xếp
+      switch (sortBy) {
+        case 'name_asc': baseQuery.orderBy('c.CourseName', 'asc'); break;
+        case 'name_desc': baseQuery.orderBy('c.CourseName', 'desc'); break;
+        case 'price_asc': baseQuery.orderBy('c.CurrentPrice', 'asc'); break;
+        case 'price_desc': baseQuery.orderBy('c.CurrentPrice', 'desc'); break;
+        case 'rating_desc': baseQuery.orderBy('c.Rating', 'desc'); break;
+        default: baseQuery.orderBy('c.CourseName', 'asc');
+      }
+
+    // Lấy dữ liệu có phân trang
+    const results = await baseQuery.clone().limit(limit).offset(offset);
+
+    // Đếm tổng số kết quả
+    const totalResult = await db('courses as c')
+      .join('users as u', 'c.UserID', '=', 'u.UserID')
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .whereRaw(`
+        LOWER(c."CourseName") LIKE ? OR
+        LOWER(c."TinyDes") LIKE ? OR
+        LOWER(c."FullDes") LIKE ? OR
+        LOWER(ca."CatName") LIKE ? OR
+        LOWER(s."SubCatName") LIKE ? OR
+        LOWER(u."Fullname") LIKE ?
+      `, [term, term, term, term, term, term])
+      .count('* as count')
+      .first();
+
+    return { results, total: parseInt(totalResult.count) };
+    },
   // finduserenrollcourses 
   async finduserenrollcourses(UserId) {
     return db('enrollments as e')

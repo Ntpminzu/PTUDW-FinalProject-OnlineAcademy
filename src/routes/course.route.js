@@ -155,16 +155,38 @@ router.get('/courselist', async function (req, res, next) {
 // Trang tìm kiếm (GET /search) - Đã sửa
 router.get('/search', async (req, res, next) => {
   try {
-      const keyword = req.query.q?.trim().toLowerCase();
-      if (!keyword) return res.redirect('/course');
-      const results = await courseModel.findByKeyword(keyword); // Đã join đủ
+    
+    const keyword = (req.query.keyword || req.query.q || '').trim().toLowerCase();
+    if (!keyword) return res.redirect('/course');
 
-      res.render('course/searchResults', {
-          layout: 'main', keyword: req.query.q, results,
-          notFound: !results || results.length === 0
-      });
-    } catch(err) { next(err); }
+    // --- Lấy tham số phân trang & sắp xếp ---
+    const page = parseInt(req.query.page) || 1;
+    const limit = 4;
+    const offset = (page - 1) * limit;
+    const sortBy = req.query.sortBy || 'name_asc';
+    // --- Gọi model ---
+    const { results, total } = await courseModel.findByKeyword(keyword, sortBy, limit, offset);
+
+    // --- Tính toán phân trang ---
+    const totalPages = Math.ceil(total / limit);
+
+    // --- Render ---
+    res.render('course/searchResults', {
+      layout: 'main',
+      keyword,
+      results,
+      sortBy,
+      currentPage: page,
+      totalPages,
+      notFound: total === 0
+    });
+  } catch (err) {
+    next(err);
+  }
 });
+
+
+
 
 router.get('/course-remake', function (req, res) {
   res.render('course/course-remake');

@@ -1,64 +1,60 @@
 {{#section "styles" append=true}}
 <link rel="stylesheet" href="/profile.css">
 {{/section}}
+
 <form id="profileForm" action="/account/profile" method="post">
   <div class="profile-card">
     <div class="profile-header">
-      <img src="https://i.pinimg.com/564x/50/70/50/5070504c4e21e947a94e1b37cf8d6de1.jpg" alt="Avatar" class="avatar">
-      <div class="info">
-        <h1 id="userName">{{user.Fullname}}</h1>
-      </div>
-      <button id="editInfoBtn" class="btn">✏️ Sửa thông tin</button>
-      <a href="/account/change-password" class="btn danger">🔒 Đổi mật khẩu</a>
-    </div>
+  <img
+    src="https://i.pinimg.com/564x/50/70/50/5070504c4e21e947a94e1b37cf8d6de1.jpg"
+    alt="Avatar"
+    class="avatar"
+  >
+  <div class="info">
+    <h1 id="userName">{{user.Fullname}}</h1>
+  </div>
+  <div class="action-buttons">
+    <button id="editInfoBtn" class="btn">✏️ Change Info</button>
+    <a href="/account/change-email" class="btn info">📧 Change Email</a>
+    <a href="/account/change-password" class="btn danger">🔒 Change Password</a>
+  </div>
+</div>
+
 
     <div class="profile-body">
-      <form id="profileForm">
-        <div class="field">
-          <label>Họ và tên:</label>
-          <input type="text" id="name" value="{{user.Fullname}}" disabled>
-        </div>
-        <div class="field">
-          <label>Email:</label>
-          <input type="email" id="email" value="{{user.Email}}" disabled>
-        </div>
-        <div class="field">
-          <label>Permission :</label> 
-          <input type="text" id="address" value="{{user.Permission}}" disabled>
-        </div>
-        <div id="saveCancelBtns" class="save-btns" style="display:none;">
-          <button type="button" class="btn success" id="saveBtn">💾 Lưu</button>
-          <button type="button" class="btn" id="cancelBtn">❌ Hủy</button>
-        </div>
-      </form>
+      <div class="field">
+        <label>Họ và tên:</label>
+        <input type="text" id="name" name="Fullname" value="{{user.Fullname}}" disabled>
+      </div>
+
+      <div class="field">
+        <label>Email:</label>
+        <input type="email" id="email" value="{{user.Email}}" disabled>
+      </div>
+
+      <div id="saveCancelBtns" class="save-btns" style="display:none;">
+        <button type="submit" class="btn success" id="saveBtn">💾 Lưu</button>
+        <button type="button" class="btn" id="cancelBtn">❌ Hủy</button>
+      </div>
     </div>
+  </div>
 </form>
 
-  <script>
-    const editBtn = document.getElementById("editInfoBtn");
-    const inputs = document.querySelectorAll("#profileForm input");
-    const saveBtns = document.getElementById("saveCancelBtns");
+<script>
+const editBtn = document.getElementById("editInfoBtn");
+const inputs = document.querySelectorAll("#profileForm input[type='text']");
+const saveBtns = document.getElementById("saveCancelBtns");
 
-    editBtn.addEventListener("click", () => {
-      inputs.forEach(i => i.disabled = false);
-      saveBtns.style.display = "flex";
-      editBtn.style.display = "none";
-    });
+editBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  inputs.forEach(i => i.disabled = false);
+  saveBtns.style.display = "flex";
+  editBtn.style.display = "none";
+});
 
-    document.getElementById("cancelBtn").addEventListener("click", () => {
-      inputs.forEach(i => i.disabled = true);
-      saveBtns.style.display = "none";
-      editBtn.style.display = "inline-block";
-    });
-
-    document.getElementById("saveBtn").addEventListener("click", () => {
-      inputs.forEach(i => i.disabled = true);
-      saveBtns.style.display = "none";
-      editBtn.style.display = "inline-block";
-      alert("✅ Đã lưu thông tin thành công!");
-    });
-
-    function removeCourse(btn) {
-      btn.parentElement.remove();
-    }
-  </script>
+document.getElementById("cancelBtn").addEventListener("click", () => {
+  inputs.forEach(i => i.disabled = true);
+  saveBtns.style.display = "none";
+  editBtn.style.display = "inline-block";
+});
+</script>

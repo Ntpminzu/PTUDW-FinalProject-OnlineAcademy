@@ -85,9 +85,13 @@
 
                     <div class="form-row full">
                         <div class="form-group">
-                            <label class="form-label" for="ImageUrl">Image URL (Optional)</label>
-                            <input type="url" class="form-input" id="ImageUrl" name="ImageUrl" value="{{ImageUrl}}"
-                                placeholder="https://..." />
+                            <label class="form-label" for="ImageUrlInput_Edit">Image URL *</label>
+                            {{!-- THÊM ID VÀO INPUT --}}
+                            <input type="url" class="form-input" id="ImageUrlInput_Edit" name="ImageUrl"
+                                value="{{course.ImageUrl}}" placeholder="https://..." />
+
+                            {{!-- THÊM DIV CHO UPPY --}}
+                            <div id="uppy-image-edit" style="margin-top: 15px;"></div>
                         </div>
                     </div>
 

@@ -4,6 +4,8 @@ import lessonModel from '../model/lesson.model.js';
 import courseModel from '../model/course.model.js';
 import * as accountModel from '../model/account.model.js';
 import db from '../utils/db.js';
+import upload from '../middlewares/upload.mdw.js';
+import multer from 'multer';
 
 const router = express.Router();
 
@@ -27,39 +29,106 @@ async function getCategoriesForForm() {
     }, []);
 }
 
-// GET /management/course (Đã sửa hoàn chỉnh)
+// GET /management/course 
 router.get('/course', async function (req, res, next) {
     // Middleware 'restrict' đã kiểm tra đăng nhập
     const userPermission = req.session.authUser.UserPermission;
-    const userId = req.session.authUser.UserID; // UserID của người đăng nhập
+    const userId = req.session.authUser.UserID;
     const instructorIdForStats = (userPermission === '1') ? userId : null;
+
+    // --- BẮT ĐẦU LOGIC PHÂN TRANG ---
+    const page = parseInt(req.query.page) || 1; // Lấy trang hiện tại từ query, mặc định là 1
+    const LIMIT = 3; // Đặt số lượng khóa học mỗi trang (ví dụ: 6)
+    const offset = (page - 1) * LIMIT;
+    // ---------------------------------
 
     try {
         let listCourses;
-        if (userPermission === '1') { // Instructor
-            listCourses = await courseModel.findByUserId(userId); // Dùng UserID
-        } else if (userPermission === '0') { // Admin
-            listCourses = await courseModel.findAll(); // findAll đã join đủ
-        } else { return res.status(403).render('403'); }
+        let totalCourses; // Biến để lưu tổng số khóa học
 
-        const [categoriesForForm, totalCourses, totalStudents, avgRating, statusCounts] = await Promise.all([
-            getCategoriesForForm(), // Lấy categories + subcats
-            courseModel.countCourses(instructorIdForStats),
+        // Lấy tổng số khóa học (Tận dụng hàm countCourses)
+        totalCourses = await courseModel.countCourses(instructorIdForStats);
+
+        // Tính tổng số trang
+        const totalPages = Math.ceil(totalCourses / LIMIT);
+
+        // Lấy danh sách khóa học đã phân trang
+        if (userPermission === '1') { // Instructor
+            listCourses = await courseModel.findByUserIdPaginated(userId, LIMIT, offset);
+        } else if (userPermission === '0') { // Admin
+            listCourses = await courseModel.findAllPaginated(LIMIT, offset);
+        } else {
+            return res.status(403).render('403');
+        }
+
+        // Lấy các dữ liệu khác (cho form và tab thống kê)
+        const [categoriesForForm, totalStudents, avgRating, statusCounts] = await Promise.all([
+            getCategoriesForForm(),
             courseModel.sumStudents(instructorIdForStats),
             courseModel.averageRating(instructorIdForStats),
             courseModel.countCoursesByStatus(instructorIdForStats)
         ]);
+
+        // Cập nhật lại totalCourses trong statistics cho đúng
         const statistics = { totalCourses, totalStudents, avgRating, statusCounts };
 
         res.render('management/course', {
             layout: 'main',
-            categories: categoriesForForm, // Truyền categories đã nhóm
+            categories: categoriesForForm,
             courses: listCourses,
-            statistics: statistics, query: req.query,
-            // Xác định tab active
-            activeTab: req.query.errorAdd ? 'add' : (req.query.addSuccess || req.query.updateSuccess || req.query.deleteSuccess ? 'list' : 'list')
+            statistics: statistics,
+            query: req.query,
+            activeTab: req.query.errorAdd ? 'add' : (req.query.addSuccess || req.query.updateSuccess || req.query.deleteSuccess ? 'list' : 'list'),
+
+            // --- TRUYỀN DỮ LIỆU PHÂN TRANG RA VIEW ---
+            pagination: {
+                hasPagination: totalPages > 1 // Chỉ hiển thị nếu có nhiều hơn 1 trang
+            },
+            currentPage: page,  // Trang hiện tại
+            totalPages: totalPages // Tổng số trang
+            // ----------------------------------------
         });
-    } catch (err) { next(err); }
+    } catch (err) {
+        next(err);
+    }
+});
+
+// Route để xử lý upload file từ Uppy
+router.post('/upload', (req, res, next) => {
+    // Chỉ Giảng viên ('1') mới được upload
+    if (req.session.authUser?.UserPermission !== '1') {
+        return res.status(403).json({ error: 'Permission denied.' });
+    }
+
+    const uploader = upload.single('file');
+
+    uploader(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            // Lỗi từ Multer (ví dụ: file quá lớn)
+            console.error("Multer error:", err);
+            return res.status(500).json({ error: err.message });
+        } else if (err) {
+            // Lỗi không xác định (ví dụ: sai loại file)
+            console.error("Unknown upload error:", err);
+            return res.status(400).json({ error: err.message });
+        }
+
+        // Nếu không có file
+        if (!req.file) {
+            console.warn("Upload attempt with no file.");
+            return res.status(400).json({ error: 'No file uploaded.' });
+        }
+
+        // Thành công!
+        // Tạo đường dẫn URL (vd: /temp_upload/file-12345.jpg)
+        const urlPath = `/temp_upload/${req.file.filename}`;
+
+        // Trả về JSON mà Uppy có thể hiểu
+        res.status(200).json({
+            success: true,
+            uploadURL: urlPath // Uppy sẽ nhận được đường dẫn này
+        });
+    });
 });
 
 // POST /management/course/add (Đã sửa hoàn chỉnh)

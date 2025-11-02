@@ -51,7 +51,7 @@
           <!-- Mặt trước -->
           <div class="card-front">
             <div class="teacher-frame">
-              <img src="{{ImageUrl}}" alt="{{CourseName}}">
+              <img src="/CourseBG/{{ImageUrl}}" alt="{{CourseName}}">
             </div>
             <h3>{{CourseName}}</h3>
             <p class="field">{{CategoryName}}</p>
@@ -100,7 +100,7 @@
     {{#each topCourses}}
     <div class="course-card">
       <a href="/course/detail?id={{CourseID}}">
-        <img src="{{this.ImageUrl}}" alt="{{this.CourseName}}">
+        <img src="CourseBG/{{this.ImageUrl}}" alt="{{this.CourseName}}">
         <div class="course-info">
           <p class="category">{{this.CatName}}</p>
           <h3>{{this.CourseName}}</h3>
@@ -128,7 +128,7 @@
     {{#each top10Newest}}
     <div class="course-card">
       <a href="/course/detail?id={{CourseID}}">
-        <img src="{{ImageUrl}}" alt="{{CourseName}}">
+        <img src="CourseBG/{{ImageUrl}}" alt="{{CourseName}}">
         <div class="course-info">
           <p class="category">{{this.CatName}}</p>
           <h3>{{CourseName}}</h3>

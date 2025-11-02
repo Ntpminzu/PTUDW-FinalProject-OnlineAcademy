@@ -1,13 +1,16 @@
 import { Resend } from 'resend';
+import dotenv from 'dotenv';
 
-const resend = new Resend('re_fHWKDXvi_7Dx3oTfN9eyd3nQK4QCJPzmA');//nào chạy Project nhớ quăng API Key vào
+dotenv.config();
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendOTP(to, otp) {
   try {
-    console.log('🔹 Sending OTP to:', to);
+    console.log('🔹 Đang gửi OTP tới:', to);
 
-    await resend.emails.send({
-      from: 'onboarding@resend.dev',
+    const response = await resend.emails.send({
+      from: 'Online Academy <onboarding@resend.dev>',
       to,
       subject: 'Online Academy - Mã OTP của bạn',
       html: `
@@ -20,11 +23,11 @@ export async function sendOTP(to, otp) {
           <hr />
           <p style="font-size: 0.9em;">Online Academy Support Team</p>
         </div>
-      `
+      `,
     });
 
-    console.log('✅ OTP email sent successfully!');
+    console.log('✅ Email OTP gửi thành công:', response.id || '(no id)');
   } catch (error) {
-    console.error('❌ Lỗi gửi mail:', error);
+    console.error('❌ Lỗi gửi email OTP:', error);
   }
 }

@@ -23,6 +23,10 @@ router.post('/signup', async (req, res) => {
     if (existingUser)
       return res.render('account/signup', { error: 'Tên đăng nhập đã tồn tại.', showOtp: false });
 
+    const existingEmail = await accountModel.findByEmail(email);
+    if (existingEmail)
+      return res.render('account/signup', { error: 'Email đã được sử dụng.', showOtp: false });
+
     const otp = Math.floor(100000 + Math.random() * 900000);
     req.session.pendingUser = { username, password, name, email };
     req.session.signupOtp = otp;
@@ -37,6 +41,7 @@ router.post('/signup', async (req, res) => {
     res.render('account/signup', { error: 'Server error.', showOtp: false });
   }
 });
+
 
 router.post('/verify-otp', async (req, res) => {
   try {

@@ -84,16 +84,16 @@ export default {
       .select('c.*', 'u.Fullname as InstructorName', 'ca.CatName', 's.SubCatName')
       .orderBy('c.WeekView', 'desc')
       .select(
-      'c.CourseID',
-      'c.CourseName',
-      'c.ImageUrl',
-      'c.Rating',
-      'c.Total_Review',
-      'c.CurrentPrice',
-      'c.OriginalPrice',
-      'c.WeekView',
-      'u.Fullname as InstructorName',
-      'ca.CatName as CategoryName'
+        'c.CourseID',
+        'c.CourseName',
+        'c.ImageUrl',
+        'c.Rating',
+        'c.Total_Review',
+        'c.CurrentPrice',
+        'c.OriginalPrice',
+        'c.WeekView',
+        'u.Fullname as InstructorName',
+        'ca.CatName as CategoryName'
       )
       .limit(4);
   },
@@ -135,7 +135,7 @@ export default {
       .offset(offset);
   },
 
-  
+
   countByCategory(SubCatID) {
     return db('courses')
       .where('SubCatID', SubCatID)
@@ -150,68 +150,103 @@ export default {
   },
 
   // SỬA: 'courses.UserID'
-  findByKeyword(keyword) {
+  async findByKeyword(keyword, sortBy = 'name_asc', limit = 6, offset = 0) {
     const term = `%${keyword.toLowerCase()}%`;
-    return db('courses as c')
-      .join('users as u', 'c.UserID', '=', 'u.UserID') // UserID
+
+    // Base query
+    const baseQuery = db('courses as c')
+      .join('users as u', 'c.UserID', '=', 'u.UserID')
       .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
       .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-      .whereRaw(`LOWER(c."CourseName") LIKE ? OR LOWER(c."TinyDes") LIKE ? OR LOWER(c."FullDes") LIKE ? OR LOWER(ca."CatName") LIKE ? OR LOWER(s."SubCatName") LIKE ? OR LOWER(u."Fullname") LIKE ?`,
-                [term, term, term, term, term, term])
-      .select('c.*', 'u.Fullname as InstructorName', 'ca.CatName', 's.SubCatName');
-  },
-// 🧭 Lấy toàn bộ khóa học user đã ghi danh (kèm trạng thái học)
-async findUserEnrollCourses(UserId) {
-  return db('enrollments as e')
-    .join('courses as c', 'e.CourseID', 'c.CourseID')
-    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
-    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-    .select(
-      'c.*',
-      'ca.CatName',
-      's.SubCatName',
-      'e.enrolled_at',
-      db.raw('"e"."LearnStatus" as "LearnStatus"'),
-      db.raw(`CASE WHEN "e"."LearnStatus" = 'DONE' THEN true ELSE false END as "IsCompleted"`)
-    )
-    .where('e.UserID', UserId)
-    .orderBy('e.enrolled_at', 'desc');
-},
+      .whereRaw(`
+        LOWER(c."CourseName") LIKE ? OR
+        LOWER(c."TinyDes") LIKE ? OR
+        LOWER(c."FullDes") LIKE ? OR
+        LOWER(ca."CatName") LIKE ? OR
+        LOWER(s."SubCatName") LIKE ? OR
+        LOWER(u."Fullname") LIKE ?
+      `, [term, term, term, term, term, term])
+      .select(
+        'c.CourseID',
+        'c.CourseName',
+        'c.ImageUrl',
+        'c.Rating',
+        'c.TotalStudent',
+        'c.CurrentPrice',
+        'c.OriginalPrice',
+        'u.Fullname as InstructorName',
+        'ca.CatName as CategoryName'
+      );
 
- // 🧮 Đếm tổng số khóa học mà user đã ghi danh
-    async countUserEnrollCourses(UserId) {
-      const result = await db('enrollments')
-        .where('UserID', UserId)
-        .count('CourseID as total')
-        .first();
-      return parseInt(result.total, 10) || 0;
+    // ✅ Thêm sắp xếp
+      switch (sortBy) {
+        case 'name_asc': baseQuery.orderBy('c.CourseName', 'asc'); break;
+        case 'name_desc': baseQuery.orderBy('c.CourseName', 'desc'); break;
+        case 'price_asc': baseQuery.orderBy('c.CurrentPrice', 'asc'); break;
+        case 'price_desc': baseQuery.orderBy('c.CurrentPrice', 'desc'); break;
+        case 'rating_desc': baseQuery.orderBy('c.Rating', 'desc'); break;
+        default: baseQuery.orderBy('c.CourseName', 'asc');
+      }
+
+    // Lấy dữ liệu có phân trang
+    const results = await baseQuery.clone().limit(limit).offset(offset);
+
+    // Đếm tổng số kết quả
+    const totalResult = await db('courses as c')
+      .join('users as u', 'c.UserID', '=', 'u.UserID')
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .whereRaw(`
+        LOWER(c."CourseName") LIKE ? OR
+        LOWER(c."TinyDes") LIKE ? OR
+        LOWER(c."FullDes") LIKE ? OR
+        LOWER(ca."CatName") LIKE ? OR
+        LOWER(s."SubCatName") LIKE ? OR
+        LOWER(u."Fullname") LIKE ?
+      `, [term, term, term, term, term, term])
+      .count('* as count')
+      .first();
+
+    return { results, total: parseInt(totalResult.count) };
     },
+  // finduserenrollcourses 
+  async finduserenrollcourses(UserId) {
+    return db('enrollments as e')
+      .join('courses as c', 'e.CourseID', 'c.CourseID')
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .select('c.*', 'ca.CatName', 's.SubCatName', 'e.enrolled_at')
+      .where('e.UserID', UserId)
+      .orderBy('e.enrolled_at', 'desc');
+  },
+  // Đếm tổng số khóa học mà user đã ghi danh
+  async countUserEnrollCourses(UserId) {
+    const result = await db('enrollments')
+      .where('UserID', UserId)
+      .count('CourseID as total')
+      .first();
+    return parseInt(result.total, 10) || 0;
+  },
 
-// 📄 Lấy danh sách khóa học user đã ghi danh (phân trang + trạng thái học)
-async findUserEnrollCoursesPaging(UserId, limit, offset) {
-  return db('enrollments as e')
-    .join('courses as c', 'e.CourseID', 'c.CourseID')
-    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
-    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-    .select(
-      'c.*',
-      'ca.CatName',
-      's.SubCatName',
-      'e.enrolled_at',
-      db.raw('"e"."LearnStatus" as "LearnStatus"'),
-      db.raw(`CASE WHEN "e"."LearnStatus" = 'DONE' THEN true ELSE false END as "IsCompleted"`)
-    )
-    .where('e.UserID', UserId)
-    .orderBy('e.enrolled_at', 'desc')
-    .limit(limit)
-    .offset(offset);
-},
+  // Lấy danh sách khóa học theo phân trang (limit + offset)
+  async findUserEnrollCoursesPaging(UserId, limit, offset) {
+    return db('enrollments as e')
+      .join('courses as c', 'e.CourseID', 'c.CourseID')
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .select('c.*', 'ca.CatName', 's.SubCatName', 'e.enrolled_at')
+      .where('e.UserID', UserId)
+      .orderBy('e.enrolled_at', 'desc')
+      .limit(limit)
+      .offset(offset);
+  },
+
 
   //--- CÁC HÀM THỐNG KÊ CHO QUẢN LÝ GIẢNG VIÊN ---//
   // Hàm trợ giúp để tạo điều kiện WHERE
   _createWhereClause(userId = null) {
-      return userId ? { UserID: userId } : {}; // Lọc theo UserID
-    },
+    return userId ? { UserID: userId } : {}; // Lọc theo UserID
+  },
 
   // Đếm tổng số khóa học (của GV hoặc tất cả)
   async countCourses(userId = null) {
@@ -229,23 +264,23 @@ async findUserEnrollCoursesPaging(UserId, limit, offset) {
 
   // Tính rating trung bình (của GV hoặc tất cả)
   async averageRating(userId = null) {
-      const whereClause = this._createWhereClause(userId); // Dùng UserID theo schema mới
-      const result = await db('courses')
-          .where(whereClause)
-          .andWhere('Rating', '>', 0) // Chỉ tính các khóa học có rating
-          .avg('Rating as average')
-          .first();
+    const whereClause = this._createWhereClause(userId); // Dùng UserID theo schema mới
+    const result = await db('courses')
+      .where(whereClause)
+      .andWhere('Rating', '>', 0) // Chỉ tính các khóa học có rating
+      .avg('Rating as average')
+      .first();
 
-      // SỬA: Kiểm tra result.average trước khi gọi toFixed
-      if (result && typeof result.average === 'number') {
-          return parseFloat(result.average.toFixed(1)); // Làm tròn nếu là số
-      } else if (result && typeof result.average === 'string') {
-          // Nếu kết quả avg trả về là string (một số DB có thể làm vậy)
-          const numAvg = parseFloat(result.average);
-          return isNaN(numAvg) ? 0 : parseFloat(numAvg.toFixed(1));
-      }
-      // Nếu không có kết quả hoặc không phải số, trả về 0
-      return 0;
+    // SỬA: Kiểm tra result.average trước khi gọi toFixed
+    if (result && typeof result.average === 'number') {
+      return parseFloat(result.average.toFixed(1)); // Làm tròn nếu là số
+    } else if (result && typeof result.average === 'string') {
+      // Nếu kết quả avg trả về là string (một số DB có thể làm vậy)
+      const numAvg = parseFloat(result.average);
+      return isNaN(numAvg) ? 0 : parseFloat(numAvg.toFixed(1));
+    }
+    // Nếu không có kết quả hoặc không phải số, trả về 0
+    return 0;
   },
 
   // Đếm số khóa học theo từng trạng thái (của GV hoặc tất cả)
@@ -256,7 +291,7 @@ async findUserEnrollCoursesPaging(UserId, limit, offset) {
       .groupBy('CourseStatus')
       .select('CourseStatus')
       .count('CourseID as count');
-    
+
     // Chuyển kết quả thành dạng { complete: 5, not complete: 10, ... }
     const counts = {};
     results.forEach(row => {
@@ -339,55 +374,78 @@ async findUserEnrollCoursesPaging(UserId, limit, offset) {
       )
       .orderBy('created_at', 'asc');
   },
-async findRelatedCourses(courseId, catId) {
-  const sameCat = await db('courses as c')
-    .join('users as u', 'c.UserID', '=', 'u.UserID')
-    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
-    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-    .where('ca.CatID', catId)
-    .andWhereNot('c.CourseID', courseId)
-    .select(
-      'c.CourseID',
-      'c.CourseName',
-      'c.ImageUrl',
-      'c.Rating',
-      'c.Total_Review',
-      'c.TotalStudent',  
-      'c.CurrentPrice',
-      'c.OriginalPrice',
-      'u.Fullname as InstructorName',
-      'ca.CatName as CategoryName'
-    )
-    .orderBy('c.Views', 'desc')
-    .limit(5);
+  async findRelatedCourses(courseId, catId) {
+    const sameCat = await db('courses as c')
+      .join('users as u', 'c.UserID', '=', 'u.UserID')
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .where('ca.CatID', catId)
+      .andWhereNot('c.CourseID', courseId)
+      .select(
+        'c.CourseID',
+        'c.CourseName',
+        'c.ImageUrl',
+        'c.Rating',
+        'c.Total_Review',
+        'c.TotalStudent',
+        'c.CurrentPrice',
+        'c.OriginalPrice',
+        'u.Fullname as InstructorName',
+        'ca.CatName as CategoryName'
+      )
+      .orderBy('c.Views', 'desc')
+      .limit(5);
 
-  if (sameCat.length >= 5) return sameCat;
+    if (sameCat.length >= 5) return sameCat;
 
-  const remaining = 5 - sameCat.length;
+    const remaining = 5 - sameCat.length;
 
-  const extra = await db('courses as c')
-    .join('users as u', 'c.UserID', '=', 'u.UserID')
-    .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
-    .join('categories as ca', 's.CatID', '=', 'ca.CatID')
-    .whereNot('c.CourseID', courseId)
-    .select(
-      'c.CourseID',
-      'c.CourseName',
-      'c.ImageUrl',
-      'c.Rating',
-      'c.Total_Review',
-      'c.TotalStudent',   
-      'c.CurrentPrice',
-      'c.OriginalPrice',
-      'u.Fullname as InstructorName',
-      'ca.CatName as CategoryName'
-    )
-    .orderByRaw('RANDOM()')
-    .limit(remaining);
+    const extra = await db('courses as c')
+      .join('users as u', 'c.UserID', '=', 'u.UserID')
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .whereNot('c.CourseID', courseId)
+      .select(
+        'c.CourseID',
+        'c.CourseName',
+        'c.ImageUrl',
+        'c.Rating',
+        'c.Total_Review',
+        'c.TotalStudent',
+        'c.CurrentPrice',
+        'c.OriginalPrice',
+        'u.Fullname as InstructorName',
+        'ca.CatName as CategoryName'
+      )
+      .orderByRaw('RANDOM()')
+      .limit(remaining);
 
-  return [...sameCat, ...extra];
-}
+    return [...sameCat, ...extra];
+  },
 
+  // --- CÁC HÀM LẤY DỮ LIỆU PHÂN TRANG ---
 
+  // Lấy tất cả khóa học (phân trang cho Admin)
+  findAllPaginated(limit, offset) {
+    return db('courses as c')
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .join('users as u', 'c.UserID', '=', 'u.UserID') // Dùng c.UserID
+      .select('c.*', 'ca.CatName', 's.SubCatName', 'u.Fullname as InstructorName')
+      .limit(limit)
+      .offset(offset)
+      .orderBy('c.Date', 'desc'); // Sắp xếp theo ngày mới nhất
+  },
 
+  // Lấy khóa học của Giảng viên (phân trang cho Instructor)
+  findByUserIdPaginated(userId, limit, offset) {
+    return db('courses as c')
+      .where('c.UserID', userId) // Lọc theo UserID (giảng viên)
+      .join('sub_cat as s', 'c.SubCatID', '=', 's.SubCatID')
+      .join('categories as ca', 's.CatID', '=', 'ca.CatID')
+      .select('c.*', 'ca.CatName', 's.SubCatName')
+      .limit(limit)
+      .offset(offset)
+      .orderBy('c.Date', 'desc'); // Sắp xếp theo ngày mới nhất
+  },
 };

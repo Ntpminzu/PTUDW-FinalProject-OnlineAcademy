@@ -97,7 +97,7 @@ router.post('/signin', async (req, res) => {
 
     if (user.Lock === true || user.Lock === 1) {
       return res.render('Admin/user/AddLock', {
-        layout: false, 
+        layout: false,
         user
       });
     }
@@ -109,57 +109,18 @@ router.post('/signin', async (req, res) => {
         showOtp: false
       });
 
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    req.session.signinUser = user;
-    req.session.signinOtp = otp;
-    req.session.signinOtpAt = Date.now();
-
-    await sendOTP(user.Email, otp);
-    console.log(`📩 Signin OTP sent to ${user.Email}: ${otp}`);
-
-    res.render('account/signin', {
-      showOtp: true,
-      email: user.Email,
-      username
-    });
-  } catch (error) {
-    console.error(error);
-    res.render('account/signin', {
-      error: 'Server error.',
-      showOtp: false
-    });
-  }
-});
-
-
-router.post('/verify-signin-otp', async (req, res) => {
-  try {
-    const { otp } = req.body;
-    const pending = req.session.signinUser;
-    const storedOtp = req.session.signinOtp;
-    const otpAt = req.session.signinOtpAt;
-
-    if (!pending || !storedOtp)
-      return res.render('account/signin', { error: 'Không tìm thấy phiên đăng nhập.', showOtp: false });
-
-    if (Date.now() - otpAt > 5 * 60 * 1000)
-      return res.render('account/signin', { error: 'OTP đã hết hạn.', showOtp: false });
-
-    if (String(otp) !== String(storedOtp))
-      return res.render('account/signin', { error: 'OTP không đúng.', showOtp: true, email: pending.Email 
-    });
     req.session.isAuthenticated = true;
-    req.session.authUser = pending;
-    req.session.signinUser = null;
-    req.session.signinOtp = null;
-    req.session.signinOtpAt = null;
+    req.session.authUser = user;
 
     const retUrl = req.session.retUrl || '/';
     delete req.session.retUrl;
     res.redirect(retUrl);
   } catch (error) {
     console.error(error);
-    res.render('account/signin', { error: 'Lỗi khi xác minh OTP.', showOtp: true });
+    res.render('account/signin', {
+      error: 'Server error.',
+      showOtp: false
+    });
   }
 });
 

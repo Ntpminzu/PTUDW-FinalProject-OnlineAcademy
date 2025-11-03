@@ -24,7 +24,7 @@
     <h5>Course Modules</h5>
     <ul class="list-group" id="videoList">
       {{#each lessons}}
-      <li class="list-group-item video-item" data-video="/LessonVid/{{this.VideoUrl}}" data-lesson-id="{{this.LessonID}}"
+      <li class="list-group-item video-item" data-video="{{this.VideoUrl}}" data-lesson-id="{{this.LessonID}}"
         data-course-id="{{../course.CourseID}}">
         <i class="bi bi-play-circle"></i>
         {{this.LessonName}}

@@ -16,7 +16,7 @@
 
             <div class="form-container" style="max-width: 900px; margin: 0 auto;">
                 {{#with course}} {{!-- Sử dụng dữ liệu 'course' được truyền từ route GET --}}
-                <form action="/management/course/update" method="POST">
+                <form action="/management/course/update" method="POST" novalidate>
                     {{!-- Hidden input để gửi CourseID khi submit --}}
                     <input type="hidden" name="CourseID" value="{{CourseID}}" />
 
@@ -87,7 +87,7 @@
                         <div class="form-group">
                             <label class="form-label" for="ImageUrlInput_Edit">Image URL *</label>
                             {{!-- THÊM ID VÀO INPUT --}}
-                            <input type="url" class="form-input" id="ImageUrlInput_Edit" name="ImageUrl"
+                            <input type="text" class="form-input" id="ImageUrlInput_Edit" name="ImageUrl"
                                 value="{{course.ImageUrl}}" placeholder="https://..." />
 
                             {{!-- THÊM DIV CHO UPPY --}}

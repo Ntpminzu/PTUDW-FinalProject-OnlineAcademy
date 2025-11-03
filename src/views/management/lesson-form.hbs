@@ -19,7 +19,7 @@
                 {{!-- Form POST đến route add hoặc update --}}
                 <form
                     action="/management/course/{{course.CourseID}}/lessons/{{#if isEditing}}{{lesson.LessonID}}/update{{else}}add{{/if}}"
-                    method="POST">
+                    method="POST" novalidate>
 
                     <div class="form-row full">
                         <div class="form-group">
@@ -32,7 +32,7 @@
                         <div class="form-group">
                             <label class="form-label" for="VideoUrlInput">Video URL *</label>
                             {{!-- THÊM ID VÀO INPUT --}}
-                            <input type="url" class="form-input" id="VideoUrlInput" name="VideoUrl"
+                            <input type="text" class="form-input" id="VideoUrlInput" name="VideoUrl"
                                 value="{{#if lesson}}{{lesson.VideoUrl}}{{else}}{{formData.VideoUrl}}{{/if}}"
                                 placeholder="https://..." required />
 

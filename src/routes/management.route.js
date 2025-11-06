@@ -6,6 +6,13 @@ import * as accountModel from '../model/account.model.js';
 import db from '../utils/db.js';
 import upload from '../middlewares/upload.mdw.js';
 import multer from 'multer';
+import uploadFile from '../service/upload.js';
+import path from 'path';
+
+const uploadMulter = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 30000000 },
+}).single('courseVid');
 
 const router = express.Router();
 
@@ -319,38 +326,45 @@ router.get('/course/:courseId/lessons/add', checkCourseOwnership, (req, res) => 
 });
 
 // XỬ LÝ THÊM BÀI HỌC MỚI (POST)
-router.post('/course/:courseId/lessons/add', checkCourseOwnership, async (req, res, next) => {
-    try {
-        const courseId = req.params.courseId;
-        const instructorId = req.session.authUser.UserID;
-        const { LessonName, TinyDes, FullDes, VideoUrl, LessonStatus, LessonPermission } = req.body;
+router.post('/course/:courseId/lessons/add', uploadMulter, checkCourseOwnership, async (req, res, next) => {
+    const courseId = req.params.courseId;
+    const instructorId = req.session.authUser.UserID;
+    const { LessonName, TinyDes, FullDes, LessonStatus, LessonPermission } = req.body;
 
-        // Validation cơ bản
-        if (!LessonName || !VideoUrl) {
-            return res.render('management/lesson-form', {
-                layout: 'main', course: req.course, isEditing: false,
-                error: 'Please enter Lesson Name and Video URL.',
-                formData: req.body // Giữ lại dữ liệu form
-            });
-        }
-
-        const newLesson = {
-            LessonName,
-            TinyDes, FullDes, VideoUrl,
-            LessonStatus: LessonStatus || 'draft', // Mặc định là draft
-            LessonPermission: LessonPermission || 'private', // Mặc định là private
-            CourseID: courseId, // Gán ID khóa học
-            UserID: instructorId // Gán ID giảng viên (người tạo)
-            // LastUpdate có DEFAULT trong DB
-        };
-
-        await lessonModel.add(newLesson);
-        res.redirect(`/management/course/${courseId}/lessons?addSuccess=true`); // Về trang danh sách bài học
-
-    } catch (err) {
-        next(err);
+    if (!LessonName) {
+        return res.render('management/lesson-form', {
+            layout: 'main',
+            course: req.course,
+            isEditing: false,
+            error: 'Please enter Lesson Name',
+            formData: req.body,
+        });
     }
+
+    let videoUrl = null;
+    if (req.file) {
+        const videoFile = req.file;
+        const videoExt = path.extname(videoFile.originalname);
+        const videoPath = `videos/${Date.now()}${videoExt}`;
+
+        videoUrl = await uploadFile(videoFile.buffer, videoPath);
+    }
+
+    const newLesson = {
+        LessonName,
+        TinyDes,
+        FullDes,
+        LessonStatus: LessonStatus || 'draft',
+        LessonPermission: LessonPermission || 'private',
+        CourseID: courseId,
+        UserID: instructorId,
+        VideoUrl: videoUrl,
+    };
+
+    await lessonModel.add(newLesson);
+    res.redirect(`/management/course/${courseId}/lessons?addSuccess=true`);
 });
+
 
 // HIỂN THỊ FORM SỬA BÀI HỌC (GET)
 router.get('/course/:courseId/lessons/:lessonId/edit', checkCourseOwnership, async (req, res, next) => {
@@ -378,19 +392,19 @@ router.get('/course/:courseId/lessons/:lessonId/edit', checkCourseOwnership, asy
 });
 
 // XỬ LÝ CẬP NHẬT BÀI HỌC (POST)
-router.post('/course/:courseId/lessons/:lessonId/update', checkCourseOwnership, async (req, res, next) => {
+router.post('/course/:courseId/lessons/:lessonId/update', uploadMulter, checkCourseOwnership, async (req, res, next) => {
     try {
         const lessonId = req.params.lessonId;
         const courseId = req.params.courseId;
         const instructorId = req.session.authUser.UserID;
-        const { LessonName, TinyDes, FullDes, VideoUrl, LessonStatus, LessonPermission } = req.body;
+        const { LessonName, TinyDes, FullDes, LessonStatus, LessonPermission } = req.body;
 
         // Validation
-        if (!LessonName || !VideoUrl) {
+        if (!LessonName) {
             const lesson = await lessonModel.findById(lessonId); // Lấy lại dữ liệu cũ
             return res.render('management/lesson-form', {
                 layout: 'main', course: req.course, lesson: lesson, isEditing: true,
-                error: 'Please enter Lesson Name and Video URL.',
+                error: 'Please enter Lesson Name',
                 formData: req.body // Không nên gửi lại hết, chỉ gửi lỗi
             });
         }
@@ -401,15 +415,37 @@ router.post('/course/:courseId/lessons/:lessonId/update', checkCourseOwnership, 
             return res.status(403).render('403', { message: 'You do not have permission to update this lesson.' });
         }
 
-        const lessonUpdates = {
-            LessonName, TinyDes, FullDes, VideoUrl,
-            LessonStatus: LessonStatus || 'draft',
-            LessonPermission: LessonPermission || 'private'
-            // UserID và CourseID không đổi
-        };
+        let videoUrl = null;
+        if (req.file) {
+            const videoFile = req.file;
+            const videoExt = path.extname(videoFile.originalname);
+            const videoPath = `videos/${Date.now()}${videoExt}`;
 
-        await lessonModel.update(lessonId, lessonUpdates);
-        res.redirect(`/management/course/${courseId}/lessons?updateSuccess=true`); // Về danh sách bài học
+            videoUrl = await uploadFile(videoFile.buffer, videoPath);
+        }
+
+        if (videoUrl != null) {
+            const lessonUpdates = {
+                LessonName, TinyDes, FullDes,
+                LessonStatus: LessonStatus || 'draft',
+                LessonPermission: LessonPermission || 'private',
+                VideoUrl: videoUrl
+            };
+
+            await lessonModel.update(lessonId, lessonUpdates);
+            res.redirect(`/management/course/${courseId}/lessons?updateSuccess=true`); // Về danh sách bài học
+
+        } else {
+            const lessonUpdates = {
+                LessonName, TinyDes, FullDes,
+                LessonStatus: LessonStatus || 'draft',
+                LessonPermission: LessonPermission || 'private'
+            };
+
+            await lessonModel.update(lessonId, lessonUpdates);
+            res.redirect(`/management/course/${courseId}/lessons?updateSuccess=true`); // Về danh sách bài học
+        }
+
 
     } catch (err) {
         next(err);
